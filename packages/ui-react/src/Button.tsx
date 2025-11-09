@@ -1,5 +1,5 @@
 import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
-import { variants, cx } from '../utils/variants';
+import { variants, cx } from './utils/variants';
 
 // Variant types matching Astro version
 type Intent = 'primary' | 'neutral' | 'ghost' | 'success' | 'warning' | 'info' | 'danger';

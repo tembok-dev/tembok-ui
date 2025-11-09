@@ -2,7 +2,7 @@
 import { ReactElement, ReactNode } from "react";
 import { Popover } from "./Popover";
 import { Side, Align } from "./hooks/usePosition";
-import { cx } from "../utils/variants";
+import { cx } from "./utils/variants";
 
 type DropdownProps = {
     trigger: ReactElement;

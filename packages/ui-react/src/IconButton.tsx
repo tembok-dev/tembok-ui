@@ -1,6 +1,6 @@
 // IconButton.tsx
 import { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
-import { variants, cx } from "../utils/variants";
+import { variants, cx } from "./utils/variants";
 
 // Match Button's variant shape
 type Intent =

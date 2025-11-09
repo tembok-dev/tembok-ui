@@ -1,7 +1,7 @@
 // tembok/components/src/react/Popover.tsx
 
 import { ReactNode, useRef, useState, useCallback, cloneElement, ReactElement, RefObject, useEffect } from 'react';
-import { cx } from '../utils/variants';
+import { cx } from './utils/variants';
 import { usePosition, Side, Align } from './hooks/usePosition';
 import { useEscapeKey } from './hooks/useEscapeKey';
 import { createPortal } from 'react-dom';
