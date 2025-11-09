@@ -7,7 +7,6 @@ export * from './SideBar';
 export * from './Toast';
 export * from './Dropdown';
 export * from './DevGrid';
-export * from './DemoSimpleLayout';
 export * from './TembokLogo';
 
 export * from './demos';
