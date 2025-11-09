@@ -1,5 +1,6 @@
 import { ReactNode, useRef, useCallback, useEffect } from 'react';
 import { Portal } from './utils/Portal';
+import { cx } from './utils/variants';
 import { useFocusTrap } from './hooks/useFocusTrap';
 import { useEscapeKey } from './hooks/useEscapeKey';
 import { useClickOutside } from './hooks/useClickOutside';
@@ -79,7 +80,7 @@ export function Modal({
       >
         {/* Backdrop */}
         <div
-          className={`fixed inset-0 z-0 bg-black/60 backdrop-blur-[1px] ${overlayClassName || ''}`}
+          className={cx('fixed inset-0 z-0 bg-black/60 backdrop-blur-[1px]', overlayClassName)}
         />
 
         {/* Panel */}
@@ -88,12 +89,12 @@ export function Modal({
           role="dialog"
           aria-modal="true"
           tabIndex={-1}
-          className={`
-            relative z-10
-            w-[min(92vw,560px)] rounded-md bg-bg shadow-soft border border-border p-6 
-            opacity-100 translate-y-0 transition-[opacity,transform] duration-200
-            ${className || ''}
-          `}
+          className={cx(
+            'relative z-10',
+            'w-[min(92vw,560px)] rounded-md bg-bg shadow-soft border border-border p-6',
+            'opacity-100 translate-y-0 transition-[opacity,transform] duration-200',
+            className
+          )}
         >
           {header && <header className="mb-3">{header}</header>}
           <div>{children}</div>

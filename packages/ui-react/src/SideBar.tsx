@@ -1,4 +1,5 @@
 import { ReactNode, useState, useEffect } from 'react';
+import { cx } from './utils/variants';
 import { useEscapeKey } from './hooks/useEscapeKey';
 
 type SidePosition = 'left' | 'right';
@@ -137,25 +138,34 @@ export function SideBar({
       {closeOnOverlayClick ? (
         <div
           onClick={handleClose}
-          className={`fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm transition-opacity duration-300 ${
-            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          } ${overlayClassName}`}
+          className={cx(
+            'fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm transition-opacity duration-300',
+            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
+            overlayClassName
+          )}
           aria-hidden="true"
         />
       ) : (
         <div
-          className={`fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm transition-opacity duration-300 ${
-            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          } ${overlayClassName}`}
+          className={cx(
+            'fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm transition-opacity duration-300',
+            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
+            overlayClassName
+          )}
           aria-hidden="true"
         />
       )}
 
       {/* Panel */}
       <aside
-        className={`fixed top-0 bottom-0 z-[2147483647] ${widthClass} ${sideTranslate} ${
-          side === 'left' ? 'left-0 border-r' : 'right-0 border-l'
-        } transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] bg-bg/90 backdrop-blur-xl border-border shadow-2xl will-change-transform`}
+        className={cx(
+          'fixed top-0 bottom-0 z-[2147483647]',
+          widthClass,
+          sideTranslate,
+          side === 'left' ? 'left-0 border-r' : 'right-0 border-l',
+          'transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] bg-bg/90 backdrop-blur-xl border-border shadow-2xl will-change-transform',
+          panelClassName
+        )}
       >
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Sticky header */}
@@ -191,7 +201,7 @@ export function SideBar({
           </div>
 
           {/* Content area */}
-          <div className={`flex-1 flex flex-col gap-8 ${panelClassName}`} onClick={handlePanelClick}>
+          <div className="flex-1 flex flex-col gap-8" onClick={handlePanelClick}>
             {children}
           </div>
         </div>
