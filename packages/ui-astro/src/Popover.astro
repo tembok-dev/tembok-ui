@@ -1,0 +1,341 @@
+---
+/**
+ * Popover.astro — reusable, headless popover for Astro + Tailwind
+ *
+ * Slots
+ *   - trigger: the activator element
+ *   - (default): the panel content
+ *
+ * Props
+ *   - openOn: "click" | "hover" = "click"
+ *   - side: "auto" | "down" | "up" = "auto"
+ *   - align: "start" | "center" | "end" = "center"
+ *   - offset: number = 10          // px gap between trigger and panel
+ *   - edgePad: number = 16         // ≥ p-4 from viewport edges
+ *   - panelClass?: string          // extra Tailwind for panel
+ *   - closeOnSelect: boolean = true// auto-close on clicks inside panel
+ *
+ * Basic usage
+ *   <Popover openOn="click" panelClass="min-w-[20rem]">
+ *     <Fragment slot="trigger"><button>Goodies</button></Fragment>
+ *     <div>…content…</div>
+ *   </Popover>
+ *
+ * In most places: drop the popover as-is (no extra class).
+ * In “special” layouts (blurred navbar pill, backdrops that inject its own layout translation): put class="popover-anchor relative" on the pill wrapper so the panel anchors to the pill instead of the tiny trigger span.
+ * 
+ * Align/side examples
+ *   <Popover side="up" align="start">…</Popover>
+ *   <Popover openOn="hover">…</Popover>
+ *
+ * Bypass auto-close (keep popover open on specific actions)
+ *   <button data-close-popover="false">Do something without closing</button>
+ *   // Or disable globally: <Popover closeOnSelect={false}>…</Popover>
+ *
+ * Built-in behaviors (no extra setup)
+ *   - Outside-click + Escape to close
+ *   - Centered positioning with edge clamping (keeps ≥ edgePad from edges)
+ *   - Auto flip up/down and align start/center/end
+ *   - Smart height: clamps to available space and scrolls internally
+ *   - Scroll isolation: wheel/touch scroll stays inside the panel
+ *   - Arrow auto-aims at trigger center and flips with side
+ *
+ * Notes
+ *   - Pure TS; no HeadlessUI/portals. Uses fixed positioning.
+ *   - If you later need a true portal-to-<body>, we can add a boolean prop.
+ */
+
+const {
+    openOn = "click",
+    offset = 10,
+    edgePad = 16,
+    panelClass = "",
+    side = "auto", // NEW
+    align = "center", // NEW
+    closeOnSelect = true, // NEW
+} = Astro.props;
+---
+
+<div
+    data-popover-root
+    data-open-on={openOn}
+    data-offset={offset}
+    data-edgepad={edgePad}
+    data-sidepref={side}
+    data-align={align}
+    data-close-on-select={String(closeOnSelect)}
+    class="relative inline-block"
+>
+    <!-- Trigger -->
+    <span
+        data-popover-trigger
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        class="inline-flex"
+    >
+        <slot name="trigger" />
+    </span>
+
+    <!-- Panel (absolute to container; centered + clamped in JS) -->
+    <div
+        data-popover-panel
+        role="dialog"
+        aria-modal="false"
+        tabindex="-1"
+        class={`absolute z-[2147483600] hidden select-none
+            rounded-lg border border-border bg-bg/90 backdrop-blur-md
+            shadow-elevation-high p-4
+            w-max max-w-[min(90vw,42rem)]
+            origin-top scale-95 opacity-0
+            transition-[opacity,transform] duration-150
+            overscroll-contain
+            ${panelClass}`}
+    >
+        <!-- Arrow (auto-placed + flipped in JS) -->
+        <div
+            data-popover-arrow
+            class="absolute h-3 w-3 bg-bg border border-border border-b-0 border-r-0"
+            style="transform: rotate(45deg);"
+        >
+        </div>
+
+        <slot />
+    </div>
+</div>
+
+<style is:inline>
+    [data-popover-panel][data-side="down"] {
+        transform-origin: top center;
+    }
+    [data-popover-panel][data-side="up"] {
+        transform-origin: bottom center;
+    }
+    [data-popover-panel].__open {
+        opacity: 1;
+        transform: scale(1);
+    }
+    [data-popover-panel]:not(.__open) {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+</style>
+
+<!-- Keep the logic inline so it runs exactly where the markup exists -->
+<script is:inline>
+    (() => {
+        // Guard so we only wire once per page load
+        if (window.__tembokPopoverBooted) return;
+        window.__tembokPopoverBooted = true;
+
+        const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+
+        function log(...args) {
+            // comment the next line to silence logs
+            // console.debug("[Popover]", ...args);
+        }
+
+        function initPopover(root) {
+            if (root.hasAttribute("data-popover-ready")) return;
+            root.setAttribute("data-popover-ready", "true");
+
+            const trigger = root.querySelector("[data-popover-trigger]");
+            const panel = root.querySelector("[data-popover-panel]");
+            const arrow = root.querySelector("[data-popover-arrow]");
+
+            if (!trigger || !panel || !arrow) {
+                log("missing parts", {
+                    trigger: !!trigger,
+                    panel: !!panel,
+                    arrow: !!arrow,
+                });
+                return;
+            }
+
+            const openOn = root.getAttribute("data-open-on") || "click";
+            const OFFSET = Number(root.getAttribute("data-offset") || 10);
+            const EDGE = Number(root.getAttribute("data-edgepad") || 16);
+            const SIDE_PREF = root.getAttribute("data-sidepref") || "auto"; // "auto" | "down" | "up"
+            const ALIGN = root.getAttribute("data-align") || "center"; // "center" | "start" | "end"
+            const CLOSE_ON_SELECT =
+                root.getAttribute("data-close-on-select") !== "false";
+
+            let open = false;
+            let tOpen, tClose;
+
+            function setOpen(next) {
+                if (open === next) return;
+                open = next;
+                trigger.setAttribute("aria-expanded", String(open));
+
+                if (open) {
+                    panel.classList.remove("hidden");
+                    panel.style.visibility = "hidden";
+                    panel.style.display = "block";
+                    position();
+                    panel.style.visibility = "visible";
+                    requestAnimationFrame(() => panel.classList.add("__open"));
+                    document.addEventListener("click", onDocClick, true);
+                    document.addEventListener("keydown", onKey, true);
+                    window.addEventListener("resize", onWin, { passive: true });
+                    window.addEventListener("scroll", onWin, { passive: true }); // no capture
+                    log("open");
+                } else {
+                    panel.classList.remove("__open");
+                    setTimeout(() => {
+                        if (!open) {
+                            panel.classList.add("hidden");
+                            panel.style.display = "";
+                        }
+                    }, 150);
+                    document.removeEventListener("click", onDocClick, true);
+                    document.removeEventListener("keydown", onKey, true);
+                    window.removeEventListener("resize", onWin);
+                    window.removeEventListener("scroll", onWin);
+                    log("close");
+                }
+            }
+
+            function onDocClick(e) {
+                if (!root.contains(e.target) && !panel.contains(e.target))
+                    setOpen(false);
+            }
+            function onKey(e) {
+                if (e.key === "Escape") setOpen(false);
+            }
+            function onWin() {
+                if (open) position();
+            }
+
+            function position() {
+                // 1) Pick the containing block (fallback = the popover root which is already relative)
+                const container = root.closest(".popover-anchor") || root;
+                
+                // 2) Measure both
+                const cbRect = container.getBoundingClientRect();
+                const actualTrigger = trigger.querySelector('button, a, [role="button"]') || trigger.firstElementChild || trigger;
+                const tr = actualTrigger.getBoundingClientRect();
+
+                // 3) Compute width/height and allowed area
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const w = panel.offsetWidth;
+                const contentH = panel.scrollHeight;
+
+                // 4) Vertical side selection
+                const spaceBelow = vh - tr.bottom - EDGE;
+                const spaceAbove = tr.top - EDGE;
+
+                let side = "down";
+                if (SIDE_PREF === "up") side = "up";
+                else if (SIDE_PREF === "down") side = "down";
+                else side = spaceBelow < contentH && spaceAbove > spaceBelow ? "up" : "down";
+
+                const allowed = side === "down"
+                    ? Math.max(0, vh - EDGE - (tr.bottom + OFFSET))
+                    : Math.max(0, (tr.top - OFFSET) - EDGE);
+
+                const finalH = Math.min(contentH, allowed);
+                panel.style.maxHeight = finalH < contentH ? `${Math.floor(finalH)}px` : "";
+                panel.style.overflowY = finalH < contentH ? "auto" : "";
+
+                // 5) Convert from viewport coords to container-relative coords
+                let top = (side === "down" ? (tr.bottom + OFFSET) : (tr.top - OFFSET - finalH)) - cbRect.top;
+                let leftCenter = (tr.left + tr.width / 2) - cbRect.left;
+
+                // Align start/center/end
+                let left = ALIGN === "start" ? (tr.left - cbRect.left)
+                         : ALIGN === "end"   ? (tr.right - w - cbRect.left)
+                                             : (leftCenter - w / 2);
+
+                // 6) Clamp to the *viewport* edges even if container is narrow
+                left = Math.max(EDGE - cbRect.left, Math.min(left, (vw - EDGE) - cbRect.left - w));
+                top = Math.max(EDGE - cbRect.top, Math.min(top, (vh - EDGE) - cbRect.top - finalH));
+
+                panel.style.left = `${left}px`;
+                panel.style.top = `${top}px`;
+                panel.setAttribute("data-side", side);
+
+                // 7) Arrow aim
+                const arrowSize = 12;
+                const midX = tr.left + tr.width / 2;
+                const arrowX = Math.max(8, Math.min(w - 8 - arrowSize, (midX - (cbRect.left + left) - arrowSize / 2)));
+                arrow.style.left = `${arrowX}px`;
+
+                if (side === "down") {
+                    arrow.style.top = `-${arrowSize / 2}px`;
+                    arrow.style.bottom = "";
+                    arrow.style.transform = "rotate(45deg)";
+                } else {
+                    arrow.style.bottom = `-${arrowSize / 2}px`;
+                    arrow.style.top = "";
+                    arrow.style.transform = "rotate(225deg)";
+                }
+            }
+
+            // Wiring
+            if (openOn === "click") {
+                trigger.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    setOpen(!open);
+                });
+            } else {
+                const enter = () => {
+                    clearTimeout(tClose);
+                    tOpen = setTimeout(() => setOpen(true), 80);
+                };
+                const leave = () => {
+                    clearTimeout(tOpen);
+                    tClose = setTimeout(() => setOpen(false), 120);
+                };
+                trigger.addEventListener("mouseenter", enter);
+                trigger.addEventListener("mouseleave", leave);
+                panel.addEventListener("mouseenter", enter);
+                panel.addEventListener("mouseleave", leave);
+                // touch fallback
+                trigger.addEventListener("click", () => setOpen(!open));
+            }
+
+            // Close on select
+            if (CLOSE_ON_SELECT) {
+                panel.addEventListener("click", (e) => {
+                    const el =
+                        e.target instanceof Element
+                            ? e.target.closest("a,button,[role='menuitem']")
+                            : null;
+                    if (!el) return;
+                    // allow opt-out per element
+                    const wants = el.getAttribute("data-close-popover");
+                    if (wants === "false") return;
+                    setOpen(false);
+                });
+            }
+
+            log("wired", { openOn, OFFSET, EDGE });
+        }
+
+        // Initialize everything currently in the DOM
+        const initAll = () => {
+            document
+                .querySelectorAll(
+                    "[data-popover-root]:not([data-popover-ready])",
+                )
+                .forEach((el) => initPopover(el));
+            log("scan complete");
+        };
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initAll, {
+                once: true,
+            });
+        } else {
+            initAll();
+        }
+
+        // If your pages swap content (Astro islands, partial nav), watch for new nodes
+        const mo = new MutationObserver(() => initAll());
+        mo.observe(document.documentElement, {
+            childList: true,
+            subtree: true,
+        });
+    })();
+</script>

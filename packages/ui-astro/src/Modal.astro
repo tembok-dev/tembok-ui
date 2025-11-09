@@ -1,0 +1,95 @@
+---
+const { id = "tembok-modal" } = Astro.props;
+const instanceAttr = "data-modal-root";
+const ID = id.replace(/"/g, '\\"');
+---
+
+<div
+    id={id}
+    {...{ [instanceAttr]: "" }}
+    class="fixed inset-0 grid place-items-center
+          z-[2147483646]
+          pointer-events-none data-[open]:pointer-events-auto"
+    style="isolation: isolate;"
+>
+    <div
+        data-backdrop
+        class="fixed inset-0 z-0 bg-black/60 backdrop-blur-[1px] hidden"
+    >
+    </div>
+
+    <div
+        data-panel
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        class="w-[min(92vw,560px)] rounded-md bg-bg shadow-soft border border-border p-6 opacity-0 -translate-y-2 transition-[opacity,transform] duration-200"
+    >
+        <header class="mb-3"><slot name="header" /></header>
+        <div><slot /></div>
+        <footer class="mt-6 flex justify-end gap-2">
+            <slot name="footer" />
+        </footer>
+    </div>
+</div>
+
+<style>
+    [data-modal-root][data-open] {
+        pointer-events: auto;
+    }
+    [data-modal-root][data-open] [data-backdrop] {
+        display: block;
+    }
+    [data-modal-root][data-open] [data-panel] {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+<script define:vars={{ ID }}>
+    window.addEventListener("DOMContentLoaded", () => {
+        const root = document.getElementById(ID);
+        if (!root) return;
+
+        const panel = root.querySelector("[data-panel]");
+        const isOpen = () => root.hasAttribute("data-open");
+        const close = () => {
+            root.removeAttribute("data-open");
+            if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur?.();
+            }
+        };
+
+        root.addEventListener(
+            "click",
+            (e) => {
+                if (!isOpen()) return;
+                const t = e.target;
+                if (!(t instanceof Element)) return;
+
+                if (t.closest("[data-backdrop]") || t.closest("[data-close]")) {
+                    e.preventDefault();
+                    close();
+                }
+            },
+            true,
+        );
+
+        window.addEventListener(
+            "keydown",
+            (e) => {
+                if (isOpen() && e.key === "Escape") {
+                    e.preventDefault();
+                    close();
+                }
+            },
+            true,
+        );
+
+        // focus panel on open
+        const mo = new MutationObserver(() => {
+            if (isOpen()) panel?.focus();
+        });
+        mo.observe(root, { attributes: true, attributeFilter: ["data-open"] });
+    });
+</script>

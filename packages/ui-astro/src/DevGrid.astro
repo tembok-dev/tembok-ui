@@ -1,0 +1,218 @@
+---
+// /packages/tembok/components/src/DevGrid.astro
+// Minimal overlay to visualize Tailwind breakpoints + a 12-col grid
+const {
+    enabled = true, // show on first load?
+    columns = 12, // grid columns
+    gutterPx = 0, // horizontal gap between columns (visual only)
+    containerPx = 0, // set >0 to simulate a container max-width
+} = Astro.props;
+
+const cols = Array.from({ length: columns });
+---
+
+<style is:inline>
+    /* Visuals stay gentle so they don’t drown your design */
+    .dg-overlay {
+        --dg-color: 255 0 0; /* red-ish guide */
+        --dg-border: rgba(var(--dg-color) / 0.35);
+        --dg-fill: rgba(var(--dg-color) / 0.1);
+        --dg-badge-bg: rgba(0 0 0 / 0.65);
+        --dg-badge-fg: #fff;
+        --dg-safe-b: env(safe-area-inset-bottom);
+        --dg-safe-l: env(safe-area-inset-left);
+        --dg-safe-r: env(safe-area-inset-right);
+        --dg-safe-t: env(safe-area-inset-top);
+    }
+    .dg-col {
+        outline: 1px solid var(--dg-border);
+        background-image: linear-gradient(
+            to bottom,
+            var(--dg-fill),
+            transparent 55%
+        );
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    .dg-ruler {
+        background: repeating-linear-gradient(
+            to right,
+            rgba(255 255 255 / 0.15) 0 1px,
+            transparent 1px 8px
+        );
+    }
+    .dg-badge {
+        font:
+            600 12px ui-sans-serif,
+            system-ui,
+            -apple-system,
+            Segoe UI,
+            Roboto,
+            "Helvetica Neue",
+            Arial,
+            "Apple Color Emoji",
+            "Segoe UI Emoji";
+        color: var(--dg-badge-fg);
+        background: var(--dg-badge-bg);
+        backdrop-filter: blur(6px);
+    }
+    .dg-corner {
+        position: fixed;
+        left: max(10px, env(safe-area-inset-left));
+        bottom: max(10px, env(safe-area-inset-bottom));
+        z-index: 2147483601; /* above grid */
+    }
+    .dg-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 9999px;
+    }
+</style>
+
+<!-- Overlay -->
+<div
+    id="devgrid"
+    class={`dg-overlay fixed inset-0 z-[2147483600] select-none pointer-events-none ${enabled ? "" : "hidden"}`}
+    data-on={enabled ? "true" : "false"}
+    aria-hidden="true"
+>
+    <!-- Optional container frame -->
+    <div
+        class="absolute inset-0 mx-auto h-full"
+        style={containerPx > 0 ? `max-width:${containerPx}px` : undefined}
+    >
+        <!-- Fill the whole overlay using flex; padding honors safe areas -->
+        <div
+            class="absolute inset-0 flex flex-col min-h-full"
+            style="padding: max(10px, var(--dg-safe-t)) max(10px, var(--dg-safe-r)) max(10px, var(--dg-safe-b)) max(10px, var(--dg-safe-l));"
+        >
+            <!-- Top ruler -->
+            <div class="dg-ruler w-full h-6 mb-2 rounded pointer-events-none">
+            </div>
+
+            <!-- The grid (takes remaining height) -->
+            <div
+                class="grid flex-1"
+                style={`grid-template-columns: repeat(${columns}, minmax(0, 1fr)); gap:${gutterPx}px;`}
+            >
+                {
+                    cols.map((_, i) => (
+                        <div class="dg-col relative">
+                            <div class="absolute top-1 left-1 text-[10px] text-white/70">
+                                {i + 1}
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Corner badge (clickable) -->
+    <div class="dg-corner pointer-events-auto">
+        <button
+            id="devgrid-badge"
+            type="button"
+            class="dg-badge inline-flex items-center gap-2 rounded px-3 py-2 ring-1 ring-white/10"
+            title="Alt + Shift + G to toggle"
+        >
+            <span id="dg-dot" class="dg-dot bg-emerald-400"></span>
+            <span id="dg-label">base</span>
+            <span aria-hidden="true">•</span>
+            <span id="dg-size">0×0</span>
+            <span aria-hidden="true">•</span>
+            <span id="dg-dpr">@1x</span>
+        </button>
+    </div>
+</div>
+
+<script is:inline>
+    // Tailwind default breakpoints (edit if your config differs)
+    const BP = [
+        { name: "2xl", min: 1536 },
+        { name: "xl", min: 1280 },
+        { name: "lg", min: 1024 },
+        { name: "md", min: 768 },
+        { name: "sm", min: 640 },
+    ];
+
+    const overlay = document.getElementById("devgrid");
+    const badge = document.getElementById("devgrid-badge");
+    const labelEl = document.getElementById("dg-label");
+    const sizeEl = document.getElementById("dg-size");
+    const dprEl = document.getElementById("dg-dpr");
+
+    function currentBP(w) {
+        for (const b of BP) if (w >= b.min) return b.name;
+        return "base";
+    }
+
+    function paint() {
+        const w = Math.round(window.innerWidth);
+        const h = Math.round(window.innerHeight);
+        const dpr = window.devicePixelRatio || 1;
+        const bp = currentBP(w);
+
+        labelEl.textContent = bp;
+        sizeEl.textContent = `${w}×${h}`;
+        dprEl.textContent = `@${dpr.toFixed(2).replace(/\.00$/, "")}x`;
+
+        const dot = document.getElementById("dg-dot");
+        const colors = {
+            base: "#a3a3a3",
+            sm: "#93c5fd",
+            md: "#60a5fa",
+            lg: "#34d399",
+            xl: "#fbbf24",
+            "2xl": "#fb7185",
+        };
+        dot.style.background = colors[bp] || "#a3a3a3";
+    }
+
+    function setOn(on) {
+        if (!overlay) return;
+        overlay.dataset.on = on ? "true" : "false";
+        overlay.classList.toggle("hidden", !on);
+        localStorage.setItem("devgrid:on", on ? "1" : "0");
+    }
+
+    // Initial state from localStorage or prop
+    const saved = localStorage.getItem("devgrid:on");
+    if (saved === "1") setOn(true);
+    if (saved === "0") setOn(false);
+    paint();
+
+    // Live updates
+    let raf;
+    const onResize = () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(paint);
+    };
+    window.addEventListener("resize", onResize);
+    window
+        .matchMedia("(resolution: 2dppx)")
+        .addEventListener?.("change", onResize);
+
+    // Toggle by click
+    badge?.addEventListener("click", (e) => {
+        e.preventDefault();
+        setOn(overlay?.classList.contains("hidden"));
+    });
+
+    // Toggle by hotkey: Alt + Shift + G (no Ctrl/⌘ to avoid conflicts)
+    window.addEventListener("keydown", (e) => {
+        const g = e.key.toLowerCase() === "g";
+        if (g && e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            setOn(overlay?.classList.contains("hidden"));
+        }
+    });
+
+    // Tiny console API
+    window.__devgrid = {
+        on: () => setOn(true),
+        off: () => setOn(false),
+        toggle: () => setOn(overlay?.classList.contains("hidden")),
+        repaint: paint,
+    };
+</script>

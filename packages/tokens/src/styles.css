@@ -1,0 +1,267 @@
+:root {
+    color-scheme: dark;
+
+    /* === Brand swatches === */
+    --brand-charcoal: 0 0% 12%;
+    /* base charcoal */
+    --brand-offwhite: 210 25% 97%;
+    /* off-white for light theme */
+    /* Brand bases (used on dark / charcoal) */
+    --brand-red: 353 86% 43%;
+    --brand-cyan: 180 100% 50%;
+    --brand-lime: 73 86% 60%;
+    --brand-ink: 210 33% 13%;
+    --brand-white: var(--brand-offwhite);
+
+    /* Brand for light mode surfaces (darker, slightly desaturated) */
+    --brand-red-light: 353 78% 42%;
+    /* keeps punch, trims glare */
+    --brand-cyan-light: 188 85% 36%;
+    /* deeper teal, crisp on white */
+    --brand-lime-light: 78 70% 34%;
+    /* green-leaning lime, readable */
+
+    /* Brand foreground companions (constants) */
+    --brand-charcoal-fg: var(--brand-offwhite);
+    --brand-offwhite-fg: var(--brand-charcoal);
+    --brand-white-fg: var(--brand-charcoal);
+    --brand-red-fg: 0 0% 100%;
+    /* white on red */
+    --brand-cyan-fg: 210 33% 13%;
+    /* ink on cyan */
+    --brand-lime-fg: 210 33% 13%;
+    /* ink on lime */
+    --brand-ink-fg: var(--brand-white);
+    /* white on ink */
+
+    /* “Current” UI-facing tokens (auto-switch) */
+    --brand-red-ui: var(--brand-red);
+    --brand-cyan-ui: var(--brand-cyan);
+    --brand-lime-ui: var(--brand-lime);
+
+    /* Optional soft tints for chips/badges on dark */
+    --brand-cyan-soft: 188 85% 20%;
+    --brand-lime-soft: 78 70% 20%;
+    --brand-red-soft: 353 78% 22%;
+
+    /* === Background scale (dark-first) === */
+    --bg-dark: 0 0% 7%;
+    --bg: 0 0% 12%;
+    --bg-light: 0 0% 17%;
+
+    /* semantic slots */
+    --fg: 205 2% 95%;
+    --muted: 205 2% 70%;
+    --border: 205 2% 20%;
+    --ring: 215 95% 64%;
+
+    --primary: var(--brand-red);
+
+    --card: var(--bg-light);
+    --card-fg: var(--fg);
+    --popover: var(--bg-light);
+    --popover-fg: var(--fg);
+    --accent: var(--bg-light);
+    --accent-fg: var(--fg);
+    --destructive: 355 80% 50%;
+    --destructive-fg: 0 0% 100%;
+
+    /* --- Status (SOLID) — constants, not dept-driven --- */
+    --success: 146 60% 40%;
+    --success-fg: var(--brand-white);
+
+    --warning: 43 96% 50%;
+    --warning-fg: var(--brand-ink);
+
+    --info: 200 90% 56%;
+    --info-fg: var(--brand-white);
+
+    --danger: 0 72% 50%;
+    --danger-fg: var(--brand-white);
+
+    /* --- Status (SOFT) — dark-first tints --- */
+    --success-soft: 146 45% 20%;
+    --success-soft-fg: 146 60% 70%;
+
+    --warning-soft: 43 90% 22%;
+    --warning-soft-fg: 43 96% 70%;
+
+    --info-soft: 200 80% 22%;
+    --info-soft-fg: 200 85% 75%;
+
+    --danger-soft: 0 70% 20%;
+    --danger-soft-fg: 0 86% 75%;
+
+    /* === Dark shadows === */
+    --shadow-color: 0deg 0% 0%;
+    --shadow-elevation-low:
+        0.3px 0.3px 0.5px hsl(var(--shadow-color) / 0.11),
+        0.6px 0.5px 0.8px -1.4px hsl(var(--shadow-color) / 0.1),
+        1.4px 1.2px 2px -2.8px hsl(var(--shadow-color) / 0.09);
+    --shadow-elevation-medium:
+        0.3px 0.3px 0.5px hsl(var(--shadow-color) / 0.12),
+        1.1px 1px 1.6px -0.9px hsl(var(--shadow-color) / 0.11),
+        2.7px 2.5px 4px -1.9px hsl(var(--shadow-color) / 0.1),
+        6.8px 6.1px 9.9px -2.8px hsl(var(--shadow-color) / 0.1);
+    --shadow-elevation-high:
+        0.3px 0.3px 0.5px hsl(var(--shadow-color) / 0.11),
+        1.8px 1.6px 2.6px -0.4px hsl(var(--shadow-color) / 0.1),
+        3.3px 3px 4.8px -0.8px hsl(var(--shadow-color) / 0.1),
+        5.6px 5px 8.1px -1.2px hsl(var(--shadow-color) / 0.1),
+        9.1px 8.2px 13.2px -1.6px hsl(var(--shadow-color) / 0.1),
+        14.4px 13.1px 21px -2px hsl(var(--shadow-color) / 0.09),
+        22.2px 20.1px 32.3px -2.4px hsl(var(--shadow-color) / 0.09),
+        33px 29.9px 48.1px -2.8px hsl(var(--shadow-color) / 0.09);
+
+
+    /* === Easing tokens — Tembok motion palette === */
+    --ease-snap: cubic-bezier(.22, 1, .36, 1);
+    /* punchy, snappy settle */
+    --ease-hover: cubic-bezier(.2, .8, .2, 1);
+    /* gentle but responsive */
+    --ease-reveal: cubic-bezier(.16, 1, .3, 1);
+    /* decisive entrance */
+    --ease-shift: cubic-bezier(.4, 0, .2, 1);
+    /* standard material-ish */
+    --ease-expo: cubic-bezier(.87, 0, .13, 1);
+    /* dramatic in-out, hero moves */
+    --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+    /* tiny bounce on press/release */
+    --ease-swap: cubic-bezier(.22, 1, .36, 1);
+    /* crisp but elegant swap: switching elements */
+}
+
+
+
+/* Light overrides: flip background scale to off-white tones */
+html[data-theme="light"] {
+    color-scheme: light;
+
+    /* Auto-swap UI tokens when light */
+    --brand-red-ui: var(--brand-red-light);
+    --brand-cyan-ui: var(--brand-cyan-light);
+    --brand-lime-ui: var(--brand-lime-light);
+
+    /* Soft tints for light (very pale backgrounds) */
+    --brand-cyan-soft: 188 70% 92%;
+    --brand-lime-soft: 78 65% 92%;
+    --brand-red-soft: 353 75% 94%;
+
+    --bg-dark: 0 0% 88%;
+    --bg: 0 0% 95%;
+    --bg-light: 0 0% 98%;
+
+    --fg: 220 15% 12%;
+    --muted: 205 2% 30%;
+    --border: 220 14% 90%;
+    --ring: 215 90% 45%;
+    --card: var(--bg-light);
+    --card-fg: var(--fg);
+    --popover: var(--bg-light);
+    --popover-fg: var(--fg);
+    --accent: 220 16% 95%;
+    --accent-fg: 220 15% 12%;
+
+    --success-soft: 146 60% 93%;
+    --success-soft-fg: 146 40% 30%;
+
+    --warning-soft: 43 96% 90%;
+    --warning-soft-fg: 35 65% 28%;
+
+    --info-soft: 200 90% 94%;
+    --info-soft-fg: 200 60% 28%;
+
+    --danger-soft: 0 90% 96%;
+    --danger-soft-fg: 0 70% 35%;
+}
+
+/* Departments — flip primary AND its foreground together */
+html[data-dept="dev"] {
+    --primary: var(--brand-cyan-ui);
+    --primary-fg: var(--brand-cyan-fg);
+}
+
+html[data-dept="red"] {
+    --primary: var(--brand-red-ui);
+    --primary-fg: var(--brand-red-fg);
+}
+
+html[data-dept="studio"] {
+    --primary: var(--brand-lime-ui);
+    --primary-fg: var(--brand-lime-fg);
+}
+
+html[data-dept="ink"] {
+    --primary: var(--brand-ink);
+    --primary-fg: var(--brand-ink-fg);
+}
+
+
+html {
+    background: hsl(var(--bg));
+    color: hsl(var(--fg));
+}
+
+/* === Tembok Design System: Buttons Formats === */
+
+.tds-btn-primary {
+    @apply flex-row flex gap-2 px-3 py-1.5 rounded-lg bg-primary text-primary-fg text-sm font-medium brightness-90 hover:brightness-100 cursor-pointer transition-all active:animate-press duration-fast
+}
+
+.tds-btn-primary:disabled {
+    @apply bg-muted/25 cursor-not-allowed;
+}
+
+.tds-btn-neutral {
+    @apply flex-row flex gap-2 px-3 py-1.5 rounded-lg bg-bg-light/90 text-fg border-border/60 text-sm font-medium brightness-90 hover:brightness-100 cursor-pointer transition-all hover:bg-bg-light hover:brightness-[1.1] active:bg-bg/90 active:animate-press duration-fast
+}
+
+/* === Tembok Design System: Headings and sections === */
+
+.h-section {
+    @apply text-fg/80 text-[14px] font-medium;
+    line-height: 1.5rem;
+}
+
+/* === Tembok Design System: Information Specs === */
+
+.info-chip {
+    @apply px-1.5 rounded-full bg-bg-light text-xs text-muted border border-fg/20;
+}
+
+/* === Tembok Design System: ToolPanel === */
+.tool-list {
+    @apply flex flex-row gap-2 items-center justify-between text-sm text-fg/60 [&>*]:last:min-w-[100px];
+}
+
+.tds-drop-list {
+    @apply flex flex-col [&>*]:min-h-[24px];
+}
+
+/* === Tembok Design System: Table === */
+.tds-table {
+    @apply rounded-lg border border-border/50 bg-bg/40 overflow-hidden;
+}
+
+.tds-table table {
+    @apply w-full border-collapse;
+}
+
+/* Headings */
+.tds-table th {
+    @apply text-xs uppercase tracking-wider text-fg/50 bg-bg-dark/25 font-medium text-left px-3 py-2;
+}
+
+/* Cells */
+.tds-table td {
+    @apply px-3 py-2 text-xs;
+}
+
+/* Row hover + dividers */
+.tds-table tbody tr:hover {
+    @apply bg-bg-light/50;
+}
+
+.tds-table tbody tr+tr {
+    @apply border-t border-border/30;
+}

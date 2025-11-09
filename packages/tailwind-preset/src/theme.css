@@ -1,0 +1,113 @@
+/* Tailwind v4 Theme Configuration for Tembok */
+@theme {
+    /* Colors */
+    --color-bg-dark: hsl(var(--bg-dark) / <alpha-value>);
+    --color-bg: hsl(var(--bg) / <alpha-value>);
+    --color-bg-light: hsl(var(--bg-light) / <alpha-value>);
+    --color-fg: hsl(var(--fg) / <alpha-value>);
+    --color-muted: hsl(var(--muted) / <alpha-value>);
+    --color-border: hsl(var(--border) / <alpha-value>);
+    --color-ring: hsl(var(--ring) / <alpha-value>);
+    
+    --color-primary: hsl(var(--primary) / <alpha-value>);
+    --color-primary-fg: hsl(var(--primary-fg) / <alpha-value>);
+    
+    --color-card: hsl(var(--card));
+    --color-card-fg: hsl(var(--card-fg));
+    --color-popover: hsl(var(--popover));
+    --color-popover-fg: hsl(var(--popover-fg));
+    --color-accent: hsl(var(--accent));
+    --color-accent-fg: hsl(var(--accent-fg));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-fg: hsl(var(--destructive-fg));
+    
+    --color-brand-charcoal: hsl(var(--brand-charcoal));
+    --color-brand-charcoal-fg: hsl(var(--brand-charcoal-fg));
+    --color-brand-offwhite: hsl(var(--brand-offwhite));
+    --color-brand-offwhite-fg: hsl(var(--brand-offwhite-fg));
+    --color-brand-white: hsl(var(--brand-white));
+    --color-brand-white-fg: hsl(var(--brand-white-fg));
+    --color-brand-red: hsl(var(--brand-red));
+    --color-brand-red-fg: hsl(var(--brand-red-fg));
+    --color-brand-cyan: hsl(var(--brand-cyan));
+    --color-brand-cyan-fg: hsl(var(--brand-cyan-fg));
+    --color-brand-lime: hsl(var(--brand-lime));
+    --color-brand-lime-fg: hsl(var(--brand-lime-fg));
+    --color-brand-ink: hsl(var(--brand-ink));
+    --color-brand-ink-fg: hsl(var(--brand-ink-fg));
+    
+    --color-brand-red-ui: hsl(var(--brand-red-ui) / <alpha-value>);
+    --color-brand-cyan-ui: hsl(var(--brand-cyan-ui) / <alpha-value>);
+    --color-brand-lime-ui: hsl(var(--brand-lime-ui) / <alpha-value>);
+    
+    --color-brand-red-light: hsl(var(--brand-red-light) / <alpha-value>);
+    --color-brand-cyan-light: hsl(var(--brand-cyan-light) / <alpha-value>);
+    --color-brand-lime-light: hsl(var(--brand-lime-light) / <alpha-value>);
+    
+    --color-brand-red-soft: hsl(var(--brand-red-soft) / <alpha-value>);
+    --color-brand-cyan-soft: hsl(var(--brand-cyan-soft) / <alpha-value>);
+    --color-brand-lime-soft: hsl(var(--brand-lime-soft) / <alpha-value>);
+    
+    --color-success: hsl(var(--success) / <alpha-value>);
+    --color-success-fg: hsl(var(--success-fg) / <alpha-value>);
+    --color-warning: hsl(var(--warning) / <alpha-value>);
+    --color-warning-fg: hsl(var(--warning-fg) / <alpha-value>);
+    --color-info: hsl(var(--info) / <alpha-value>);
+    --color-info-fg: hsl(var(--info-fg) / <alpha-value>);
+    --color-danger: hsl(var(--danger) / <alpha-value>);
+    --color-danger-fg: hsl(var(--danger-fg) / <alpha-value>);
+    
+    --color-success-soft: hsl(var(--success-soft) / <alpha-value>);
+    --color-success-soft-fg: hsl(var(--success-soft-fg) / <alpha-value>);
+    --color-warning-soft: hsl(var(--warning-soft) / <alpha-value>);
+    --color-warning-soft-fg: hsl(var(--warning-soft-fg) / <alpha-value>);
+    --color-info-soft: hsl(var(--info-soft) / <alpha-value>);
+    --color-info-soft-fg: hsl(var(--info-soft-fg) / <alpha-value>);
+    --color-danger-soft: hsl(var(--danger-soft) / <alpha-value>);
+    --color-danger-soft-fg: hsl(var(--danger-soft-fg) / <alpha-value>);
+    
+    /* Box shadows */
+    --shadow-elevation-low: var(--shadow-elevation-low);
+    --shadow-elevation-medium: var(--shadow-elevation-medium);
+    --shadow-elevation-high: var(--shadow-elevation-high);
+    
+    /* Background image */
+    --background-image-noise: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><filter id=%22n%22><feTurbulence baseFrequency=%220.8%22 numOctaves=%224%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');
+    
+    /* Transition durations */
+    --transition-duration-fast: 150ms;
+    --transition-duration-base: 250ms;
+    --transition-duration-slow: 400ms;
+    --transition-duration-slower: 700ms;
+    --transition-duration-swap: 450ms;
+    
+    /* Transition timing functions */
+    --transition-timing-function-snap: var(--ease-snap);
+    --transition-timing-function-hover: var(--ease-hover);
+    --transition-timing-function-reveal: var(--ease-reveal);
+    --transition-timing-function-shift: var(--ease-shift);
+    --transition-timing-function-expo: var(--ease-expo);
+    --transition-timing-function-bounce: var(--ease-bounce);
+    --transition-timing-function-swap: var(--ease-swap);
+    
+    /* Animations */
+    --animate-snap-in: snap-in var(--anim-dur,300ms) var(--ease-snap) both;
+    --animate-reveal: reveal-down var(--anim-dur,400ms) var(--ease-reveal) both;
+    --animate-press: press 120ms var(--ease-bounce) both;
+}
+
+/* Keyframes */
+@keyframes snap-in {
+    0% { transform: translateY(8px) scale(.98); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes reveal-down {
+    0% { clip-path: inset(0 0 100% 0); opacity: 0.001; }
+    100% { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+@keyframes press {
+    0% { transform: scale(1); }
+    100% { transform: scale(.98); }
+}
