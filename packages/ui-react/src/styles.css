@@ -42,7 +42,7 @@
 }
 
 /* 2) Dark solo si el host lo pide (Tailwind .dark o data-theme) */
-.dark, [data-theme="dark"] {
+/* .dark, [data-theme="dark"] {
   --color-bg: #0a0a0a;
   --color-bg-dark: #050505;
   --color-bg-light: #1a1a1a;
@@ -57,7 +57,7 @@
   --color-fg-invert: #0a0a0a;
 
   --color-border: rgba(245, 245, 245, 0.15);
-}
+} */
 
 /* 3) Utilidades (sin @layer) */
 .bg-bg { background-color: var(--color-bg); }
