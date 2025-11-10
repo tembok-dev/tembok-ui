@@ -4,7 +4,7 @@ import { useEscapeKey } from './hooks/useEscapeKey';
 
 type SidePosition = 'left' | 'right';
 
-interface SideBarProps {
+export interface SideBarProps {
   id?: string;
   side?: SidePosition;
   widthClass?: string;

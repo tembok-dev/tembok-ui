@@ -5,7 +5,7 @@ import { useFocusTrap } from './hooks/useFocusTrap';
 import { useEscapeKey } from './hooks/useEscapeKey';
 import { useClickOutside } from './hooks/useClickOutside';
 
-interface ModalProps {
+export interface ModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: ReactNode;

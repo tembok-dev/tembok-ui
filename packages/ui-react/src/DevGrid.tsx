@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-interface DevGridProps {
+export interface DevGridProps {
   enabled?: boolean;
   columns?: number;
   gutterPx?: number;

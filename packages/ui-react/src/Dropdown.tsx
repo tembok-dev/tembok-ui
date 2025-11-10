@@ -4,7 +4,7 @@ import { Popover } from "./Popover";
 import { Side, Align } from "./hooks/usePosition";
 import { cx } from "./utils/variants";
 
-type DropdownProps = {
+export type DropdownProps = {
     trigger: ReactElement;
     children: ReactNode;              // buttons/anchors OR <ul><li>…</li></ul>
     side?: Side;

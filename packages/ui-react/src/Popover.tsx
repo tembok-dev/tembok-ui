@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom';
 
 type OpenMode = 'click' | 'hover';
 
-interface PopoverProps {
+export interface PopoverProps {
   trigger: ReactElement;
   children: ReactNode;
   openOn?: OpenMode;
