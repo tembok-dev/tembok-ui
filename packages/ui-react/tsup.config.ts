@@ -9,4 +9,8 @@ export default defineConfig({
   treeshake: true,
   minify: false,
   external: ['react', 'react-dom'],
+  loader: {
+    '.css': 'css',
+  },
+  injectStyle: true,
 });

@@ -91,9 +91,12 @@ type Toast = {
     intent?: Intent;
     duration?: number; // ms
     canClose?: boolean;
+    className?: string;
 };
 
-type ToastInput = Omit<Toast, "id">;
+type ToastInput = Omit<Toast, "id"> & {
+    className?: string;
+};
 
 /* ========= Context ========= */
 type ToastCtx = {
@@ -187,7 +190,7 @@ function ToastCard({
     toast: Toast;
     onDismiss: (id: string) => void;
 }) {
-    const { id, title, description, intent = "neutral", duration = 4000, canClose = true } = toast;
+    const { id, title, description, intent = "neutral", duration = 4000, canClose = true, className } = toast;
     const timerRef = useRef<number | null>(null);
     const [hover, setHover] = useState(false);
     const [mount, setMount] = useState(false);
@@ -216,8 +219,9 @@ function ToastCard({
                 "text-sm text-fg/90",
                 "transition-all duration-200 ease-out",
                 mount ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
-                "[&>div]:min-w-0", // fix text overflow
-            ].join(" ")}
+                "[&>div]:min-w-0",
+                className
+            ].filter(Boolean).join(" ")}
         >
             <div className="grid grid-cols-[auto_1fr_auto] items-start gap-3 p-3">
                 {/* Intent icon */}
