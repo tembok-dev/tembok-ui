@@ -75,13 +75,17 @@ export function Modal({
     <Portal>
       <div
         id={id}
-        className="fixed inset-0 grid place-items-center z-[2147483646] pointer-events-auto"
-        style={{ isolation: 'isolate' }}
+        className="tmbk-theme fixed inset-0 grid place-items-center z-[2147483646] pointer-events-auto"
+        
       >
         {/* Backdrop */}
-        <div
-          className={cx('fixed inset-0 z-0 tmbk-modal-overlay', overlayClassName)}
-        />
+      <div
+        className={cx(
+          // estaba z-0 → súbelo
+          'fixed inset-0 z-[2147483645] tmbk-modal-overlay',
+          overlayClassName
+        )}
+      />
 
         {/* Panel */}
         <div
@@ -91,7 +95,7 @@ export function Modal({
           tabIndex={-1}
           className={cx(
             'relative z-10',
-            'w-[min(92vw,560px)] rounded-md bg-bg shadow-soft border border-border p-6',
+            'w-[min(92vw,560px)] rounded-md tmbk-bg tmbk-text shadow-soft border tmbk-border p-6',
             'opacity-100 translate-y-0 transition-[opacity,transform] duration-200',
             className
           )}

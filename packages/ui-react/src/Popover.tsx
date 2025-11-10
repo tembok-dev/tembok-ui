@@ -140,9 +140,9 @@ export function Popover({
       ref={panelRef}
       role={role}
       className={cx(
-        'fixed z-[2147483600] select-none',
+        'tmbk-theme fixed z-[2147483600] select-none',
         // Defaults (dark) remain; inline styles override when provided:
-        'rounded-lg border border-border bg-bg/80 backdrop-blur-md',
+        'rounded-lg border border-[color:var(--tmbk-border)] bg-[color:var(--tmbk-bg)]/80 backdrop-blur-md',
         'shadow-elevation-high p-4',
         'w-max max-w-[min(90vw,42rem)]',
         'origin-top transition-[opacity,transform] duration-150',
@@ -158,7 +158,7 @@ export function Popover({
       {/* Arrow inherits same bg/border overrides */}
       <div
         ref={arrowRef}
-        className="absolute h-3 w-3 bg-bg border border-border border-b-0 border-r-0"
+        className="absolute h-3 w-3 bg-[color:var(--tmbk-bg)] border border-[color:var(--tmbk-border)] border-b-0 border-r-0"
         style={arrowInlineStyle}
       />
       {children}

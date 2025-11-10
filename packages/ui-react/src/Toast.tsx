@@ -170,7 +170,7 @@ function Toaster({
     return (
         <div
             className="
-        pointer-events-none fixed right-4 bottom-4 z-[9999]
+        tmbk-theme pointer-events-none fixed right-4 bottom-4 z-[9999]
         flex w-[min(420px,calc(100vw-1.5rem))] flex-col gap-2
       "
             aria-live="polite"
@@ -215,8 +215,8 @@ function ToastCard({
             onMouseLeave={() => setHover(false)}
             className={[
                 "pointer-events-auto rounded-2xl border ",
-                "bg-bg/85 border-border/40 backdrop-blur-md shadow-elevation-high",
-                "text-sm text-fg/90",
+                "bg-[color:var(--tmbk-bg)]/85 border-[color:var(--tmbk-border)]/40 backdrop-blur-md shadow-elevation-high",
+                "text-sm text-[color:var(--tmbk-fg)]/90",
                 "transition-all duration-200 ease-out",
                 mount ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
                 "[&>div]:min-w-0",
@@ -238,14 +238,14 @@ function ToastCard({
                 {/* Text */}
                 <div className="min-w-0">
                     {title && <p className="truncate text-[0.95rem] font-semibold">{title}</p>}
-                    {description && <p className="mt-0.5 line-clamp-3 text-fg/70">{description}</p>}
+                    {description && <p className="mt-0.5 line-clamp-3 text-[color:var(--tmbk-fg)]/70">{description}</p>}
                 </div>
 
                 {/* Close */}
                 {canClose && (
                     <button
                         onClick={() => onDismiss(id)}
-                        className="ml-1 rounded-lg p-1 text-fg/60 hover:bg-fg/5 hover:text-fg/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/40"
+                        className="ml-1 rounded-lg p-1 text-[color:var(--tmbk-fg)]/60 hover:bg-[color:var(--tmbk-fg)]/5 hover:text-[color:var(--tmbk-fg)]/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--tmbk-brand-cyan)]/40"
                         aria-label="Close notification"
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -268,20 +268,20 @@ const intentStyles: Record<
     { iconWrap: string; bar: string }
 > = {
     success: {
-        iconWrap: "bg-success/10 text-success ring-success/20",
-        bar: "bg-success/40",
+        iconWrap: "bg-[color:var(--tmbk-success)]/10 text-[color:var(--tmbk-success)] ring-[color:var(--tmbk-success)]/20",
+        bar: "bg-[color:var(--tmbk-success)]/40",
     },
     warning: {
-        iconWrap: "bg-warning/10 text-warning ring-warning/20",
-        bar: "bg-warning/40",
+        iconWrap: "bg-[color:var(--tmbk-warning)]/10 text-[color:var(--tmbk-warning)] ring-[color:var(--tmbk-warning)]/20",
+        bar: "bg-[color:var(--tmbk-warning)]/40",
     },
     danger: {
-        iconWrap: "bg-danger/10 text-danger ring-danger/20",
-        bar: "bg-danger/40",
+        iconWrap: "bg-[color:var(--tmbk-danger)]/10 text-[color:var(--tmbk-danger)] ring-[color:var(--tmbk-danger)]/20",
+        bar: "bg-[color:var(--tmbk-danger)]/40",
     },
     neutral: {
-        iconWrap: "bg-fg/10 text-fg/70 ring-border/40",
-        bar: "bg-border/60",
+        iconWrap: "bg-[color:var(--tmbk-fg)]/10 text-[color:var(--tmbk-fg)]/70 ring-[color:var(--tmbk-border)]/40",
+        bar: "bg-[color:var(--tmbk-border)]/60",
     },
 };
 

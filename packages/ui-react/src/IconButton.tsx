@@ -35,31 +35,33 @@ export type IconButtonProps<E extends ElementType = "button"> =
 // Base & variants mirror Button.tsx surface exactly.
 const cls = variants(
     // === Base matches Button ===
-    "inline-flex items-center justify-center select-none cursor-pointer \
+    "tmbk-theme inline-flex items-center justify-center select-none cursor-pointer \
    rounded-lg text-sm font-medium \
    brightness-90 hover:brightness-100 \
    transition-all duration-fast shadow-sm active:animate-press \
-   border border-border \
+   border tmbk-border \
    outline-none focus:outline-none \
-   focus-visible:ring-2 focus-visible:ring-fg/30 \
-   focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--bg))] \
+   focus-visible:ring-2 \
+   focus-visible:ring-[color:var(--tmbk-fg)]/30 \
+   focus-visible:ring-offset-2 \
+   focus-visible:ring-offset-[color:var(--tmbk-bg)] \
    ring-transparent ring-offset-transparent",
     {
         intent: {
             primary:
-                "bg-primary text-primary-fg border-transparent active:brightness-95 focus-visible:ring-primary/40",
+                "tmbk-bg-primary tmbk-text-primary-fg border-transparent active:brightness-95 focus-visible:ring-[color:var(--tmbk-primary)]/40",
             neutral:
-                "bg-bg-light/90 text-fg border-border/60 active:bg-bg/90 focus-visible:ring-fg/30",
+                "tmbk-bg-light tmbk-text tmbk-border/60 active:bg-[color:var(--tmbk-bg)]/90 focus-visible:ring-[color:var(--tmbk-fg)]/30",
             ghost:
-                "bg-transparent text-fg border-border active:bg-bg-light/80 focus-visible:ring-fg/25",
+                "bg-transparent tmbk-text tmbk-border active:bg-[color:var(--tmbk-bg-light)]/80 focus-visible:ring-[color:var(--tmbk-fg)]/25",
             success:
-                "bg-success text-success-fg border-transparent active:brightness-95 focus-visible:ring-success/35",
+                "tmbk-bg-success tmbk-text-success-fg border-transparent active:brightness-95 focus-visible:ring-[color:var(--tmbk-success)]/35",
             warning:
-                "bg-warning text-warning-fg border-transparent active:brightness-95 focus-visible:ring-warning/35",
+                "tmbk-bg-warning tmbk-text-warning-fg border-transparent active:brightness-95 focus-visible:ring-[color:var(--tmbk-warning)]/35",
             info:
-                "bg-info text-info-fg border-transparent active:brightness-95 focus-visible:ring-info/35",
+                "tmbk-bg-info tmbk-text-info-fg border-transparent active:brightness-95 focus-visible:ring-[color:var(--tmbk-info)]/35",
             danger:
-                "bg-danger text-danger-fg border-transparent active:brightness-95 focus-visible:ring-danger/40",
+                "tmbk-bg-danger tmbk-text-danger-fg border-transparent active:brightness-95 focus-visible:ring-[color:var(--tmbk-danger)]/40",
         },
         // Use SAME size paddings as Button so heights/rounding/offsets align in rows.
         size: {
@@ -69,13 +71,13 @@ const cls = variants(
         },
         tone: {
             default: "",
-            ink: "!bg-brand-ink/90  !text-brand-ink-fg   hover:!bg-brand-ink  focus-visible:!ring-brand-ink/40",
-            red: "!bg-brand-red/90  !text-brand-red-fg   hover:!bg-brand-red  focus-visible:!ring-brand-red/40",
-            lime: "!bg-brand-lime/90 !text-brand-lime-fg  hover:!bg-brand-lime focus-visible:!ring-brand-lime/40",
-            cyan: "!bg-brand-cyan/90 !text-brand-cyan-fg  hover:!bg-brand-cyan focus-visible:!ring-brand-cyan/40",
+            ink: "!tmbk-bg-brand-ink/90  !tmbk-text-brand-ink-fg   hover:!tmbk-bg-brand-ink  focus-visible:!ring-[color:var(--tmbk-brand-ink)]/40",
+            red: "!tmbk-bg-brand-red/90  !tmbk-text-brand-red-fg   hover:!tmbk-bg-brand-red  focus-visible:!ring-[color:var(--tmbk-brand-red)]/40",
+            lime: "!tmbk-bg-brand-lime/90 !tmbk-text-brand-lime-fg  hover:!tmbk-bg-brand-lime focus-visible:!ring-[color:var(--tmbk-brand-lime)]/40",
+            cyan: "!tmbk-bg-brand-cyan/90 !tmbk-text-brand-cyan-fg  hover:!tmbk-bg-brand-cyan focus-visible:!ring-[color:var(--tmbk-brand-cyan)]/40",
         },
         disabled: {
-            true: "disabled:brightness-25 disabled:bg-fg disabled:text-bg-dark pointer-events-none",
+            true: "disabled:brightness-25 disabled:tmbk-bg disabled:tmbk-text pointer-events-none",
             false: "",
         },
     },

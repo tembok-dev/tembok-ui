@@ -133,13 +133,13 @@ export function SideBar({
   const headerAlign = side === 'left' ? 'justify-start' : 'justify-end';
 
   return (
-    <div style={{ isolation: 'isolate' }}>
+    <div className="tmbk-theme" style={{ isolation: 'isolate' }}>
       {/* Overlay */}
       {closeOnOverlayClick ? (
         <div
           onClick={handleClose}
           className={cx(
-            'fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm transition-opacity duration-300',
+            'fixed inset-0 z-[2147483646] bg-[color:var(--tmbk-bg)]/60 backdrop-blur-sm transition-opacity duration-300',
             isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
             overlayClassName
           )}
@@ -148,7 +148,7 @@ export function SideBar({
       ) : (
         <div
           className={cx(
-            'fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm transition-opacity duration-300',
+            'fixed inset-0 z-[2147483646] bg-[color:var(--tmbk-bg)]/60 backdrop-blur-sm transition-opacity duration-300',
             isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
             overlayClassName
           )}
@@ -163,13 +163,13 @@ export function SideBar({
           widthClass,
           sideTranslate,
           side === 'left' ? 'left-0 border-r' : 'right-0 border-l',
-          'transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] bg-bg/90 backdrop-blur-xl border-border shadow-2xl will-change-transform',
+          'transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] bg-[color:var(--tmbk-bg)]/90 backdrop-blur-xl border-[color:var(--tmbk-border)] shadow-2xl will-change-transform',
           panelClassName
         )}
       >
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Sticky header */}
-          <div className="sticky top-0 z-10 w-full bg-bg/80 backdrop-blur-xl border-b border-border">
+          <div className="sticky top-0 z-10 w-full bg-[color:var(--tmbk-bg)]/80 backdrop-blur-xl border-b border-[color:var(--tmbk-border)]">
             <div className={`flex ${headerAlign} items-center gap-2 px-6 py-4`}>
               {header ? (
                 header
@@ -178,7 +178,7 @@ export function SideBar({
                   <button
                     onClick={handleClose}
                     aria-label={closeAriaLabel}
-                    className="inline-grid place-items-center rounded-md p-2 bg-bg-light/90 text-fg hover:bg-bg-light active:bg-bg/90 transition-all duration-200 cursor-pointer ring-1 ring-border"
+                    className="inline-grid place-items-center rounded-md p-2 bg-[color:var(--tmbk-bg-light)]/90 tmbk-text hover:bg-[color:var(--tmbk-bg-light)] active:bg-[color:var(--tmbk-bg)]/90 transition-all duration-200 cursor-pointer ring-1 ring-[color:var(--tmbk-border)]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

@@ -79,18 +79,18 @@ export const TembokLogo = memo(
         // The animation uses custom @keyframes defined below.
         return (
             <div
-                className="inline-block group leading-none"
+                className="tmbk-theme inline-block group leading-none"
                 aria-hidden={attrs["aria-hidden"] as any}
             >
                 {/* Scoped keyframes for the logo */}
                 <style>
                     {`
             @keyframes tembokColorCycle {
-              0%   { color: hsl(var(--fg)); }
-              25%  { color: hsl(var(--brand-red-ui)); }
-              50%  { color: hsl(var(--brand-cyan-ui)); }
-              75%  { color: hsl(var(--brand-lime-ui)); }
-              100% { color: hsl(var(--fg)); }
+              0%   { color: var(--tmbk-fg); }
+              25%  { color: var(--tmbk-brand-red); }
+              50%  { color: var(--tmbk-brand-cyan); }
+              75%  { color: var(--tmbk-brand-lime); }
+              100% { color: var(--tmbk-fg); }
             }
           `}
                 </style>
@@ -166,4 +166,3 @@ export const TembokLogo = memo(
         );
     })
 );
-

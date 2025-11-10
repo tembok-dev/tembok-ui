@@ -28,21 +28,27 @@ export function Dropdown({
             align={align}
             closeOnSelect
             panelClassName={cx(
-                // Panel chrome
-                "min-w-44 p-1 rounded-xl border border-border bg-bg/95 backdrop-blur-md",
+                // ⬇️ Scope de tema local + chrome del panel
+                "tmbk-theme min-w-44 p-1 rounded-xl border",
+                "border-[color:var(--tmbk-border)]",            // border tmbk
+                "bg-[color:var(--tmbk-bg)]/95",                  // fondo tmbk con opacidad
+                "backdrop-blur-md",                              // (se mantiene)
                 "shadow-elevation-high",
+
                 // --- WRAPPER-AWARE SELECTORS (panel > wrapper > item) ---
                 // Generic items (button|a|div)
                 "[&>*>*]:block [&>*>*]:w-full [&>*>*]:rounded-lg [&>*>*]:px-3 [&>*>*]:py-2 [&>*>*]:text-left [&>*>*]:text-sm",
                 "[&>*>*]:outline-none [&>*>*]:ring-0",
-                "[&>*>*:hover]:bg-bg-light/70 [&>*>*:hover]:text-fg",
+                "[&>*>*:hover]:bg-[color:var(--tmbk-bg-light)]/70 [&>*>*:hover]:tmbk-text",
                 "[&>*>*:disabled]:opacity-50",
+
                 // UL mode: panel > wrapper > ul > li > (a|button|div)
                 "[&>*>ul]:m-0 [&>*>ul]:p-0 [&>*>ul]:list-none",
                 "[&>*>ul>li>*]:block [&>*>ul>li>*]:w-full [&>*>ul>li>*]:rounded-lg [&>*>ul>li>*]:px-3 [&>*>ul>li>*]:py-2 [&>*>ul>li>*]:text-left [&>*>ul>li>*]:text-sm",
-                "[&>*>ul>li>*:hover]:bg-bg-light/70 [&>*>ul>li>*:hover]:text-fg",
+                "[&>*>ul>li>*:hover]:bg-[color:var(--tmbk-bg-light)]/70 [&>*>ul>li>*:hover]:tmbk-text",
+
                 // Separators
-                "[&>*>hr]:my-1 [&>*>hr]:border-t [&>*>hr]:border-border/60 [&>*>hr:hover]:bg-transparent",
+                "[&>*>hr]:my-1 [&>*>hr]:border-t [&>*>hr]:border-[color:var(--tmbk-border)]/60 [&>*>hr:hover]:bg-transparent",
                 className
             )}
         >
