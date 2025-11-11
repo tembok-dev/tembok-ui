@@ -1,6 +1,4 @@
-/* @tembok/ui-react — Scoped component styles (non-bleeding) */
-
-/* 1) Base clara por defecto */
+/* 1) Tokens base */
 .tmbk-theme {
   --tmbk-bg: #fafafa;
   --tmbk-bg-dark: #e4e4e7;
@@ -32,16 +30,19 @@
   --tmbk-info:    #3b82f6; --tmbk-info-fg:    #ffffff;
   --tmbk-danger:  #ef4444; --tmbk-danger-fg:  #ffffff;
 
-  --tmbk-border: rgba(41, 41, 41, 0.15);
-  --tmbk-ring: rgba(90, 237, 234, 0.35);
+  --tmbk-border: rgba(41,41,41,.15);
+  --tmbk-ring: rgba(90,237,234,.35);
 
   --tmbk-brand-red:  #c31f39; --tmbk-brand-red-fg:  #ffffff;
   --tmbk-brand-cyan: #00ffff; --tmbk-brand-cyan-fg: #1a1a1a;
   --tmbk-brand-lime: #c5e836; --tmbk-brand-lime-fg: #1a1a1a;
   --tmbk-brand-ink:  #1a2332; --tmbk-brand-ink-fg:  #ffffff;
+
+  /* (Opcional) pista para formularios/scrollbars */
+  color-scheme: light dark;
 }
 
-/* 2) Dark (opt-in, respeta .dark o data-theme del host) */
+/* 2) Dark (opt-in) */
 .dark .tmbk-theme,
 [data-theme="dark"] .tmbk-theme {
   --tmbk-bg: #0a0a0a;
@@ -57,46 +58,59 @@
   --tmbk-fg-fg: #0a0a0a;
   --tmbk-fg-invert: #0a0a0a;
 
-  --tmbk-border: rgba(245, 245, 245, 0.15);
+  --tmbk-border: rgba(245,245,245,.15);
 }
 
-/* 3) Utilidades (scoped, sin @layer) */
-.tmbk-theme .tmbk-bg { background-color: var(--tmbk-bg); }
-.tmbk-theme .tmbk-bg-dark { background-color: var(--tmbk-bg-dark); }
-.tmbk-theme .tmbk-bg-light { background-color: var(--tmbk-bg-light); }
+/* 3) Aliases scoped con especificidad 0 */
+:where(.tmbk-theme) :where(.bg-bg)               { background-color: var(--tmbk-bg); }
+:where(.tmbk-theme) :where(.bg-bg-light)         { background-color: var(--tmbk-bg-light); }
+:where(.tmbk-theme) :where(.bg-bg-dark)          { background-color: var(--tmbk-bg-dark); }
 
-.tmbk-theme .tmbk-bg-primary { background-color: var(--tmbk-primary); }
-.tmbk-theme .tmbk-bg-secondary { background-color: var(--tmbk-secondary); }
+:where(.tmbk-theme) :where(.bg-primary)          { background-color: var(--tmbk-primary); }
+:where(.tmbk-theme) :where(.text-primary-fg)     { color:            var(--tmbk-primary-fg); }
 
-.tmbk-theme .tmbk-text { color: var(--tmbk-fg); }
-.tmbk-theme .tmbk-text-dark { color: var(--tmbk-fg-dark); }
-.tmbk-theme .tmbk-text-light { color: var(--tmbk-fg-light); }
-.tmbk-theme .tmbk-text-primary-fg { color: var(--tmbk-primary-fg); }
-.tmbk-theme .tmbk-text-secondary-fg { color: var(--tmbk-secondary-fg); }
+:where(.tmbk-theme) :where(.text-fg)             { color:            var(--tmbk-fg); }
+:where(.tmbk-theme) :where(.text-fg-light)       { color:            var(--tmbk-fg-light); }
+:where(.tmbk-theme) :where(.text-fg-muted)       { color:            var(--tmbk-fg-muted); }
 
-.tmbk-theme .tmbk-bg-success { background-color: var(--tmbk-success); }
-.tmbk-theme .tmbk-text-success-fg { color: var(--tmbk-success-fg); }
-.tmbk-theme .tmbk-bg-warning { background-color: var(--tmbk-warning); }
-.tmbk-theme .tmbk-text-warning-fg { color: var(--tmbk-warning-fg); }
-.tmbk-theme .tmbk-bg-info { background-color: var(--tmbk-info); }
-.tmbk-theme .tmbk-text-info-fg { color: var(--tmbk-info-fg); }
-.tmbk-theme .tmbk-bg-danger { background-color: var(--tmbk-danger); }
-.tmbk-theme .tmbk-text-danger-fg { color: var(--tmbk-danger-fg); }
+:where(.tmbk-theme) :where(.bg-secondary)        { background-color: var(--tmbk-secondary); }
+:where(.tmbk-theme) :where(.text-secondary-fg)   { color:            var(--tmbk-secondary-fg); }
 
-.tmbk-theme .tmbk-border { border-color: var(--tmbk-border); }
+:where(.tmbk-theme) :where(.border-border)       { border-color:     var(--tmbk-border); }
 
-.tmbk-theme .tmbk-bg-brand-red { background-color: var(--tmbk-brand-red); }
-.tmbk-theme .tmbk-text-brand-red-fg { color: var(--tmbk-brand-red-fg); }
-.tmbk-theme .tmbk-bg-brand-cyan { background-color: var(--tmbk-brand-cyan); }
-.tmbk-theme .tmbk-text-brand-cyan-fg { color: var(--tmbk-brand-cyan-fg); }
-.tmbk-theme .tmbk-bg-brand-lime { background-color: var(--tmbk-brand-lime); }
-.tmbk-theme .tmbk-text-brand-lime-fg { color: var(--tmbk-brand-lime-fg); }
-.tmbk-theme .tmbk-bg-brand-ink { background-color: var(--tmbk-brand-ink); }
-.tmbk-theme .tmbk-text-brand-ink-fg { color: var(--tmbk-brand-ink-fg); }
+/* Estados (opcionales) */
+:where(.tmbk-theme) :where(.bg-success)          { background-color: var(--tmbk-success); }
+:where(.tmbk-theme) :where(.text-success-fg)     { color:            var(--tmbk-success-fg); }
+:where(.tmbk-theme) :where(.bg-warning)          { background-color: var(--tmbk-warning); }
+:where(.tmbk-theme) :where(.text-warning-fg)     { color:            var(--tmbk-warning-fg); }
+:where(.tmbk-theme) :where(.bg-info)             { background-color: var(--tmbk-info); }
+:where(.tmbk-theme) :where(.text-info-fg)        { color:            var(--tmbk-info-fg); }
+:where(.tmbk-theme) :where(.bg-danger)           { background-color: var(--tmbk-danger); }
+:where(.tmbk-theme) :where(.text-danger-fg)      { color:            var(--tmbk-danger-fg); }
 
-/* 4) Modal overlay */
-.tmbk-theme .tmbk-modal-overlay {
+/* Ring/offset: fallback + mejora con color-mix */
+:where(.tmbk-theme) :where(.ring-primary)  { --tw-ring-color: var(--tmbk-ring); }
+@supports (color: color-mix(in oklab, black, white)) {
+  :where(.tmbk-theme) :where(.ring-primary) {
+    --tw-ring-color: color-mix(in oklab, var(--tmbk-primary) 40%, transparent);
+  }
+}
+:where(.tmbk-theme) :where(.ring-fg)       { --tw-ring-color: var(--tmbk-fg); }
+:where(.tmbk-theme) :where(.ring-offset-bg){ --tw-ring-offset-color: var(--tmbk-bg); }
+
+/* 4) Overlay */
+:where(.tmbk-theme) :where(.tmbk-modal-overlay) {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,.6);
+}
+
+
+/* 5) Normaliza svg en botones/iconos (escala por font-size del contenedor) */
+:where(.tmbk-theme) :where(.tmbk-icon svg) {
+  width: 1em;
+  height: 1em;
+  display: block;      /* evita gaps por inline baseline */
+  stroke: currentColor; /* si el ícono usa stroke */
+  fill: currentColor;   /* si el ícono usa fill */
 }
