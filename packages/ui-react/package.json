@@ -1,6 +1,6 @@
 {
   "name": "@tembok/ui-react",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -31,12 +31,16 @@
   },
   "sideEffects": [
     "*.css",
+    "**/*.css",
     "**/*.css"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "clean": "rimraf dist",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "copy:styles": "node scripts/copy-styles.cjs",
+    "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run copy:styles && npm pack --dry-run"
+ 
   },
   "peerDependencies": {
     "react": "^18 || ^19",
