@@ -1,0 +1,22 @@
+.tmbk-theme {
+  --tmbk-bg:#fafafa; --tmbk-bg-light:#fff; --tmbk-bg-dark:#e4e4e7;
+  --tmbk-fg:#292929; --tmbk-fg-light:#808080; --tmbk-fg-muted:#808080;
+  --tmbk-border:rgba(41,41,41,.15);
+  --tmbk-primary:#5AEDEA; --tmbk-primary-fg:#292929; --tmbk-ring:rgba(90,237,234,.35);
+  --tmbk-success:#10b981; --tmbk-success-fg:#fff;
+  --tmbk-warning:#f59e0b; --tmbk-warning-fg:#1a1a1a;
+  --tmbk-info:#3b82f6;    --tmbk-info-fg:#fff;
+  --tmbk-danger:#ef4444;  --tmbk-danger-fg:#fff;
+
+  --tmbk-brand-red:#c31f39; --tmbk-brand-red-fg:#fff;
+  --tmbk-brand-cyan:#00ffff; --tmbk-brand-cyan-fg:#1a1a1a;
+  --tmbk-brand-lime:#c5e836; --tmbk-brand-lime-fg:#1a1a1a;
+  --tmbk-brand-ink:#1a2332;  --tmbk-brand-ink-fg:#fff;
+
+  color-scheme: light dark;
+}
+.dark .tmbk-theme, [data-theme="dark"] .tmbk-theme {
+  --tmbk-bg:#0a0a0a; --tmbk-bg-light:#1a1a1a; --tmbk-bg-dark:#050505;
+  --tmbk-fg:#f5f5f5; --tmbk-fg-light:#a3a3a3; --tmbk-fg-muted:#a3a3a3;
+  --tmbk-border:rgba(245,245,245,.15);
+}

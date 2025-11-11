@@ -1,4 +1,7 @@
-import { ReactNode, useRef, useCallback, useEffect } from 'react';
+// Modal.tsx
+// Headless styling
+
+import { ReactNode, useRef, useCallback, useEffect, useId } from 'react';
 import { Portal } from './utils/Portal';
 import { cx } from './utils/variants';
 import { useFocusTrap } from './hooks/useFocusTrap';
@@ -11,27 +14,25 @@ export interface ModalProps {
   children: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
-  className?: string;
-  overlayClassName?: string;
+  className?: string;        // extra classes for panel
+  overlayClassName?: string; // extra classes for overlay
   id?: string;
 }
 
 /**
  * Modal component - Accessible modal dialog with backdrop and focus trap
- * 
+ *
  * @example
- * ```tsx
  * const [open, setOpen] = useState(false);
- * 
- * <Modal 
- *   open={open} 
+ *
+ * <Modal
+ *   open={open}
  *   onOpenChange={setOpen}
  *   header={<h2>Modal Title</h2>}
  *   footer={<Button onClick={() => setOpen(false)}>Close</Button>}
  * >
  *   <p>Modal content here</p>
  * </Modal>
- * ```
  */
 export function Modal({
   open,
@@ -44,6 +45,8 @@ export function Modal({
   id = 'tembok-modal',
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null!);
+  const headerId = useId();
+  const bodyId = useId();
 
   const handleClose = useCallback(() => {
     onOpenChange(false);
@@ -63,9 +66,7 @@ export function Modal({
     if (open) {
       const originalStyle = window.getComputedStyle(document.body).overflow;
       document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = originalStyle;
-      };
+      return () => { document.body.style.overflow = originalStyle; };
     }
   }, [open]);
 
@@ -75,16 +76,13 @@ export function Modal({
     <Portal>
       <div
         id={id}
-        className="tmbk-theme fixed inset-0 grid place-items-center z-[2147483646] pointer-events-auto"
-
+        // Scope + layout shell (no Tailwind)
+        className="tmbk-theme tmbk-modal"
       >
         {/* Backdrop */}
         <div
-          className={cx(
-            // estaba z-0 → súbelo
-            'fixed inset-0 z-[2147483645] tmbk-modal-overlay opacity-100 transition-opacity duration-200',
-            overlayClassName
-          )}
+          className={cx('tmbk-overlay', overlayClassName)}
+          aria-hidden="true"
         />
 
         {/* Panel */}
@@ -92,19 +90,14 @@ export function Modal({
           ref={panelRef}
           role="dialog"
           aria-modal="true"
+          {...(header ? { 'aria-labelledby': headerId } : {})}
+          {...(children ? { 'aria-describedby': bodyId } : {})}
           tabIndex={-1}
-          className={cx(
-            'relative z-10',
-            'w-[min(92vw,560px)] rounded-md bg-bg text-fg shadow-soft border border-border p-6',
-            'opacity-100 translate-y-0 transition-[opacity,transform] duration-200',
-            className
-          )}
+          className={cx('tmbk-modal-panel', className)}
         >
-          {header && <header className="mb-3">{header}</header>}
-          <div>{children}</div>
-          {footer && (
-            <footer className="mt-6 flex justify-end gap-2">{footer}</footer>
-          )}
+          {header && <header id={headerId} className="tmbk-modal-header">{header}</header>}
+          <div id={bodyId} className="tmbk-modal-body">{children}</div>
+          {footer && <footer className="tmbk-modal-footer">{footer}</footer>}
         </div>
       </div>
     </Portal>

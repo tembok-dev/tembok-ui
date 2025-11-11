@@ -1,6 +1,6 @@
 {
   "name": "@tembok/ui-react",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -30,7 +30,8 @@
     "access": "public"
   },
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "**/*.css"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",

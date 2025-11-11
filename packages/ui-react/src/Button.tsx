@@ -1,7 +1,8 @@
+// Button.tsx
 import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import { variants, cx } from './utils/variants';
 
-type Intent = 'primary' | 'neutral' | 'ghost' | 'success' | 'warning' | 'info' | 'danger';
+type Intent = 'primary' | 'secondary' | 'neutral' | 'ghost' | 'success' | 'warning' | 'info' | 'danger';
 type Size = 'sm' | 'md' | 'lg';
 type Tone = 'default' | 'ink' | 'red' | 'lime' | 'cyan';
 
@@ -19,37 +20,37 @@ export type ButtonProps<E extends ElementType = 'button'> = PolymorphicProps<E>;
 
 const base =
   // scope + hueso estilístico
-  "tmbk-theme inline-flex items-center gap-2 select-none cursor-pointer rounded-lg " +
-  "transition-all shadow-sm active:animate-press outline-none " +
-  "focus-visible:ring-2 ring-offset-2 focus-visible:outline-none " +
-  // ring/offset semánticos (nuestro shim provee fallback)
-  "ring-primary ring-offset-bg border";
+  "tmbk-theme tmbk-btn";
 
 const cls = variants(base, {
   intent: {
-    primary: "bg-primary text-primary-fg border-transparent hover:brightness-105 active:brightness-95",
-    neutral: "bg-bg-light text-fg border-border hover:brightness-105 active:brightness-95",
-    ghost: "bg-transparent text-fg border-border hover:bg-bg-light/80",
-    success: "bg-success text-success-fg border-transparent hover:brightness-105 active:brightness-95",
-    warning: "bg-warning text-warning-fg border-transparent hover:brightness-105 active:brightness-95",
-    info: "bg-info text-info-fg border-transparent hover:brightness-105 active:brightness-95",
-    danger: "bg-danger text-danger-fg border-transparent hover:brightness-105 active:brightness-95",
+    // El estilo visual de intent lo maneja CSS vía [data-intent]
+    primary: "",
+    secondary:'',
+    neutral: "",
+    ghost: "",
+    success: "",
+    warning: "",
+    info: "",
+    danger: "",
   },
   size: {
-    sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2 text-sm",
-    lg: "px-5 py-2.5 text-base",
+    // Tamaños precompilados en CSS (sin Tailwind)
+    sm: "tmbk-btn--sm",
+    md: "tmbk-btn--md",
+    lg: "tmbk-btn--lg",
   },
-  // Tones Tembok -> reasignan intent visual con clases semánticas
+  // Tones Tembok -> reasignan intent visual con data attributes (CSS)
   tone: {
     default: "",
-    ink: "bg-[color:var(--tmbk-brand-ink)]  text-[color:var(--tmbk-brand-ink-fg)]",
-    red: "bg-[color:var(--tmbk-brand-red)]  text-[color:var(--tmbk-brand-red-fg)]",
-    lime: "bg-[color:var(--tmbk-brand-lime)] text-[color:var(--tmbk-brand-lime-fg)]",
-    cyan: "bg-[color:var(--tmbk-brand-cyan)] text-[color:var(--tmbk-brand-cyan-fg)]",
+    ink: "",
+    red: "",
+    lime: "",
+    cyan: "",
   },
   disabled: {
-    true: "pointer-events-none opacity-60",
+    // Disabled lo resuelven [:disabled] y [aria-disabled] en CSS
+    true: "",
     false: "",
   },
 }, { intent: "primary", size: "sm", tone: "default", disabled: "false" });
@@ -64,15 +65,38 @@ export function Button<E extends ElementType = 'button'>({
   children,
   ...props
 }: ButtonProps<E>) {
-  const Component = as || 'button';
+  const Component = (as || 'button') as ElementType;
+
   const buttonClass = cx(
     cls({ intent, size, tone, disabled: String(disabled) }),
     className
   );
-  const buttonProps = Component === 'button' ? { disabled, ...props } : props;
 
+  // Pasamos data-attrs para que CSS aplique intent/tone.
+  const dataAttrs = { 'data-intent': intent, 'data-tone': tone };
+
+  // --- Branch nativo: <button> ---
+  if (Component === 'button') {
+    return (
+      <button
+        className={buttonClass}
+        {...dataAttrs}
+        disabled={disabled}
+        {...(props as ComponentPropsWithoutRef<'button'>)}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  // --- Branch polimórfico: <a>, <div>, etc. ---
   return (
-    <Component className={buttonClass} {...buttonProps}>
+    <Component
+      className={buttonClass}
+      {...dataAttrs}
+      aria-disabled={disabled || undefined} // Booleanish solo en no-button
+      {...props}
+    >
       {children}
     </Component>
   );

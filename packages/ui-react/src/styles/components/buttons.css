@@ -1,0 +1,180 @@
+/* =========================================================
+   @tembok/ui-react — Button base (dual-scope, CSS-only)
+   ========================================================= */
+
+/* Base */
+:where(.tmbk-theme .tmbk-btn, .tmbk-btn.tmbk-theme) {
+    --btn-bg: var(--tmbk-primary);
+    --btn-fg: var(--tmbk-primary-fg);
+    --btn-bd: transparent;
+    --btn-ring: var(--tmbk-ring);
+
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    border-radius: .5rem;
+    border: 1px solid var(--btn-bd);
+    background-color: var(--btn-bg);
+    color: var(--btn-fg);
+    font: inherit;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    padding: .375rem .75rem;
+    /* default = sm */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 1px 1px rgba(0, 0, 0, .04);
+    transition: filter .15s ease, transform .15s ease,
+        background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+/* Hover/Active/Focus */
+:where(.tmbk-theme .tmbk-btn:hover, .tmbk-btn.tmbk-theme:hover) {
+    filter: brightness(1.05);
+}
+
+:where(.tmbk-theme .tmbk-btn:active, .tmbk-btn.tmbk-theme:active) {
+    filter: brightness(.95);
+    scale: .98;
+}
+
+:where(.tmbk-theme .tmbk-btn:focus-visible, .tmbk-btn.tmbk-theme:focus-visible) {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--btn-ring), 0 0 0 4px var(--tmbk-bg);
+}
+
+/* Disabled */
+:where(.tmbk-theme .tmbk-btn[aria-disabled="true"], .tmbk-btn.tmbk-theme[aria-disabled="true"]),
+:where(.tmbk-theme .tmbk-btn:disabled, .tmbk-btn.tmbk-theme:disabled) {
+    opacity: .5;
+    filter: brightness(1.1);
+    pointer-events: none;
+}
+
+/* Intents */
+:where(.tmbk-theme .tmbk-btn[data-intent="primary"], .tmbk-btn.tmbk-theme[data-intent="primary"]) {
+    --btn-bg: var(--tmbk-primary);
+    --btn-fg: var(--tmbk-primary-fg);
+    --btn-bd: transparent;
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="secondary"], .tmbk-btn.tmbk-theme[data-intent="secondary"]) {
+    --btn-bg: var(--tmbk-primary) '80%';
+    --btn-fg: var(--tmbk-primary-fg);
+    --btn-bd: var(--tmbk-primary);
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="neutral"], .tmbk-btn.tmbk-theme[data-intent="neutral"]) {
+    --btn-bg: var(--tmbk-bg-light);
+    --btn-fg: var(--tmbk-fg);
+    --btn-bd: var(--tmbk-border);
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="ghost"], .tmbk-btn.tmbk-theme[data-intent="ghost"]) {
+    --btn-bg: color-mix(in oklab, var(--tmbk-fg) 3%, transparent);
+    --btn-fg: var(--tmbk-fg);
+    --btn-bd: transparent;
+    box-shadow: none;
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="ghost"]:hover, .tmbk-btn.tmbk-theme[data-intent="ghost"]:hover) {
+    background-color: color-mix(in oklab, var(--tmbk-bg-light) 80%, transparent);
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="success"], .tmbk-btn.tmbk-theme[data-intent="success"]) {
+    --btn-bg: var(--tmbk-success);
+    --btn-fg: var(--tmbk-success-fg);
+    --btn-bd: transparent;
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="warning"], .tmbk-btn.tmbk-theme[data-intent="warning"]) {
+    --btn-bg: var(--tmbk-warning);
+    --btn-fg: var(--tmbk-warning-fg);
+    --btn-bd: transparent;
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="info"], .tmbk-btn.tmbk-theme[data-intent="info"]) {
+    --btn-bg: var(--tmbk-info);
+    --btn-fg: var(--tmbk-info-fg);
+    --btn-bd: transparent;
+}
+
+:where(.tmbk-theme .tmbk-btn[data-intent="danger"], .tmbk-btn.tmbk-theme[data-intent="danger"]) {
+    --btn-bg: var(--tmbk-danger);
+    --btn-fg: var(--tmbk-danger-fg);
+    --btn-bd: transparent;
+}
+
+/* Tones */
+:where(.tmbk-theme .tmbk-btn[data-tone="ink"], .tmbk-btn.tmbk-theme[data-tone="ink"]) {
+    --btn-bg: var(--tmbk-brand-ink);
+    --btn-fg: var(--tmbk-brand-ink-fg);
+}
+
+:where(.tmbk-theme .tmbk-btn[data-tone="red"], .tmbk-btn.tmbk-theme[data-tone="red"]) {
+    --btn-bg: var(--tmbk-brand-red);
+    --btn-fg: var(--tmbk-brand-red-fg);
+}
+
+:where(.tmbk-theme .tmbk-btn[data-tone="lime"], .tmbk-btn.tmbk-theme[data-tone="lime"]) {
+    --btn-bg: var(--tmbk-brand-lime);
+    --btn-fg: var(--tmbk-brand-lime-fg);
+}
+
+:where(.tmbk-theme .tmbk-btn[data-tone="cyan"], .tmbk-btn.tmbk-theme[data-tone="cyan"]) {
+    --btn-bg: var(--tmbk-brand-cyan);
+    --btn-fg: var(--tmbk-brand-cyan-fg);
+}
+
+/* Sizes */
+:where(.tmbk-theme .tmbk-btn--sm, .tmbk-btn.tmbk-theme.tmbk-btn--sm) {
+    padding: .375rem .75rem;
+    font-size: .75rem;
+}
+
+:where(.tmbk-theme .tmbk-btn--md, .tmbk-btn.tmbk-theme.tmbk-btn--md) {
+    padding: .5rem 1rem;
+    font-size: .875rem;
+}
+
+:where(.tmbk-theme .tmbk-btn--lg, .tmbk-btn.tmbk-theme.tmbk-btn--lg) {
+    padding: .625rem 1.25rem;
+    font-size: 1rem;
+}
+
+/* IconButton */
+:where(.tmbk-theme .tmbk-btn--icon, .tmbk-btn--icon.tmbk-theme) {
+    justify-content: center;
+}
+
+:where(.tmbk-theme .tmbk-btn--icon > .tmbk-icon, .tmbk-btn--icon.tmbk-theme > .tmbk-icon) {
+    display: inline-grid;
+    place-items: center;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+}
+
+:where(.tmbk-theme .tmbk-btn--icon > .tmbk-icon svg, .tmbk-btn--icon.tmbk-theme > .tmbk-icon svg) {
+    width: 1em;
+    height: 1em;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+}
+
+:where(.tmbk-theme .tmbk-btn--icon.tmbk-btn--sm, .tmbk-btn--icon.tmbk-theme.tmbk-btn--sm) {
+    padding: .375rem;
+    font-size: .875rem;
+}
+
+:where(.tmbk-theme .tmbk-btn--icon.tmbk-btn--md, .tmbk-btn--icon.tmbk-theme.tmbk-btn--md) {
+    padding: .5rem;
+    font-size: 1rem;
+}
+
+:where(.tmbk-theme .tmbk-btn--icon.tmbk-btn--lg, .tmbk-btn--icon.tmbk-theme.tmbk-btn--lg) {
+    padding: .625rem;
+    font-size: 1.125rem;
+}

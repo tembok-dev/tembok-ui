@@ -1,5 +1,5 @@
 // tembok-ui/packages/ui-react/src/index.ts
-import './styles.css';
+import './styles/styles.css';
 
 export * from './Button';
 export * from './IconButton';
