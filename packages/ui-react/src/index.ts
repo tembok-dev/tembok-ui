@@ -1,5 +1,13 @@
 // tembok-ui/packages/ui-react/src/index.ts
-import './styles/styles.css';
+import './styles/tokens.css';
+import './styles/aliases.css';
+import './styles/components/buttons.css';
+import './styles/components/dropdown.css';
+import './styles/components/modal.css';
+import './styles/components/overlay.css';
+import './styles/components/popover.css';
+import './styles/components/sidebar.css';
+import './styles/components/toast.css';
 
 export * from './Button';
 export * from './IconButton';
