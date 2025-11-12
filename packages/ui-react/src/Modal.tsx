@@ -8,6 +8,34 @@ import { useFocusTrap } from './hooks/useFocusTrap';
 import { useEscapeKey } from './hooks/useEscapeKey';
 import { useClickOutside } from './hooks/useClickOutside';
 
+
+/**
+ * Headless Modal wiring (example)
+ *
+ * const [open, setOpen] = useState(false);
+ *
+ * <div className="tmbk-theme">
+ *   <div
+ *     className="tmbk-modal-overlay"
+ *     data-open={open}
+ *     onClick={() => setOpen(false)}
+ *   />
+ *   <div
+ *     className="tmbk-modal"
+ *     data-open={open}            // or data-state="open" | "closed"
+ *     aria-hidden={!open}
+ *   >
+ *     <section className="tmbk-modal-panel" data-size="md">
+ *       <header className="tmbk-modal-header">
+ *         <button className="tmbk-modal-close" onClick={() => setOpen(false)}>✕</button>
+ *       </header>
+ *       <div className="tmbk-modal-body">…content…</div>
+ *       <footer className="tmbk-modal-footer">…actions…</footer>
+ *     </section>
+ *   </div>
+ * </div>
+ */
+
 export interface ModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;

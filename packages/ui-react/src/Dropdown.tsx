@@ -5,57 +5,65 @@ import { Side, Align } from "./hooks/usePosition";
 import { cx } from "./utils/variants";
 
 export type DropdownProps = {
-    trigger: ReactElement;
-    children: ReactNode;              // buttons/anchors OR <ul><li>…</li></ul>
-    side?: Side;
-    align?: Align;
-    className?: string;               // extra panel classes
-    maxHeight?: number;               // scroll clamp inside panel
+  trigger: ReactElement;
+  children: ReactNode;     // direct items OR <ul><li>…</li></ul>
+  side?: Side;
+  align?: Align;
+  className?: string;      // extra panel classes
+  maxHeight?: number;      // scroll clamp
+  /** Optional per-instance variable overrides */
+  bgColor?: string;        // -> --tmbk-bg
+  textColor?: string;      // -> --tmbk-fg
+  borderColor?: string;    // -> --tmbk-border
+  /** If no theme wrapper present, keep true to scope on the panel */
+  themeScoped?: boolean;   // default true
 };
 
 export function Dropdown({
-    trigger,
-    children,
-    side = "down",
-    align = "start",
-    className,
-    maxHeight = 320,
+  trigger,
+  children,
+  side = "down",
+  align = "start",
+  className,
+  maxHeight = 320,
+  bgColor,
+  textColor,
+  borderColor,
+  themeScoped = true,
 }: DropdownProps) {
-    return (
-        <Popover
-            trigger={trigger}
-            side={side}
-            align={align}
-            closeOnSelect
-            panelClassName={cx(
-                // ⬇️ Scope de tema local + chrome del panel
-                "tmbk-theme min-w-44 p-1 rounded-xl border",
-                "border-[color:var(--tmbk-border)]",            // border tmbk
-                "bg-[color:var(--tmbk-bg)]/95",                  // fondo tmbk con opacidad
-                "backdrop-blur-md",                              // (se mantiene)
-                "shadow-elevation-high",
+  // Panel classes: headless + optional local theme scope
+  const panelClassName = cx(
+    "tmbk-dropdown",
+    themeScoped && "tmbk-theme",
+    className
+  );
 
-                // --- WRAPPER-AWARE SELECTORS (panel > wrapper > item) ---
-                // Generic items (button|a|div)
-                "[&>*>*]:block [&>*>*]:w-full [&>*>*]:rounded-lg [&>*>*]:px-3 [&>*>*]:py-2 [&>*>*]:text-left [&>*>*]:text-sm",
-                "[&>*>*]:outline-none [&>*>*]:ring-0",
-                "[&>*>*:hover]:bg-[color:var(--tmbk-bg-light)]/70 [&>*>*:hover]:tmbk-text",
-                "[&>*>*:disabled]:opacity-50",
+  // CSS variables: per-instance overrides + max height for wrapper
+  const style: React.CSSProperties = {
+    ...(bgColor ? { ["--tmbk-bg" as any]: bgColor } : null),
+    ...(textColor ? { ["--tmbk-fg" as any]: textColor } : null),
+    ...(borderColor ? { ["--tmbk-border" as any]: borderColor } : null),
+    ["--tmbk-dropdown-maxh" as any]: `${maxHeight}px`,
+  };
 
-                // UL mode: panel > wrapper > ul > li > (a|button|div)
-                "[&>*>ul]:m-0 [&>*>ul]:p-0 [&>*>ul]:list-none",
-                "[&>*>ul>li>*]:block [&>*>ul>li>*]:w-full [&>*>ul>li>*]:rounded-lg [&>*>ul>li>*]:px-3 [&>*>ul>li>*]:py-2 [&>*>ul>li>*]:text-left [&>*>ul>li>*]:text-sm",
-                "[&>*>ul>li>*:hover]:bg-[color:var(--tmbk-bg-light)]/70 [&>*>ul>li>*:hover]:tmbk-text",
-
-                // Separators
-                "[&>*>hr]:my-1 [&>*>hr]:border-t [&>*>hr]:border-[color:var(--tmbk-border)]/60 [&>*>hr:hover]:bg-transparent",
-                className
-            )}
-        >
-            {/* wrapper (kept to avoid touching Popover) */}
-            <div className="overflow-auto" style={{ maxHeight }}>
-                {children}
-            </div>
-        </Popover>
-    );
+  return (
+    <Popover
+      trigger={trigger}
+      side={side}
+      align={align}
+      role="menu"
+      closeOnSelect
+      panelClassName={panelClassName}
+      // Pass-through variable overrides to the panel node
+      bgColor={bgColor}
+      textColor={textColor}
+      borderColor={borderColor}
+      // keep Popover headless; the classes above drive CSS below
+    >
+      {/* wrapper keeps scroll and structural selectors stable */}
+      <div className="tmbk-dropdown-wrap" role="none">
+        {children}
+      </div>
+    </Popover>
+  );
 }

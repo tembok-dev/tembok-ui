@@ -1,125 +1,148 @@
 # @tembok/ui-react
 
-React UI components for the Tembok design system.
+Headless React UI components for the Tembok Design System — automatically styled, zero setup.
+
+No Tailwind configuration. No CSS imports.
+Just install and use.
+
+Current stable: 0.0.14
+You can install prerelease builds using the @next tag if needed.
+
+--------------------------------------------------------------------
 
 ## Installation
 
-```bash
-pnpm add @tembok/ui-react @tembok/tailwind-preset
-```
+pnpm add @tembok/ui-react
+# or
+npm install @tembok/ui-react
+# prerelease builds:
+npm install @tembok/ui-react@next
+
+--------------------------------------------------------------------
 
 ## Setup
 
-1. Install the Tailwind preset:
+No configuration required — all styles are injected automatically.
 
-```js
-// tailwind.config.js
-import tembokPreset from '@tembok/tailwind-preset';
+To enable the design system scope and theme variables, wrap your app with the tmbk-theme class:
 
-export default {
-  presets: [tembokPreset],
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
-};
-```
+// App.tsx
+export default function App() {
+  return (
+    <div className="tmbk-theme">
+      <AppContent />
+    </div>
+  );
+}
 
-2. Import components:
+Without this wrapper, components still render but fallback to plain browser defaults.
 
-```tsx
-import { Button, Modal, SideBar, Toast, Dropdown } from '@tembok/ui-react';
-```
+--------------------------------------------------------------------
+
+## Usage
+
+Import components directly — no CSS or Tailwind setup needed.
+
+import { Button, IconButton, Modal, Toast } from "@tembok/ui-react";
+
+--------------------------------------------------------------------
 
 ## Components
 
 ### Button
 
-Polymorphic button with variants for intent, size, and tone.
+Polymorphic, accessible, and themable button component.
 
-```tsx
-<Button intent="primary" size="md">
-  Click me
-</Button>
+<Button intent="primary" size="md">Click me</Button>
 
-<Button as="a" href="/about" intent="neutral">
-  Link Button
-</Button>
-```
+<Button as="a" href="/about" intent="neutral">Link Button</Button>
 
-**Props:**
-- `intent` - `primary` | `neutral` | `ghost` | `success` | `warning` | `info` | `danger`
-- `size` - `sm` | `md` | `lg`
-- `tone` - `default` | `ink` | `red` | `lime` | `cyan`
-- `as` - Polymorphic element type (default: `button`)
+Props:
+- intent: 'primary' | 'secondary' | 'neutral' | 'ghost' | 'success' | 'warning' | 'info' | 'danger' (default: 'primary')
+- size: 'sm' | 'md' | 'lg' (default: 'sm')
+- tone: 'default' | 'ink' | 'red' | 'lime' | 'cyan' (default: 'default')
+- as: polymorphic element type (default: 'button')
+- disabled: boolean (default: false)
+
+### IconButton
+
+Icon-only button with automatic icon scaling.
+
+<IconButton label="Edit"><Edit2 /></IconButton>
+<IconButton tone="ink" intent="primary"><Plus /></IconButton>
 
 ### Modal
 
-Accessible modal dialog with Portal rendering.
+Accessible modal dialog rendered via portal, with focus trap and backdrop blur.
 
-```tsx
-const [isOpen, setIsOpen] = useState(false);
+const [open, setOpen] = useState(false);
 
-<Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+<Modal open={open} onOpenChange={setOpen}>
   <h2>Modal Title</h2>
-  <p>Modal content goes here</p>
+  <p>Modal content here</p>
 </Modal>
-```
-
-### SideBar
-
-Collapsible sidebar component.
-
-```tsx
-<SideBar position="left" isOpen={isSidebarOpen}>
-  <nav>Navigation items</nav>
-</SideBar>
-```
 
 ### Toast
 
-Toast notification system.
+Global toast notifications.
 
-```tsx
-import { toast } from '@tembok/ui-react';
+import { toast } from "@tembok/ui-react";
 
-toast.success('Operation completed!');
-toast.error('Something went wrong');
-toast.info('Information message');
-toast.warning('Warning message');
-```
-
-### Dropdown
-
-Dropdown menu with positioning.
-
-```tsx
-<Dropdown trigger={<Button>Menu</Button>}>
-  <button>Option 1</button>
-  <button>Option 2</button>
-</Dropdown>
-```
+toast.success("Operation completed!");
+toast.error("Something went wrong");
+toast.info("Information message");
+toast.warning("Warning message");
 
 ### Other Components
 
-- `IconButton` - Icon-only button variant
-- `Popover` - Popover component with positioning
-- `DevGrid` - Development grid overlay
-- `TembokLogo` - Tembok logo component
+- SideBar — Collapsible sidebar
+- Dropdown — Dropdown menu
+- Popover — Contextual popover
+- DevGrid — Development grid overlay
+- TembokLogo — SVG logo component
+
+--------------------------------------------------------------------
 
 ## Hooks
 
-```tsx
-import { 
+import {
   useClickOutside,
   useEscapeKey,
   useFocusTrap,
-  usePosition 
-} from '@tembok/ui-react';
-```
+  usePosition,
+} from "@tembok/ui-react";
+
+--------------------------------------------------------------------
+
+## Theming
+
+All tokens live under .tmbk-theme. You can override them in your host app:
+
+.tmbk-theme {
+  --tmbk-primary: #5aedec;
+  --tmbk-bg: #fafafa;
+  --tmbk-fg: #222;
+}
+
+Dark mode activates automatically via .dark or [data-theme="dark"].
+
+--------------------------------------------------------------------
 
 ## Requirements
 
-- React 18+
-- Tailwind CSS 4+
+- React 18 or higher
+- TypeScript (optional, fully typed)
+- No Tailwind required (self-contained styling)
+
+--------------------------------------------------------------------
+
+## Versioning
+
+- latest → stable release (recommended for production)
+- next → prerelease builds (for testing new components)
+
+--------------------------------------------------------------------
 
 ## License
 
-MIT
+MIT © 2025 Tembok Dev

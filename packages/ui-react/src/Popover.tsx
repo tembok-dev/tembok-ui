@@ -1,12 +1,20 @@
-// tembok/components/src/react/Popover.tsx
+// tembok/components/src/react/Popover.tsx (headless)
+import {
+  ReactNode,
+  useRef,
+  useState,
+  useCallback,
+  cloneElement,
+  ReactElement,
+  RefObject,
+  useEffect,
+} from "react";
+import { cx } from "./utils/variants";
+import { usePosition, Side, Align } from "./hooks/usePosition";
+import { useEscapeKey } from "./hooks/useEscapeKey";
+import { createPortal } from "react-dom";
 
-import { ReactNode, useRef, useState, useCallback, cloneElement, ReactElement, RefObject, useEffect } from 'react';
-import { cx } from './utils/variants';
-import { usePosition, Side, Align } from './hooks/usePosition';
-import { useEscapeKey } from './hooks/useEscapeKey';
-import { createPortal } from 'react-dom';
-
-type OpenMode = 'click' | 'hover';
+type OpenMode = "click" | "hover";
 
 export interface PopoverProps {
   trigger: ReactElement;
@@ -16,43 +24,51 @@ export interface PopoverProps {
   align?: Align;
   offset?: number;
   edgePad?: number;
+  /** Extra class for the panel (keep it headless) */
   panelClassName?: string;
   closeOnSelect?: boolean;
-  role?: 'dialog' | 'menu' | 'listbox' | 'tree' | 'grid';
+  role?: "dialog" | "menu" | "listbox" | "tree" | "grid";
 
-  /** Optional theme overrides (inline styles beat Tailwind defaults) */
-  bgColor?: string;     // e.g. "white" or "#0f172aE6"
-  textColor?: string;   // e.g. "#0a0a0a"
-  borderColor?: string; // e.g. "#e5e7eb"
+  /** Optional theme overrides (wired to CSS variables) */
+  bgColor?: string;     // maps to --tmbk-bg
+  textColor?: string;   // maps to --tmbk-fg
+  borderColor?: string; // maps to --tmbk-border
+
+  /** Optional: add/remove the theme scope class here if you prefer local scoping */
+  themeScoped?: boolean; // default true: adds "tmbk-theme" on the panel
 }
 
 export function Popover({
   trigger,
   children,
-  openOn = 'click',
-  side = 'auto',
-  align = 'center',
+  openOn = "click",
+  side = "auto",
+  align = "center",
   offset = 10,
   edgePad = 16,
   panelClassName,
   closeOnSelect = true,
-  role = 'dialog',
+  role = "dialog",
   bgColor,
   textColor,
   borderColor,
+  themeScoped = true,
 }: PopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null!);
   const panelRef = useRef<HTMLDivElement>(null!);
   const arrowRef = useRef<HTMLDivElement>(null!);
-  const hoverTimeoutRef = useRef<{ enter?: ReturnType<typeof setTimeout>; leave?: ReturnType<typeof setTimeout> }>({});
+  const hoverTimeoutRef = useRef<{
+    enter?: ReturnType<typeof setTimeout>;
+    leave?: ReturnType<typeof setTimeout>;
+  }>({});
 
   const handleClose = useCallback(() => setIsOpen(false), []);
 
-  // Position calculation
+  // Positioning engine (kept as-is)
   usePosition({ triggerRef, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
 
-  // Local click outside (click-mode only)
+  // Local click-outside (click-mode only)
   function useClickOutside(
     ref: RefObject<HTMLElement>,
     handler: () => void,
@@ -68,35 +84,37 @@ export function Popover({
 
         const target = event.target as Node | null;
         const clickedInPanel = panel.contains(target);
-        const clickedInIgnored = extraIgnoreRefs.some((r) => r.current && r.current.contains(target));
+        const clickedInIgnored = extraIgnoreRefs.some(
+          (r) => r.current && r.current.contains(target)
+        );
         if (!clickedInPanel && !clickedInIgnored) handler();
       };
 
-      document.addEventListener('pointerdown', onPointerDown, { capture: true });
-      return () => document.removeEventListener('pointerdown', onPointerDown, { capture: true });
+      document.addEventListener("pointerdown", onPointerDown, { capture: true });
+      return () => document.removeEventListener("pointerdown", onPointerDown, { capture: true });
     }, [ref, handler, active, extraIgnoreRefs]);
   }
 
   useEscapeKey(handleClose, isOpen);
-  useClickOutside(panelRef, handleClose, isOpen && openOn === 'click', [triggerRef]);
+  useClickOutside(panelRef, handleClose, isOpen && openOn === "click", [triggerRef]);
 
   // Trigger handlers
   const handleTriggerClick = (e: React.MouseEvent) => {
-    if (openOn !== 'click') return;
+    if (openOn !== "click") return;
     e.preventDefault();
     e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
 
   const handleMouseEnter = () => {
-    if (openOn === 'hover') {
+    if (openOn === "hover") {
       clearTimeout(hoverTimeoutRef.current.leave);
       hoverTimeoutRef.current.enter = setTimeout(() => setIsOpen(true), 80);
     }
   };
 
   const handleMouseLeave = () => {
-    if (openOn === 'hover') {
+    if (openOn === "hover") {
       clearTimeout(hoverTimeoutRef.current.enter);
       hoverTimeoutRef.current.leave = setTimeout(() => setIsOpen(false), 120);
     }
@@ -107,70 +125,63 @@ export function Popover({
     const target = e.target as HTMLElement;
     const clickable = target.closest('a, button, [role="menuitem"]');
     if (clickable) {
-      const dataAttr = clickable.getAttribute('data-close-popover');
-      if (dataAttr !== 'false') setIsOpen(false);
+      const dataAttr = clickable.getAttribute("data-close-popover");
+      if (dataAttr !== "false") setIsOpen(false);
     }
   };
 
-  // Clone trigger with events
+  // Clone trigger with events and ARIA
+  const triggerId = useRef(`tmbk-popover-trigger-${Math.random().toString(36).slice(2)}`).current;
+  const panelId = useRef(`tmbk-popover-panel-${Math.random().toString(36).slice(2)}`).current;
+
   const triggerElement = cloneElement(trigger, {
     onClick: handleTriggerClick,
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
-    'aria-haspopup': 'dialog' as const,
-    'aria-expanded': isOpen,
+    "aria-haspopup": role,
+    "aria-expanded": isOpen,
+    "aria-controls": panelId,
+    id: triggerId,
   } as any);
 
-  // Inline styles only when dev passes an override; undefined = keep current dark defaults
-  const panelInlineStyle: React.CSSProperties = {
-    ...(bgColor ? { backgroundColor: bgColor } : null),
-    ...(textColor ? { color: textColor } : null),
-    ...(borderColor ? { borderColor } : null),
-    transformOrigin: side === 'up' ? 'bottom center' : 'top center',
-  };
-
-  const arrowInlineStyle: React.CSSProperties = {
-    ...(bgColor ? { backgroundColor: bgColor } : null),
-    ...(borderColor ? { borderColor } : null),
-    transform: 'rotate(45deg)',
+  // CSS variable overrides to avoid style bleeding
+  const variableOverrides: React.CSSProperties = {
+    ...(bgColor ? { ["--tmbk-bg" as any]: bgColor } : null),
+    ...(textColor ? { ["--tmbk-fg" as any]: textColor } : null),
+    ...(borderColor ? { ["--tmbk-border" as any]: borderColor } : null),
   };
 
   const panel = (
     <div
       ref={panelRef}
+      id={panelId}
       role={role}
+      aria-labelledby={triggerId}
       className={cx(
-        'tmbk-theme fixed z-[2147483600] select-none',
-        // Defaults (dark) remain; inline styles override when provided:
-        'rounded-lg border border-[color:var(--tmbk-border)] bg-[color:var(--tmbk-bg)]/80 backdrop-blur-md',
-        'shadow-elevation-high p-4',
-        'w-max max-w-[min(90vw,42rem)]',
-        'origin-top transition-[opacity,transform] duration-150',
-        'overscroll-contain',
-        isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none',
+        "tmbk-popover",
+        themeScoped && "tmbk-theme",
         panelClassName
       )}
-      style={panelInlineStyle}
+      data-open={isOpen ? "true" : "false"}
+      data-side={side}
+      data-align={align}
+      // Keep it headless: style only sets CSS vars when provided
+      style={variableOverrides}
       onClick={handlePanelClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Arrow inherits same bg/border overrides */}
-      <div
-        ref={arrowRef}
-        className="absolute h-3 w-3 bg-[color:var(--tmbk-bg)] border border-[color:var(--tmbk-border)] border-b-0 border-r-0"
-        style={arrowInlineStyle}
-      />
+      <div ref={arrowRef} className="tmbk-popover-arrow" />
       {children}
     </div>
   );
 
   return (
-    <div className="relative inline-block">
-      <span ref={triggerRef} className="inline-flex">
+    <div className="tmbk-popover-root">
+      <span ref={triggerRef} className="tmbk-popover-trigger">
         {triggerElement}
       </span>
-      {typeof window !== 'undefined' ? createPortal(panel, document.body) : null}
+      {typeof window !== "undefined" ? createPortal(panel, document.body) : null}
     </div>
   );
 }

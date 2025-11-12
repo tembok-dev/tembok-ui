@@ -1,176 +1,199 @@
-import { ReactNode, useState, useEffect } from 'react';
-import { cx } from './utils/variants';
-import { useEscapeKey } from './hooks/useEscapeKey';
+// tembok/components/src/react/SideBar.tsx
+import { ReactNode, useState, useEffect, useRef } from "react";
+import { cx } from "./utils/variants";
+import { useEscapeKey } from "./hooks/useEscapeKey";
 
-type SidePosition = 'left' | 'right';
+type SidePosition = "left" | "right";
+
+/**
+ * =========================================================
+ * @example — Using <SideBar /> headless
+ * =========================================================
+ *
+ * // Import CSS once in your app entry:
+ *
+ * function Example() {
+ *   const [open, setOpen] = useState(false);
+ *
+ *   return (
+ *     <>
+ *       <button data-sidebar-open="mainMenu">Open Menu</button>
+ *       <button data-sidebar-toggle="mainMenu">Toggle Menu</button>
+ *
+ *       <SideBar
+ *         id="mainMenu"
+ *         side="left"
+ *         header={<h2>Navigation</h2>}
+ *         closeOnOverlayClick
+ *         closeOnEscape
+ *         showClose
+ *       >
+ *         <nav>
+ *           <a href="#home">Home</a>
+ *           <a href="#projects">Projects</a>
+ *           <a href="#contact">Contact</a>
+ *           <hr />
+ *           <button data-close-menu>Close</button>
+ *         </nav>
+ *       </SideBar>
+ *     </>
+ *   );
+ * }
+ *
+ * // You can also control it manually:
+ * <button onClick={() => setOpen(true)}>Open Menu</button>
+ * <SideBar defaultOpen={open} />
+ *
+ * // Global triggers (no React state needed):
+ * <a href="#" data-sidebar-open="mainMenu">Open</a>
+ * <a href="#" data-sidebar-close="mainMenu">Close</a>
+ * <a href="#" data-sidebar-toggle="mainMenu">Toggle</a>
+ *
+ * =========================================================
+ */
+
 
 export interface SideBarProps {
   id?: string;
   side?: SidePosition;
-  widthClass?: string;
+  /** Width controls via CSS vars (fallbacks in CSS) */
+  width?: string;      // -> --tmbk-sidebar-w   e.g. "86vw"
+  maxWidth?: string;   // -> --tmbk-sidebar-maxw e.g. "360px"
+
   panelClassName?: string;
   overlayClassName?: string;
   showClose?: boolean;
   closeAriaLabel?: string;
+
   defaultOpen?: boolean;
   closeOnLinkClick?: boolean;
   closeOnEscape?: boolean;
   closeOnOverlayClick?: boolean;
+
   children?: ReactNode;
   header?: ReactNode;
+
+  /** Per-instance theme overrides */
+  bgColor?: string;     // -> --tmbk-bg
+  textColor?: string;   // -> --tmbk-fg
+  borderColor?: string; // -> --tmbk-border
+  backdrop?: string;    // -> --tmbk-backdrop (overlay background)
+
+  /** Add .tmbk-theme to overlay/panel if no themed ancestor exists */
+  themeScoped?: boolean; // default true
 }
 
-/**
- * SideBar component - Collapsible sidebar with overlay and smooth transitions
- * 
- * @example
- * ```tsx
- * const [open, setOpen] = useState(false);
- * 
- * <SideBar 
- *   open={open} 
- *   onOpenChange={setOpen}
- *   side="right"
- *   header={<h2>Menu</h2>}
- * >
- *   <nav>
- *     <a href="/about">About</a>
- *     <a href="/contact">Contact</a>
- *   </nav>
- * </SideBar>
- * 
- * <button onClick={() => setOpen(true)}>Open Menu</button>
- * ```
- */
 export function SideBar({
-  id = 'sidebar',
-  side = 'right',
-  widthClass = 'w-[86vw] max-w-[360px]',
-  panelClassName = 'px-6 pt-10 pb-10',
-  overlayClassName = '',
+  id = "sidebar",
+  side = "right",
+  width,
+  maxWidth,
+  panelClassName,
+  overlayClassName,
   showClose = true,
-  closeAriaLabel = 'Close menu',
+  closeAriaLabel = "Close menu",
   defaultOpen = false,
   closeOnLinkClick = false,
   closeOnEscape = true,
   closeOnOverlayClick = true,
   children,
   header,
+
+  bgColor,
+  textColor,
+  borderColor,
+  backdrop,
+  themeScoped = true,
 }: SideBarProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  const handleClose = () => setIsOpen(false);
 
-  // Escape key to close
+  // Escape
   useEscapeKey(handleClose, isOpen && closeOnEscape);
 
-  // Prevent body scroll when sidebar is open
+  // Body scroll lock
   useEffect(() => {
-    if (isOpen) {
-      const originalStyle = window.getComputedStyle(document.body).overflow;
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = originalStyle;
-      };
-    }
+    if (!isOpen) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
   }, [isOpen]);
 
-  // Expose toggle function globally for external triggers
+  // Global toggles via data-* attributes
   useEffect(() => {
-    const handleGlobalToggle = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const opener = target.closest(
-        '[data-sidebar-open],[data-sidebar-close],[data-sidebar-toggle]'
-      );
+    const onDocClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const opener = t.closest("[data-sidebar-open],[data-sidebar-close],[data-sidebar-toggle]");
       if (!opener) return;
 
-      const openId = opener.getAttribute('data-sidebar-open');
-      const closeId = opener.getAttribute('data-sidebar-close');
-      const toggleId = opener.getAttribute('data-sidebar-toggle');
+      const openId = opener.getAttribute("data-sidebar-open");
+      const closeId = opener.getAttribute("data-sidebar-close");
+      const toggleId = opener.getAttribute("data-sidebar-toggle");
       const tgt = openId || closeId || toggleId;
       if (tgt !== id) return;
 
       if (openId) setIsOpen(true);
       if (closeId) setIsOpen(false);
-      if (toggleId) setIsOpen((prev) => !prev);
+      if (toggleId) setIsOpen((p) => !p);
 
-      // Prevent accidental navigation
-      if (opener.tagName === 'A' && opener.getAttribute('href') === '#') {
-        e.preventDefault();
-      }
+      const isHashLink = opener.tagName === "A" && opener.getAttribute("href") === "#";
+      if (isHashLink) e.preventDefault();
     };
 
-    document.addEventListener('click', handleGlobalToggle, { capture: true });
-    return () => {
-      document.removeEventListener('click', handleGlobalToggle, { capture: true });
-    };
+    document.addEventListener("click", onDocClick, { capture: true });
+    return () => document.removeEventListener("click", onDocClick, { capture: true });
   }, [id]);
 
+  // Close on link click
   const handlePanelClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    const closeElement = target.closest('[data-close-menu]');
-    
-    if (closeElement) {
-      setIsOpen(false);
-      return;
-    }
-
-    if (closeOnLinkClick) {
-      const link = target.closest('a');
-      if (link) {
-        setIsOpen(false);
-      }
-    }
+    const wantsClose = target.closest("[data-close-menu]");
+    if (wantsClose) return void setIsOpen(false);
+    if (closeOnLinkClick && target.closest("a")) setIsOpen(false);
   };
 
-  const sideTranslate =
-    side === 'left'
-      ? isOpen ? 'translate-x-0' : 'translate-x-[-100%]'
-      : isOpen ? 'translate-x-0' : 'translate-x-full';
-
-  const headerAlign = side === 'left' ? 'justify-start' : 'justify-end';
+  // CSS variables (per-instance)
+  const vars: React.CSSProperties = {
+    ...(bgColor ? { ["--tmbk-bg" as any]: bgColor } : null),
+    ...(textColor ? { ["--tmbk-fg" as any]: textColor } : null),
+    ...(borderColor ? { ["--tmbk-border" as any]: borderColor } : null),
+    ...(backdrop ? { ["--tmbk-backdrop" as any]: backdrop } : null),
+    ...(width ? { ["--tmbk-sidebar-w" as any]: width } : null),
+    ...(maxWidth ? { ["--tmbk-sidebar-maxw" as any]: maxWidth } : null),
+  };
 
   return (
-    <div className="tmbk-theme" style={{ isolation: 'isolate' }}>
+    <>
       {/* Overlay */}
-      {closeOnOverlayClick ? (
-        <div
-          onClick={handleClose}
-          className={cx(
-            'fixed inset-0 z-[2147483646] bg-[color:var(--tmbk-bg)]/60 backdrop-blur-sm transition-opacity duration-300',
-            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
-            overlayClassName
-          )}
-          aria-hidden="true"
-        />
-      ) : (
-        <div
-          className={cx(
-            'fixed inset-0 z-[2147483646] bg-[color:var(--tmbk-bg)]/60 backdrop-blur-sm transition-opacity duration-300',
-            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
-            overlayClassName
-          )}
-          aria-hidden="true"
-        />
-      )}
+      <div
+        className={cx(
+          "tmbk-sidebar-overlay",
+          themeScoped && "tmbk-theme",
+          overlayClassName
+        )}
+        data-open={isOpen ? "true" : "false"}
+        aria-hidden="true"
+        onClick={closeOnOverlayClick ? handleClose : undefined}
+        style={vars}
+      />
 
       {/* Panel */}
       <aside
-        className={cx(
-          'fixed top-0 bottom-0 z-[2147483647]',
-          widthClass,
-          sideTranslate,
-          side === 'left' ? 'left-0 border-r' : 'right-0 border-l',
-          'transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)] bg-[color:var(--tmbk-bg)]/90 backdrop-blur-xl border-[color:var(--tmbk-border)] shadow-2xl will-change-transform',
-          panelClassName
-        )}
+        className={cx("tmbk-sidebar", themeScoped && "tmbk-theme", panelClassName)}
+        data-open={isOpen ? "true" : "false"}
+        data-side={side}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!isOpen}
+        style={vars}
       >
-        <div className="flex h-full flex-col overflow-y-auto">
+        <div className="tmbk-sidebar-shell">
           {/* Sticky header */}
-          <div className="sticky top-0 z-10 w-full bg-[color:var(--tmbk-bg)]/80 backdrop-blur-xl border-b border-[color:var(--tmbk-border)]">
-            <div className={`flex ${headerAlign} items-center gap-2 px-6 py-4`}>
+          <div className="tmbk-sidebar-header" data-side={side}>
+            <div className="tmbk-sidebar-header-row">
               {header ? (
                 header
               ) : (
@@ -178,7 +201,7 @@ export function SideBar({
                   <button
                     onClick={handleClose}
                     aria-label={closeAriaLabel}
-                    className="inline-grid place-items-center rounded-md p-2 bg-[color:var(--tmbk-bg-light)]/90 tmbk-text hover:bg-[color:var(--tmbk-bg-light)] active:bg-[color:var(--tmbk-bg)]/90 transition-all duration-200 cursor-pointer ring-1 ring-[color:var(--tmbk-border)]"
+                    className="tmbk-sidebar-close"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -200,12 +223,12 @@ export function SideBar({
             </div>
           </div>
 
-          {/* Content area */}
-          <div className="flex-1 flex flex-col gap-8" onClick={handlePanelClick}>
+          {/* Content */}
+          <div className="tmbk-sidebar-content" onClick={handlePanelClick}>
             {children}
           </div>
         </div>
       </aside>
-    </div>
+    </>
   );
 }

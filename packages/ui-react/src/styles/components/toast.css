@@ -1,0 +1,189 @@
+/* =========================================================
+   @tembok/ui-react — toast.css (headless + dual-scope)
+   - Works inside .tmbk-theme OR with .tmbk-theme on the element
+   - Pure CSS tokens; no Tailwind utilities
+   - Driven by [data-intent], [data-state], [data-position]
+   ========================================================= */
+
+/* Vars (fallbacks) */
+:root {
+  --tmbk-toast-z: 2147483647;
+  --tmbk-toast-gap: .5rem;
+  --tmbk-toast-w: 420px;
+  --tmbk-toast-pad: .75rem;
+  --tmbk-toast-radius: 1rem;
+  --tmbk-toast-shadow: 0 12px 36px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.12);
+  --tmbk-toast-overlay: color-mix(in oklab, var(--tmbk-bg, #0b1020) 75%, transparent);
+}
+
+/* ---------------- Toaster container ---------------- */
+:where(.tmbk-theme .tmbk-toaster, .tmbk-toaster.tmbk-theme) {
+  position: fixed;
+  z-index: var(--tmbk-toast-z);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tmbk-toast-gap);
+  width: min(var(--tmbk-toast-w), calc(100vw - 1.5rem));
+  pointer-events: none;
+}
+
+/* positions */
+:where(.tmbk-theme .tmbk-toaster, .tmbk-toaster.tmbk-theme)[data-position="br"] {
+  right: 1rem; bottom: 1rem;
+}
+:where(.tmbk-theme .tmbk-toaster, .tmbk-toaster.tmbk-theme)[data-position="bl"] {
+  left: 1rem; bottom: 1rem;
+}
+:where(.tmbk-theme .tmbk-toaster, .tmbk-toaster.tmbk-theme)[data-position="tr"] {
+  right: 1rem; top: 1rem;
+}
+:where(.tmbk-theme .tmbk-toaster, .tmbk-toaster.tmbk-theme)[data-position="tl"] {
+  left: 1rem; top: 1rem;
+}
+
+/* ---------------- Toast card ---------------- */
+:where(.tmbk-theme .tmbk-toast, .tmbk-toast.tmbk-theme) {
+  pointer-events: auto;
+  border-radius: var(--tmbk-toast-radius);
+  border: 1px solid color-mix(in oklab, var(--tmbk-border, rgba(0,0,0,.12)) 90%, transparent);
+  background-color: color-mix(in oklab, var(--tmbk-bg, #fff) 92%, transparent);
+  color: var(--tmbk-fg, #111);
+  box-shadow: var(--tmbk-toast-shadow);
+  overflow: clip;
+
+  /* entrance */
+  opacity: 0;
+  transform: translateY(6px) scale(.985);
+  transition: opacity .25s ease, transform .25s cubic-bezier(.22,1,.36,1);
+}
+
+/* open/closed */
+:where(.tmbk-theme .tmbk-toast[data-state="open"], .tmbk-toast.tmbk-theme[data-state="open"]) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+:where(.tmbk-theme .tmbk-toast[data-state="closed"], .tmbk-toast.tmbk-theme[data-state="closed"]) {
+  opacity: 0;
+  transform: translateY(6px) scale(.985);
+}
+
+/* content row */
+:where(.tmbk-theme .tmbk-toast-row, .tmbk-toast-row.tmbk-theme) {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: .75rem;
+  padding: var(--tmbk-toast-pad);
+}
+
+/* icon */
+:where(.tmbk-theme .tmbk-toast-icon, .tmbk-toast-icon.tmbk-theme) {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tmbk-border, rgba(0,0,0,.12)) 60%, transparent);
+}
+:where(.tmbk-theme .tmbk-toast-icon-svg, .tmbk-toast-icon-svg.tmbk-theme) {
+  width: 1rem; height: 1rem;
+}
+
+/* text */
+:where(.tmbk-theme .tmbk-toast-content, .tmbk-toast-content.tmbk-theme) {
+  min-width: 0;
+}
+:where(.tmbk-theme .tmbk-toast-title, .tmbk-toast-title.tmbk-theme) {
+  font-weight: 600;
+  font-size: .95rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(.tmbk-theme .tmbk-toast-desc, .tmbk-toast-desc.tmbk-theme) {
+  margin-top: .25rem;
+  color: color-mix(in oklab, var(--tmbk-fg, #111) 70%, transparent);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* close button */
+:where(.tmbk-theme .tmbk-toast-close, .tmbk-toast-close.tmbk-theme) {
+  border-radius: .5rem;
+  padding: .375rem;
+  color: color-mix(in oklab, var(--tmbk-fg, #111) 70%, transparent);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, transform .15s ease;
+}
+:where(.tmbk-theme .tmbk-toast-close:hover, .tmbk-toast-close.tmbk-theme:hover) {
+  background: color-mix(in oklab, var(--tmbk-fg, #111) 8%, transparent);
+  color: color-mix(in oklab, var(--tmbk-fg, #111) 85%, transparent);
+}
+:where(.tmbk-theme .tmbk-toast-close:active, .tmbk-toast-close.tmbk-theme:active) {
+  transform: scale(.98);
+}
+:where(.tmbk-theme .tmbk-toast-close:focus-visible, .tmbk-toast-close.tmbk-theme:focus-visible) {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--tmbk-ring, rgba(0,255,255,.35)) 100%, transparent);
+}
+
+/* intent bar */
+:where(.tmbk-theme .tmbk-toast-bar, .tmbk-toast-bar.tmbk-theme) {
+  height: .25rem;
+  width: 100%;
+}
+
+/* ---------------- Intents via data-intent ---------------- */
+:where(.tmbk-theme .tmbk-toast[data-intent="success"] .tmbk-toast-icon,
+       .tmbk-toast.tmbk-theme[data-intent="success"] .tmbk-toast-icon) {
+  background: color-mix(in oklab, var(--tmbk-success, #10b981) 12%, transparent);
+  color: var(--tmbk-success, #10b981);
+}
+:where(.tmbk-theme .tmbk-toast[data-intent="success"] .tmbk-toast-bar,
+       .tmbk-toast.tmbk-theme[data-intent="success"] .tmbk-toast-bar) {
+  background: color-mix(in oklab, var(--tmbk-success, #10b981) 40%, transparent);
+}
+
+:where(.tmbk-theme .tmbk-toast[data-intent="warning"] .tmbk-toast-icon,
+       .tmbk-toast.tmbk-theme[data-intent="warning"] .tmbk-toast-icon) {
+  background: color-mix(in oklab, var(--tmbk-warning, #f59e0b) 12%, transparent);
+  color: var(--tmbk-warning, #f59e0b);
+}
+:where(.tmbk-theme .tmbk-toast[data-intent="warning"] .tmbk-toast-bar,
+       .tmbk-toast.tmbk-theme[data-intent="warning"] .tmbk-toast-bar) {
+  background: color-mix(in oklab, var(--tmbk-warning, #f59e0b) 40%, transparent);
+}
+
+:where(.tmbk-theme .tmbk-toast[data-intent="danger"] .tmbk-toast-icon,
+       .tmbk-toast.tmbk-theme[data-intent="danger"] .tmbk-toast-icon) {
+  background: color-mix(in oklab, var(--tmbk-danger, #ef4444) 12%, transparent);
+  color: var(--tmbk-danger, #ef4444);
+}
+:where(.tmbk-theme .tmbk-toast[data-intent="danger"] .tmbk-toast-bar,
+       .tmbk-toast.tmbk-theme[data-intent="danger"] .tmbk-toast-bar) {
+  background: color-mix(in oklab, var(--tmbk-danger, #ef4444) 40%, transparent);
+}
+
+:where(.tmbk-theme .tmbk-toast[data-intent="neutral"] .tmbk-toast-icon,
+       .tmbk-toast.tmbk-theme[data-intent="neutral"] .tmbk-toast-icon) {
+  background: color-mix(in oklab, var(--tmbk-fg, #111) 10%, transparent);
+  color: color-mix(in oklab, var(--tmbk-fg, #111) 70%, transparent);
+}
+:where(.tmbk-theme .tmbk-toast[data-intent="neutral"] .tmbk-toast-bar,
+       .tmbk-toast.tmbk-theme[data-intent="neutral"] .tmbk-toast-bar) {
+  background: color-mix(in oklab, var(--tmbk-border, rgba(0,0,0,.12)) 60%, transparent);
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  :where(.tmbk-theme .tmbk-toast, .tmbk-toast.tmbk-theme) {
+    transition: none;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
