@@ -9,13 +9,14 @@
   --tmbk-sidebar-w: 86vw;
   --tmbk-sidebar-maxw: 360px;
   --tmbk-backdrop: color-mix(in oklab, var(--tmbk-bg) 60%, transparent);
+  --sidebar-z: 2147483646;
 }
 
 /* ---------------- Overlay ---------------- */
 :where(.tmbk-theme .tmbk-sidebar-overlay, .tmbk-sidebar-overlay.tmbk-theme) {
   position: fixed;
   inset: 0;
-  z-index: 2147483646;
+  z-index: var(--sidebar-z, 2147483646);
   background: var(--tmbk-backdrop);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -35,7 +36,7 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: 2147483647;
+  z-index: calc(var(--sidebar-z, 2147483646) + 1);
   width: min(var(--tmbk-sidebar-w), var(--tmbk-sidebar-maxw));
   /* Surface */
   background-color: color-mix(in oklab, var(--tmbk-bg) 90%, transparent);

@@ -16,6 +16,28 @@ import { createPortal } from "react-dom";
 
 type OpenMode = "click" | "hover";
 
+/**
+ * Headless Popover — attach a floating panel to any trigger element.
+ *
+ * • Works with click or hover (`openOn="click" | "hover"`).  
+ * • Auto-positions with arrow + collision handling.  
+ * • Closes on outside click, Escape, or selecting an item (unless `data-close-popover="false"`).  
+ * • You control all styling via `panelClassName` + your CSS.
+ *
+ * Example:
+ * ```tsx
+ * <Popover
+ *   trigger={<button>Options</button>}
+ *   side="bottom"
+ *   align="start"
+ *   panelClassName="rounded-md border bg-bg p-2"
+ * >
+ *   <button className="block px-2 py-1">Edit</button>
+ *   <button className="block px-2 py-1">Delete</button>
+ * </Popover>
+ * ```
+ */
+
 export interface PopoverProps {
   trigger: ReactElement;
   children: ReactNode;

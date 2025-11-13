@@ -1,0 +1,217 @@
+/* =========================================================
+   @tembok/ui-react — DataTable (dual-scope, CSS-only)
+   ========================================================= */
+
+/* Wrapper / outer container (no scroll here) */
+:where(.tmbk-theme .tmbk-datatable, .tmbk-datatable.tmbk-theme) {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--tmbk-border);
+  background-color: color-mix(in oklab, var(--tmbk-bg) 92%, transparent);
+  backdrop-filter: blur(10px);
+  overflow: hidden; /* clip inner scroll + hint neatly */
+}
+
+/* Scroll area: header + rows only */
+:where(.tmbk-theme .tmbk-datatable__scroll,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__scroll) {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Subtle right-side scroll hint, attached to scroll area only */
+:where(.tmbk-theme .tmbk-datatable__scroll-hint,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__scroll-hint) {
+  pointer-events: none;
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: 2rem;
+  background-image: linear-gradient(to left, var(--tmbk-bg), transparent);
+}
+
+/* Table base */
+:where(.tmbk-theme .tmbk-datatable__table,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  color: var(--tmbk-fg);
+}
+
+/* Head */
+:where(.tmbk-theme .tmbk-datatable__head,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__head) {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+  background-color: color-mix(in oklab, var(--tmbk-bg-light) 95%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--tmbk-border);
+}
+
+/* Header cells */
+:where(.tmbk-theme .tmbk-datatable__header-cell,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__header-cell) {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  color: var(--tmbk-fg-light);
+  background-color: inherit;
+}
+
+:where(.tmbk-theme .tmbk-datatable__header-cell--primary,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__header-cell--primary) {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 15;
+  background-color: color-mix(in oklab, var(--tmbk-bg-light) 98%, transparent);
+}
+
+/* Sortable header */
+:where(.tmbk-theme .tmbk-datatable__header-cell--sortable,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__header-cell--sortable) {
+  cursor: pointer;
+  user-select: none;
+}
+
+:where(.tmbk-theme .tmbk-datatable__header-label,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__header-label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+:where(.tmbk-theme .tmbk-datatable__sort-indicator,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__sort-indicator) {
+  font-size: 0.625rem;
+  color: var(--tmbk-fg-muted);
+}
+
+/* Body rows */
+:where(.tmbk-theme .tmbk-datatable__row,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__row) {
+  transition: background-color 0.15s ease;
+  background-color: var(--tmbk-bg);
+}
+
+/* Odd row subtle striping */
+:where(.tmbk-theme .tmbk-datatable__row:nth-child(odd),
+.tmbk-datatable.tmbk-theme .tmbk-datatable__row:nth-child(odd)) {
+  background-color: color-mix(in oklab, var(--tmbk-bg-dark) 6%, var(--tmbk-bg));
+}
+
+/* Hover */
+:where(.tmbk-theme .tmbk-datatable__row:hover,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__row:hover) {
+  background-color: color-mix(in oklab, var(--tmbk-bg-dark) 12%, var(--tmbk-bg));
+}
+
+/* Selected row */
+:where(.tmbk-theme .tmbk-datatable__row--selected,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__row--selected) {
+  background-color: color-mix(in oklab, var(--tmbk-fg) 8%, var(--tmbk-bg));
+}
+
+/* Body cells */
+:where(.tmbk-theme .tmbk-datatable__cell,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__cell) {
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  font-size: 0.8125rem;
+  min-width: 7.5rem; /* 120px default, overridable inline */
+  color: var(--tmbk-fg);
+  /* background-color: inherit; let row bg show */
+}
+
+/* Primary sticky cell */
+:where(.tmbk-theme .tmbk-datatable__cell--primary,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__cell--primary) {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 5;
+  background-color: color-mix(in oklab, var(--tmbk-bg-light) 97%, transparent);
+  box-shadow: 1px 0 0 0 var(--tmbk-border);
+}
+
+/* Selection / checkbox column — smaller now */
+/* Apply to BOTH header and body select cells */
+:where(.tmbk-theme .tmbk-datatable__header-cell.tmbk-datatable__cell--select,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__header-cell.tmbk-datatable__cell--select,
+.tmbk-theme .tmbk-datatable__cell.tmbk-datatable__cell--select,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__cell.tmbk-datatable__cell--select) {
+  width: 2.5rem; /* ~40px - enough for checkbox + padding */
+  min-width: 2.5rem; /* override base cell min-width */
+  max-width: 2.5rem; /* prevent expansion */
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  text-align: center;
+}
+
+/* Ensure primary cell tracks row hover/selected subtly */
+:where(.tmbk-theme .tmbk-datatable__row:hover .tmbk-datatable__cell--primary,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__row:hover .tmbk-datatable__cell--primary) {
+  background-color: color-mix(in oklab, var(--tmbk-bg-dark) 14%, var(--tmbk-bg-light));
+}
+
+:where(.tmbk-theme .tmbk-datatable__row--selected .tmbk-datatable__cell--primary,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__row--selected .tmbk-datatable__cell--primary) {
+  background-color: color-mix(in oklab, var(--tmbk-fg) 10%, var(--tmbk-bg-light));
+}
+
+/* Empty state */
+:where(.tmbk-theme .tmbk-datatable__empty,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__empty) {
+  padding: 1.5rem 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--tmbk-fg-muted);
+}
+
+/* Footer / pagination bar */
+:where(.tmbk-theme .tmbk-datatable__footer,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__footer) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--tmbk-border);
+  font-size: 0.75rem;
+  color: var(--tmbk-fg-light);
+  background-color: color-mix(in oklab, var(--tmbk-bg-light) 96%, transparent);
+}
+
+:where(.tmbk-theme .tmbk-datatable__footer-text,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__footer-text) {
+  white-space: nowrap;
+}
+
+:where(.tmbk-theme .tmbk-datatable__footer-meta,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__footer-meta) {
+  opacity: 0.75;
+}
+
+:where(.tmbk-theme .tmbk-datatable__footer-actions,
+.tmbk-datatable.tmbk-theme .tmbk-datatable__footer-actions) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Make native checkbox a bit aligned with theme */
+:where(.tmbk-theme .tmbk-datatable input[type="checkbox"],
+.tmbk-datatable.tmbk-theme input[type="checkbox"]) {
+  width: 0.9rem;
+  height: 0.9rem;
+  accent-color: var(--tmbk-primary);
+  cursor: pointer;
+  background-color: var(--tmbk-bg-light);
+}

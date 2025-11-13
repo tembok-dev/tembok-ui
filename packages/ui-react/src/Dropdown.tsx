@@ -17,6 +17,8 @@ export type DropdownProps = {
   borderColor?: string;    // -> --tmbk-border
   /** If no theme wrapper present, keep true to scope on the panel */
   themeScoped?: boolean;   // default true
+  /** Extra class for the panel (keep it headless) */
+  closeOnSelect?: boolean;
 };
 
 export function Dropdown({
@@ -30,6 +32,7 @@ export function Dropdown({
   textColor,
   borderColor,
   themeScoped = true,
+  closeOnSelect = true
 }: DropdownProps) {
   // Panel classes: headless + optional local theme scope
   const panelClassName = cx(
@@ -52,13 +55,13 @@ export function Dropdown({
       side={side}
       align={align}
       role="menu"
-      closeOnSelect
+      closeOnSelect={closeOnSelect}
       panelClassName={panelClassName}
       // Pass-through variable overrides to the panel node
       bgColor={bgColor}
       textColor={textColor}
       borderColor={borderColor}
-      // keep Popover headless; the classes above drive CSS below
+    // keep Popover headless; the classes above drive CSS below
     >
       {/* wrapper keeps scroll and structural selectors stable */}
       <div className="tmbk-dropdown-wrap" role="none">

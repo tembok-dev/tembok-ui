@@ -1,9 +1,41 @@
 // tembok/components/src/react/SideBar.tsx
 import { ReactNode, useState, useEffect, useRef } from "react";
+import { Portal } from "./utils/Portal";
 import { cx } from "./utils/variants";
 import { useEscapeKey } from "./hooks/useEscapeKey";
 
 type SidePosition = "left" | "right";
+
+
+export interface SideBarProps {
+  id?: string;
+  side?: SidePosition;
+  /** Width controls via CSS vars (fallbacks in CSS) */
+  width?: string;      // -> --tmbk-sidebar-w   e.g. "86vw"
+  maxWidth?: string;   // -> --tmbk-sidebar-maxw e.g. "360px"
+
+  panelClassName?: string;
+  overlayClassName?: string;
+  showClose?: boolean;
+  closeAriaLabel?: string;
+
+  defaultOpen?: boolean;
+  closeOnLinkClick?: boolean;
+  closeOnEscape?: boolean;
+  closeOnOverlayClick?: boolean;
+
+  children?: ReactNode;
+  header?: ReactNode;
+
+  /** Per-instance theme overrides */
+  bgColor?: string;     // -> --tmbk-bg
+  textColor?: string;   // -> --tmbk-fg
+  borderColor?: string; // -> --tmbk-border
+  backdrop?: string;    // -> --tmbk-backdrop (overlay background)
+
+  /** Add .tmbk-theme to overlay/panel if no themed ancestor exists */
+  themeScoped?: boolean; // default true
+}
 
 /**
  * =========================================================
@@ -51,37 +83,6 @@ type SidePosition = "left" | "right";
  *
  * =========================================================
  */
-
-
-export interface SideBarProps {
-  id?: string;
-  side?: SidePosition;
-  /** Width controls via CSS vars (fallbacks in CSS) */
-  width?: string;      // -> --tmbk-sidebar-w   e.g. "86vw"
-  maxWidth?: string;   // -> --tmbk-sidebar-maxw e.g. "360px"
-
-  panelClassName?: string;
-  overlayClassName?: string;
-  showClose?: boolean;
-  closeAriaLabel?: string;
-
-  defaultOpen?: boolean;
-  closeOnLinkClick?: boolean;
-  closeOnEscape?: boolean;
-  closeOnOverlayClick?: boolean;
-
-  children?: ReactNode;
-  header?: ReactNode;
-
-  /** Per-instance theme overrides */
-  bgColor?: string;     // -> --tmbk-bg
-  textColor?: string;   // -> --tmbk-fg
-  borderColor?: string; // -> --tmbk-border
-  backdrop?: string;    // -> --tmbk-backdrop (overlay background)
-
-  /** Add .tmbk-theme to overlay/panel if no themed ancestor exists */
-  themeScoped?: boolean; // default true
-}
 
 export function SideBar({
   id = "sidebar",
@@ -166,7 +167,7 @@ export function SideBar({
   };
 
   return (
-    <>
+    <Portal>
       {/* Overlay */}
       <div
         className={cx(
@@ -229,6 +230,6 @@ export function SideBar({
           </div>
         </div>
       </aside>
-    </>
+    </Portal>
   );
 }
