@@ -9,6 +9,7 @@ import './styles/components/popover.css';
 import './styles/components/sidebar.css';
 import './styles/components/toast.css';
 import './styles/components/datatable.css';
+import './styles/components/inputfield.css';
 
 export * from './Button';
 export * from './IconButton';
@@ -20,6 +21,7 @@ export * from './Dropdown';
 export * from './DevGrid';
 export * from './TembokLogo';
 export * from './DataTable';
+export * from './InputField';
 
 export * from './demos';
 export * from './hooks';

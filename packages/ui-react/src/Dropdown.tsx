@@ -19,6 +19,8 @@ export type DropdownProps = {
   themeScoped?: boolean;   // default true
   /** Extra class for the panel (keep it headless) */
   closeOnSelect?: boolean;
+  /** Bubble z-index down to the underlying Popover */
+  zIndex?: number;
 };
 
 export function Dropdown({
@@ -32,7 +34,8 @@ export function Dropdown({
   textColor,
   borderColor,
   themeScoped = true,
-  closeOnSelect = true
+  closeOnSelect = true,
+  zIndex,
 }: DropdownProps) {
   // Panel classes: headless + optional local theme scope
   const panelClassName = cx(
@@ -61,10 +64,11 @@ export function Dropdown({
       bgColor={bgColor}
       textColor={textColor}
       borderColor={borderColor}
+      zIndex={zIndex}
     // keep Popover headless; the classes above drive CSS below
     >
       {/* wrapper keeps scroll and structural selectors stable */}
-      <div className="tmbk-dropdown-wrap" role="none">
+      <div className="tmbk-dropdown-wrap" role="none" style={style}>
         {children}
       </div>
     </Popover>

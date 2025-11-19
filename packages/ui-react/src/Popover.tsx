@@ -58,6 +58,9 @@ export interface PopoverProps {
 
   /** Optional: add/remove the theme scope class here if you prefer local scoping */
   themeScoped?: boolean; // default true: adds "tmbk-theme" on the panel
+
+  /** Optional: override z-index for this popover panel */
+  zIndex?: number;
 }
 
 export function Popover({
@@ -75,6 +78,7 @@ export function Popover({
   textColor,
   borderColor,
   themeScoped = true,
+  zIndex,
 }: PopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null!);
@@ -171,6 +175,7 @@ export function Popover({
     ...(bgColor ? { ["--tmbk-bg" as any]: bgColor } : null),
     ...(textColor ? { ["--tmbk-fg" as any]: textColor } : null),
     ...(borderColor ? { ["--tmbk-border" as any]: borderColor } : null),
+    ...(zIndex != null ? { zIndex } : null),
   };
 
   const panel = (
