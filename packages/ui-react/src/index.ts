@@ -26,7 +26,6 @@ export * from './InputField';
 export * from './Loaders';
 
 
-export * from './demos';
 export * from './hooks';
 export * from './utils';
 
