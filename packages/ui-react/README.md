@@ -1,11 +1,11 @@
 # @tembok/ui-react
 
-Headless React UI components for the Tembok Design System — automatically styled, zero setup.
+Headless React UI components for the Tembok Design System - automatically styled, zero setup.
 
 No Tailwind configuration. No CSS imports.
 Just install and use.
 
-Current stable: 0.0.14
+Current stable: 0.0.19
 You can install prerelease builds using the @next tag if needed.
 
 --------------------------------------------------------------------
@@ -22,7 +22,7 @@ npm install @tembok/ui-react@next
 
 ## Setup
 
-No configuration required — all styles are injected automatically.
+No configuration required - all styles are injected automatically.
 
 To enable the design system scope and theme variables, wrap your app with the tmbk-theme class:
 
@@ -41,9 +41,9 @@ Without this wrapper, components still render but fallback to plain browser defa
 
 ## Usage
 
-Import components directly — no CSS or Tailwind setup needed.
+Import components directly - no CSS or Tailwind setup needed.
 
-import { Button, IconButton, Modal, Toast } from "@tembok/ui-react";
+import { Button, IconButton, Loaders, Modal, Toast } from "@tembok/ui-react";
 
 --------------------------------------------------------------------
 
@@ -93,13 +93,153 @@ toast.error("Something went wrong");
 toast.info("Information message");
 toast.warning("Warning message");
 
-### Other Components
+### Loaders
 
-- SideBar — Collapsible sidebar
-- Dropdown — Dropdown menu
-- Popover — Contextual popover
-- DevGrid — Development grid overlay
-- TembokLogo — SVG logo component
+Animated loaders with size and color options.
+
+<Loaders type="energyspin" size="md" color="#E72AAE" />
+<Loaders type="spintrail" size="lg" color="rebeccapurple" />
+
+Props:
+- type: 'energyspin' | 'spintrail' (default: 'energyspin')
+- size: 'sm' | 'md' | 'lg' (default: 'md')
+- color: any valid CSS color (default: '#E72AAE')
+
+### InputField
+
+Controlled input with label and error support.
+
+```tsx
+import { useState } from "react";
+import { InputField } from "@tembok/ui-react";
+
+export default function Example() {
+  const [value, setValue] = useState("");
+
+  return (
+    <InputField
+      label="Company"
+      placeholder="Acme Inc."
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```
+
+### DataTable
+
+Basic table with columns and rows.
+
+```tsx
+import { DataTable } from "@tembok/ui-react";
+
+const rows = [
+  { id: 1, name: "Ada", email: "ada@example.com" },
+  { id: 2, name: "Linus", email: "linus@example.com" },
+];
+
+const columns = [
+  { id: "name", label: "Name", isPrimary: true, sortable: true },
+  { id: "email", label: "Email" },
+];
+
+export default function Example() {
+  return (
+    <DataTable
+      data={rows}
+      columns={columns}
+      getRowId={(row) => row.id}
+      enableSorting
+    />
+  );
+}
+```
+
+### Dropdown
+
+Menu anchored to a trigger.
+
+```tsx
+import { Dropdown } from "@tembok/ui-react";
+
+export default function Example() {
+  return (
+    <Dropdown
+      trigger={<button>Menu</button>}
+      side="down"
+      align="start"
+    >
+      <button type="button">Edit</button>
+      <button type="button">Delete</button>
+    </Dropdown>
+  );
+}
+```
+
+### Popover
+
+Floating panel attached to any trigger.
+
+```tsx
+import { Popover } from "@tembok/ui-react";
+
+export default function Example() {
+  return (
+    <Popover trigger={<button>Help</button>} side="down" align="center">
+      <div>Quick tips go here.</div>
+    </Popover>
+  );
+}
+```
+
+### SideBar
+
+Slide-out panel with simple data-attribute triggers.
+
+```tsx
+import { SideBar } from "@tembok/ui-react";
+
+export default function Example() {
+  return (
+    <>
+      <button data-sidebar-open="mainMenu">Open Menu</button>
+
+      <SideBar id="mainMenu" side="left" closeOnOverlayClick>
+        <nav>
+          <a href="#home">Home</a>
+          <a href="#projects">Projects</a>
+          <button data-close-menu>Close</button>
+        </nav>
+      </SideBar>
+    </>
+  );
+}
+```
+
+### DevGrid
+
+Development grid overlay for layout checks.
+
+```tsx
+import { DevGrid } from "@tembok/ui-react";
+
+export default function Example() {
+  return <DevGrid enabled={true} columns={12} />;
+}
+```
+
+### TembokLogo
+
+SVG logo component.
+
+```tsx
+import { TembokLogo } from "@tembok/ui-react";
+
+export default function Example() {
+  return <TembokLogo size="md" />;
+}
+```
 
 --------------------------------------------------------------------
 
@@ -138,11 +278,18 @@ Dark mode activates automatically via .dark or [data-theme="dark"].
 
 ## Versioning
 
-- latest → stable release (recommended for production)
-- next → prerelease builds (for testing new components)
+- latest - stable release (recommended for production)
+- next - prerelease builds (for testing new components)
+
+## Changelog
+
+- 0.0.19 - Added Loaders component (energyspin, spintrail)
+- 0.0.18 - Added InputField component
+- 0.0.17 - Added DataTable component
+- 0.0.1 - Added Button, IconButton, Modal, Toast, Dropdown, Popover, SideBar, DevGrid, TembokLogo
 
 --------------------------------------------------------------------
 
 ## License
 
-MIT © 2025 Tembok Dev
+MIT (c) 2025 Tembok Dev

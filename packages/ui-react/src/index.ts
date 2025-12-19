@@ -10,6 +10,7 @@ import './styles/components/sidebar.css';
 import './styles/components/toast.css';
 import './styles/components/datatable.css';
 import './styles/components/inputfield.css';
+import './styles/components/loaders.css'
 
 export * from './Button';
 export * from './IconButton';
@@ -22,6 +23,8 @@ export * from './DevGrid';
 export * from './TembokLogo';
 export * from './DataTable';
 export * from './InputField';
+export * from './Loaders';
+
 
 export * from './demos';
 export * from './hooks';
