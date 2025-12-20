@@ -1,0 +1,58 @@
+---
+import Popover from "./Popover.astro";
+import { cx } from "./utils/variants";
+
+const {
+  side = "down",
+  align = "start",
+  class: className,
+  maxHeight = 320,
+  bgColor,
+  textColor,
+  borderColor,
+  themeScoped = true,
+  closeOnSelect = true,
+  zIndex,
+  openOn = "click",
+  offset,
+  edgePad,
+} = Astro.props;
+
+const panelClassName = cx(
+  "tmbk-dropdown",
+  themeScoped && "tmbk-theme",
+  className
+);
+
+const styleVars = {};
+if (bgColor) styleVars["--tmbk-bg"] = bgColor;
+if (textColor) styleVars["--tmbk-fg"] = textColor;
+if (borderColor) styleVars["--tmbk-border"] = borderColor;
+styleVars["--tmbk-dropdown-maxh"] = `${maxHeight}px`;
+
+const styleAttr = Object.entries(styleVars)
+  .map(([key, value]) => `${key}:${value}`)
+  .join(";");
+---
+
+<Popover
+  openOn={openOn}
+  side={side}
+  align={align}
+  role="menu"
+  closeOnSelect={closeOnSelect}
+  panelClassName={panelClassName}
+  bgColor={bgColor}
+  textColor={textColor}
+  borderColor={borderColor}
+  zIndex={zIndex}
+  offset={offset}
+  edgePad={edgePad}
+>
+  <Fragment slot="trigger">
+    <slot name="trigger" />
+  </Fragment>
+  <div class="tmbk-dropdown-wrap" role="none" style={styleAttr}>
+    <slot />
+  </div>
+</Popover>

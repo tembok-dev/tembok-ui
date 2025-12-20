@@ -1,0 +1,124 @@
+@keyframes loaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+    filter: blur(3px);
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.5;
+    filter: blur(3px);
+  }
+}
+
+@keyframes orbitEase {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-shell {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--loader-size);
+  block-size: var(--loader-size);
+}
+
+.loader-size-sm {
+  --loader-size: 24px;
+  --loader-border: 4px;
+}
+
+.loader-size-md {
+  --loader-size: 32px;
+  --loader-border: 4px;
+}
+
+.loader-size-lg {
+  --loader-size: 48px;
+  --loader-border: 4px;
+}
+
+.energyspin-spinner {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  animation: loaderSpin 900ms linear infinite;
+}
+
+.energyspin-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: var(--loader-border) solid transparent;
+}
+
+.energyspin-ring--glow {
+  border-color: var(--loader-color);
+  opacity: 0.5;
+  filter: blur(3px);
+  animation: loaderPulse 900ms cubic-bezier(0.7, 0.19, 0.42, 0.86) infinite;
+}
+
+.energyspin-ring--base {
+  border-color: color-mix(in srgb, var(--loader-color) 14%, transparent);
+}
+
+.energyspin-ring--arc {
+  border-color: var(--loader-color);
+  mask: conic-gradient(from var(--mask-start, 0deg), transparent 0deg 55%, #000 55deg 100%);
+  -webkit-mask: conic-gradient(from var(--mask-start, 0deg), transparent 0deg 55%, #000 55deg 100%);
+}
+
+.energyspin-ring--bright {
+  filter: brightness(1.6);
+}
+
+.energyspin-ring--soft {
+  filter: brightness(0.6);
+}
+
+.energyspin-rotate-20 {
+  transform: rotate(20deg);
+}
+
+.energyspin-rotate-40 {
+  transform: rotate(40deg);
+}
+
+.spintrail-shell {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.spintrail-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.spintrail-dot-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.spintrail-dot {
+  margin-top: 0;
+  background: var(--loader-color);
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 9999px;
+}

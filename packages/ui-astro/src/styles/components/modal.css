@@ -1,0 +1,68 @@
+/* =========================================================
+   @tembok/ui-react — modal.css (layout + panel)
+   - Dual-scope
+   - Uses tokens via CSS vars (bg/fg/border)
+   - No dependency on Tailwind utilities
+   ========================================================= */
+
+/* Modal root shell (centers its content) */
+.tmbk-theme .tmbk-modal,
+.tmbk-modal.tmbk-theme {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: auto;
+    z-index: var(--modal-z, 2147483646);
+}
+
+/* Panel */
+.tmbk-theme .tmbk-modal-panel,
+.tmbk-modal-panel.tmbk-theme {
+    position: relative;
+    z-index: calc(var(--modal-z, 2147483646) + 1);
+    width: min(92vw, 560px);
+    border-radius: .75rem;
+
+    background-color: var(--tmbk-bg, #fff);
+    color: var(--tmbk-fg, #111);
+    border: 1px solid var(--tmbk-border, rgba(0, 0, 0, .12));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .18), 0 4px 12px rgba(0, 0, 0, .12);
+    padding: 1.5rem;
+
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+/* Sections */
+.tmbk-theme .tmbk-modal-header,
+.tmbk-modal-header.tmbk-theme {
+    margin-bottom: .75rem;
+}
+
+.tmbk-theme .tmbk-modal-body,
+.tmbk-modal-body.tmbk-theme {
+    /* default flow */
+}
+
+.tmbk-theme .tmbk-modal-footer,
+.tmbk-modal-footer.tmbk-theme {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: end;
+    gap: .5rem;
+}
+
+/* Optional: simple open/close transitions with data-state */
+.tmbk-theme .tmbk-modal[data-state="closed"] .tmbk-modal-panel,
+.tmbk-modal.tmbk-theme[data-state="closed"] .tmbk-modal-panel {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.tmbk-theme .tmbk-modal[data-state="open"] .tmbk-modal-panel,
+.tmbk-modal.tmbk-theme[data-state="open"] .tmbk-modal-panel {
+    opacity: 1;
+    transform: translateY(0);
+}

@@ -1,0 +1,93 @@
+/* =========================================================
+   Popover (headless, dual-scope) — works with or without wrapper
+   ========================================================= */
+
+/* Panel base */
+:where(.tmbk-theme .tmbk-popover, .tmbk-popover.tmbk-theme) {
+  position: fixed;
+  z-index: 2147483600;
+  box-sizing: border-box;
+
+  /* Surface */
+  background-color: var(--tmbk-bg);
+  color: var(--tmbk-fg);
+  border: 1px solid var(--tmbk-border);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 10px 35px rgba(0,0,0,.22), 0 4px 12px rgba(0,0,0,.12);
+
+  /* Sizing */
+  max-width: min(90vw, 42rem);
+  width: max-content;
+  padding: 1rem;
+
+  /* Animation (closed by default) */
+  opacity: 0;
+  transform: scale(.96);
+  pointer-events: none;
+  transition: opacity .15s ease, transform .15s ease;
+
+  /* Arrow size var (used below) */
+  --tmbk-popover-arrow: 10px;
+}
+
+/* Open state */
+:where(.tmbk-theme .tmbk-popover[data-open="true"], .tmbk-popover.tmbk-theme[data-open="true"]) {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* Side-aware origin (default = down) */
+:where(.tmbk-theme .tmbk-popover, .tmbk-popover.tmbk-theme) { 
+  transform-origin: top center; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="down"], .tmbk-popover.tmbk-theme[data-side="down"]) { 
+  transform-origin: top center; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="up"], .tmbk-popover.tmbk-theme[data-side="up"]) { 
+  transform-origin: bottom center; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="left"], .tmbk-popover.tmbk-theme[data-side="left"]) { 
+  transform-origin: center right; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="right"], .tmbk-popover.tmbk-theme[data-side="right"]) { 
+  transform-origin: center left; 
+}
+
+/* Arrow */
+:where(.tmbk-theme .tmbk-popover-arrow, .tmbk-popover-arrow.tmbk-theme) {
+  position: absolute;
+  width: var(--tmbk-popover-arrow);
+  height: var(--tmbk-popover-arrow);
+  background-color: var(--tmbk-bg);
+  border: 1px solid var(--tmbk-border);
+  transform: rotate(45deg);
+}
+
+/* Trim borders so arrow merges with panel edge */
+:where(.tmbk-theme .tmbk-popover[data-side="up"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="up"] .tmbk-popover-arrow) { 
+  border-top: none; border-left: none; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="down"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="down"] .tmbk-popover-arrow) { 
+  border-bottom: none; border-right: none; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="left"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="left"] .tmbk-popover-arrow) { 
+  border-left: none; border-bottom: none; 
+}
+:where(.tmbk-theme .tmbk-popover[data-side="right"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="right"] .tmbk-popover-arrow) { 
+  border-right: none; border-top: none; 
+}
+
+/* Root/trigger wrappers (unintrusive) */
+.tmbk-popover-root { position: relative; display: inline-block; }
+.tmbk-popover-trigger { display: inline-flex; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :where(.tmbk-theme .tmbk-popover, .tmbk-popover.tmbk-theme) {
+    transition: none;
+    transform: none !important;
+  }
+}

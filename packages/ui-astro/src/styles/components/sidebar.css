@@ -1,0 +1,158 @@
+/* =========================================================
+   @tembok/ui-react — Sidebar (headless, dual-scope)
+   - Works inside .tmbk-theme OR with .tmbk-theme on the element
+   - Driven by data-open and data-side
+   ========================================================= */
+
+/* Vars (fallbacks) */
+:root {
+  --tmbk-sidebar-w: 86vw;
+  --tmbk-sidebar-maxw: 360px;
+  --tmbk-backdrop: color-mix(in oklab, var(--tmbk-bg) 60%, transparent);
+  --sidebar-z: 2147483646;
+}
+
+/* ---------------- Overlay ---------------- */
+:where(.tmbk-theme .tmbk-sidebar-overlay, .tmbk-sidebar-overlay.tmbk-theme) {
+  position: fixed;
+  inset: 0;
+  z-index: var(--sidebar-z, 2147483646);
+  background: var(--tmbk-backdrop);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: opacity .3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+:where(.tmbk-theme .tmbk-sidebar-overlay[data-open="true"],
+       .tmbk-sidebar-overlay.tmbk-theme[data-open="true"]) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------------- Panel ---------------- */
+:where(.tmbk-theme .tmbk-sidebar, .tmbk-sidebar.tmbk-theme) {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: calc(var(--sidebar-z, 2147483646) + 1);
+  width: min(var(--tmbk-sidebar-w), var(--tmbk-sidebar-maxw));
+  /* Surface */
+  background-color: color-mix(in oklab, var(--tmbk-bg) 90%, transparent);
+  color: var(--tmbk-fg);
+  border-left: 1px solid var(--tmbk-border);
+  border-right: 0; /* default right-side */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 35px rgba(0,0,0,.22), 0 6px 18px rgba(0,0,0,.16);
+
+  transform: translateX(100%); /* default off-screen for right */
+  transition: transform .3s cubic-bezier(.22,1,.36,1);
+  will-change: transform;
+}
+
+/* Left/Right placement + borders */
+:where(.tmbk-theme .tmbk-sidebar[data-side="right"], .tmbk-sidebar.tmbk-theme[data-side="right"]) {
+  right: 0;
+  left: auto;
+  border-left: 1px solid var(--tmbk-border);
+  border-right: 0;
+  transform: translateX(100%);
+}
+:where(.tmbk-theme .tmbk-sidebar[data-side="left"], .tmbk-sidebar.tmbk-theme[data-side="left"]) {
+  left: 0;
+  right: auto;
+  border-right: 1px solid var(--tmbk-border);
+  border-left: 0;
+  transform: translateX(-100%);
+}
+
+/* Open state */
+:where(.tmbk-theme .tmbk-sidebar[data-open="true"][data-side="right"],
+       .tmbk-sidebar.tmbk-theme[data-open="true"][data-side="right"]) {
+  transform: translateX(0);
+}
+:where(.tmbk-theme .tmbk-sidebar[data-open="true"][data-side="left"],
+       .tmbk-sidebar.tmbk-theme[data-open="true"][data-side="left"]) {
+  transform: translateX(0);
+}
+
+/* ---------------- Structure ---------------- */
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-shell,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-shell) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header (sticky) */
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-header,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-header) {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  background-color: color-mix(in oklab, var(--tmbk-bg) 80%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--tmbk-border);
+}
+
+/* Align header content depending on side */
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-header-row,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-header-row) {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 1rem 1.5rem; /* px-6 py-4 */
+  justify-content: flex-end; /* default right */
+}
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-header[data-side="left"] .tmbk-sidebar-header-row,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-header[data-side="left"] .tmbk-sidebar-header-row) {
+  justify-content: flex-start;
+}
+
+/* Close button */
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-close,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-close) {
+  display: inline-grid;
+  place-items: center;
+  border-radius: .375rem;
+  padding: .5rem;
+  cursor: pointer;
+  background: color-mix(in oklab, var(--tmbk-bg-light) 90%, transparent);
+  color: var(--tmbk-fg);
+  box-shadow: inset 0 0 0 1px var(--tmbk-border);
+  transition: background-color .15s ease, transform .15s ease, filter .15s ease;
+}
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-close:hover,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-close:hover) {
+  filter: brightness(1.05);
+}
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-close:active,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-close:active) {
+  transform: scale(.98);
+}
+
+/* Content area */
+:where(.tmbk-theme .tmbk-sidebar .tmbk-sidebar-content,
+       .tmbk-sidebar.tmbk-theme .tmbk-sidebar-content) {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem 1.5rem 2.5rem; /* pt-10 px-6 pb-10 */
+  overflow-y: auto;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :where(.tmbk-theme .tmbk-sidebar-overlay, .tmbk-sidebar-overlay.tmbk-theme) {
+    transition: none;
+  }
+  :where(.tmbk-theme .tmbk-sidebar, .tmbk-sidebar.tmbk-theme) {
+    transition: none;
+    transform: translateX(0) !important;
+  }
+}

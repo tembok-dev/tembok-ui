@@ -1,100 +1,89 @@
 ---
-import { cx, variants } from "./utils/variants";
+import { variants, cx } from "./utils/variants";
+
+type Intent =
+  | "primary"
+  | "secondary"
+  | "neutral"
+  | "ghost"
+  | "success"
+  | "warning"
+  | "info"
+  | "danger";
+type Size = "sm" | "md" | "lg";
+type Tone = "default" | "ink" | "red" | "lime" | "cyan";
+
+const base = "tmbk-theme tmbk-btn tmbk-btn--icon";
 
 const cls = variants(
-    "relative inline-grid place-items-center rounded-md \
-   backdrop-blur-md shadow-sm ring-transparent ring-offset-transparent \
-   transition-all duration-200 cursor-pointer \
-   outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 \
-   hover:shadow-md hover:scale-105 active:scale-95",
-    {
-        intent: {
-            primary:
-                "bg-primary text-primary-fg hover:brightness-[1.08] active:brightness-95 focus-visible:ring-primary/40",
-            neutral:
-                "bg-bg-light/90 text-fg hover:bg-bg-light active:bg-bg/90 focus-visible:ring-fg/30",
-            ghost: "bg-transparent text-fg hover:bg-bg-light/60 active:bg-bg-light/80 focus-visible:ring-fg/25 border border-transparent",
-        },
-        tone: {
-            default: "",
-            ink: "!bg-brand-ink/90  !text-brand-ink-fg   hover:!bg-brand-ink  focus-visible:!ring-brand-ink/40",
-            red: "!bg-brand-red/90  !text-brand-red-fg   hover:!bg-brand-red  focus-visible:!ring-brand-red/40",
-            lime: "!bg-brand-lime/90 !text-brand-lime-fg  hover:!bg-brand-lime focus-visible:!ring-brand-lime/40",
-            cyan: "!bg-brand-cyan/90 !text-brand-cyan-fg  hover:!bg-brand-cyan focus-visible:!ring-brand-cyan/40",
-        },
-        pad: { compact: "p-1", regular: "p-2" },
-        disabled: {
-            true: "opacity-60 pointer-events-none scale-100 shadow-none",
-            false: "",
-        },
+  base,
+  {
+    intent: {
+      primary: "",
+      secondary: "",
+      neutral: "",
+      ghost: "",
+      success: "",
+      warning: "",
+      info: "",
+      danger: "",
     },
-    { intent: "neutral", tone: "default", pad: "regular", disabled: "false" },
+    size: {
+      sm: "tmbk-btn--sm",
+      md: "tmbk-btn--md",
+      lg: "tmbk-btn--lg",
+    },
+    tone: {
+      default: "",
+      ink: "",
+      red: "",
+      lime: "",
+      cyan: "",
+    },
+    disabled: {
+      true: "",
+      false: "",
+    },
+  },
+  { intent: "primary", size: "sm", tone: "default", disabled: "false" }
 );
 
 const {
-    label = "Icon button",
-    size = 32,
-    intent,
-    tone,
-    pad,
-    disabled,
-    pulse = false,
-    href, // NEW: if present, render <a>
-    onClick, // NEW: if present, pass down to <button>
-    class: klass,
-    ...attrs
+  as = "button",
+  label = "Icon button",
+  intent = "primary",
+  size = "sm",
+  tone = "default",
+  disabled = false,
+  pulse = false,
+  class: className,
+  ...attrs
 } = Astro.props;
 
-const baseClass = cx(
-    cls({ intent, tone, pad, disabled: String(disabled) }),
-    klass,
+const Tag = as;
+const classNames = cx(
+  cls({ intent, size, tone, disabled: String(disabled) }),
+  className
 );
-const style = `--ib-size:${size}px; width:var(--ib-size); height:var(--ib-size);`;
+const dataAttrs = { "data-intent": intent, "data-tone": tone };
+const labelled = { "aria-label": label, title: label };
+const isButton = Tag === "button";
 ---
 
-{
-    href ? (
-        <a
-            href={href}
-            aria-label={label}
-            title={label}
-            class={baseClass}
-            style={style}
-            {...attrs}
-        >
-            {pulse && (
-                <span
-                    aria-hidden="true"
-                    class="pointer-events-none absolute inset-0 grid place-items-center z-0"
-                >
-                    <span class="size-4 rounded-full bg-[currentColor]/35 animate-ping" />
-                </span>
-            )}
-            <span class="relative z-10 inline-grid place-items-center">
-                <slot />
-            </span>
-        </a>
-    ) : (
-        <button
-            aria-label={label}
-            title={label}
-            class={baseClass}
-            style={style}
-            disabled={disabled}
-            onclick={onClick}
-            {...attrs}
-        >
-            {pulse && (
-                <span
-                    aria-hidden="true"
-                    class="pointer-events-none absolute inset-0 grid place-items-center z-0"
-                >
-                    <span class="size-4 rounded-full bg-[currentColor]/35 animate-ping" />
-                </span>
-            )}
-            <span class="relative z-10 inline-grid place-items-center">
-                <slot />
-            </span>
-        </button>
-    )
-}
+<Tag
+  class={classNames}
+  {...dataAttrs}
+  {...labelled}
+  disabled={isButton ? !!disabled : undefined}
+  aria-disabled={!isButton && disabled ? "true" : undefined}
+  {...attrs}
+>
+  {pulse && (
+    <span aria-hidden="true" class="tmbk-btn__pulse">
+      <span class="tmbk-btn__pulse-dot" />
+    </span>
+  )}
+  <span class="tmbk-icon">
+    <slot />
+  </span>
+</Tag>

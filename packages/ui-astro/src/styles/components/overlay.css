@@ -1,0 +1,63 @@
+/* =========================================================
+   @tembok/ui-react — overlay.css (reusable overlay)
+   - Dual-scope: supports ancestor or same-node .tmbk-theme
+   - Tunable via CSS vars + data-attrs
+   ========================================================= */
+
+/* Base overlay (also aliases .tmbk-modal-overlay for backwards compat) */
+:where(.tmbk-theme .tmbk-overlay,
+       .tmbk-overlay.tmbk-theme,
+       .tmbk-theme .tmbk-modal-overlay,
+       .tmbk-modal-overlay.tmbk-theme) {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+  z-index: var(--overlay-z, 2147483645);
+
+  /* Tunables */
+  --overlay-blur: var(--tmbk-overlay-blur, 6px);
+  --overlay-opacity: var(--tmbk-overlay-opacity, .6);
+  --overlay-color: var(--tmbk-overlay-color, 0, 0, 0); /* r,g,b */
+
+  backdrop-filter: blur(var(--overlay-blur));
+  -webkit-backdrop-filter: blur(var(--overlay-blur));
+  background: rgba(var(--overlay-color), var(--overlay-opacity));
+
+  opacity: 1;
+  transition: opacity .2s ease;
+}
+
+/* Optional tones via data attribute */
+:where(.tmbk-theme .tmbk-overlay[data-tone="dim"],
+       .tmbk-overlay.tmbk-theme[data-tone="dim"]) {
+  --tmbk-overlay-color: 0, 0, 0;
+  --tmbk-overlay-opacity: .6;
+}
+
+:where(.tmbk-theme .tmbk-overlay[data-tone="dark"],
+       .tmbk-overlay.tmbk-theme[data-tone="dark"]) {
+  --tmbk-overlay-color: 0, 0, 0;
+  --tmbk-overlay-opacity: .75;
+}
+
+:where(.tmbk-theme .tmbk-overlay[data-tone="clear"],
+       .tmbk-overlay.tmbk-theme[data-tone="clear"]) {
+  --tmbk-overlay-color: 0, 0, 0;
+  --tmbk-overlay-opacity: .25;
+}
+
+/* Blur sizes */
+:where(.tmbk-theme .tmbk-overlay[data-blur="none"],
+       .tmbk-overlay.tmbk-theme[data-blur="none"]) {
+  --tmbk-overlay-blur: 0px;
+}
+
+:where(.tmbk-theme .tmbk-overlay[data-blur="md"],
+       .tmbk-overlay.tmbk-theme[data-blur="md"]) {
+  --tmbk-overlay-blur: 6px;
+}
+
+:where(.tmbk-theme .tmbk-overlay[data-blur="lg"],
+       .tmbk-overlay.tmbk-theme[data-blur="lg"]) {
+  --tmbk-overlay-blur: 10px;
+}

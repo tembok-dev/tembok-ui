@@ -1,95 +1,121 @@
 ---
-const { id = "tembok-modal" } = Astro.props;
+import { cx } from "./utils/variants";
+
+const {
+  id = "tembok-modal",
+  open = false,
+  class: className,
+  overlayClassName,
+  closeOnEscape = true,
+  closeOnOverlayClick = true,
+} = Astro.props;
+
 const instanceAttr = "data-modal-root";
-const ID = id.replace(/"/g, '\\"');
+const isOpen = !!open;
 ---
 
 <div
-    id={id}
-    {...{ [instanceAttr]: "" }}
-    class="fixed inset-0 grid place-items-center
-          z-[2147483646]
-          pointer-events-none data-[open]:pointer-events-auto"
-    style="isolation: isolate;"
+  id={id}
+  {...{ [instanceAttr]: "" }}
+  class="tmbk-theme tmbk-modal"
+  data-open={isOpen ? "true" : "false"}
+  data-state={isOpen ? "open" : "closed"}
+  aria-hidden={isOpen ? "false" : "true"}
 >
-    <div
-        data-backdrop
-        class="fixed inset-0 z-0 bg-black/60 backdrop-blur-[1px] hidden"
-    >
-    </div>
+  <div
+    class={cx("tmbk-overlay tmbk-modal-overlay", overlayClassName)}
+    data-modal-overlay
+    aria-hidden="true"
+  />
 
-    <div
-        data-panel
-        role="dialog"
-        aria-modal="true"
-        tabindex="-1"
-        class="w-[min(92vw,560px)] rounded-md bg-bg shadow-soft border border-border p-6 opacity-0 -translate-y-2 transition-[opacity,transform] duration-200"
-    >
-        <header class="mb-3"><slot name="header" /></header>
-        <div><slot /></div>
-        <footer class="mt-6 flex justify-end gap-2">
-            <slot name="footer" />
-        </footer>
+  <div
+    class={cx("tmbk-modal-panel", className)}
+    data-modal-panel
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+  >
+    <header class="tmbk-modal-header">
+      <slot name="header" />
+    </header>
+    <div class="tmbk-modal-body">
+      <slot />
     </div>
+    <footer class="tmbk-modal-footer">
+      <slot name="footer" />
+    </footer>
+  </div>
 </div>
 
-<style>
-    [data-modal-root][data-open] {
-        pointer-events: auto;
+<script is:inline define:vars={{ id, closeOnEscape, closeOnOverlayClick }}>
+  (() => {
+    const root = document.getElementById(id);
+    if (!root) return;
+
+    const panel = root.querySelector("[data-modal-panel]");
+    const overlay = root.querySelector("[data-modal-overlay]");
+
+    const isOpen = () => root.getAttribute("data-open") === "true";
+    const setOpen = (next) => {
+      root.setAttribute("data-open", next ? "true" : "false");
+      root.setAttribute("data-state", next ? "open" : "closed");
+      root.setAttribute("aria-hidden", next ? "false" : "true");
+      if (next) panel?.focus();
+      const body = document.body;
+      if (next) {
+        body.dataset.tmbkModalScroll = body.style.overflow || "";
+        body.style.overflow = "hidden";
+      } else if (body.dataset.tmbkModalScroll !== undefined) {
+        body.style.overflow = body.dataset.tmbkModalScroll;
+        delete body.dataset.tmbkModalScroll;
+      }
+    };
+
+    const close = () => setOpen(false);
+
+    const onDocClick = (e) => {
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+
+      const opener = t.closest("[data-modal-open],[data-modal-close],[data-modal-toggle]");
+      if (opener) {
+        const openId = opener.getAttribute("data-modal-open");
+        const closeId = opener.getAttribute("data-modal-close");
+        const toggleId = opener.getAttribute("data-modal-toggle");
+        const tgt = openId || closeId || toggleId;
+        if (tgt === id) {
+          if (openId) setOpen(true);
+          if (closeId) setOpen(false);
+          if (toggleId) setOpen(!isOpen());
+          if (opener.tagName === "A" && opener.getAttribute("href") === "#") {
+            e.preventDefault();
+          }
+          return;
+        }
+      }
+
+      if (
+        closeOnOverlayClick &&
+        overlay &&
+        (t === overlay || t.closest("[data-modal-overlay]"))
+      ) {
+        close();
+        return;
+      }
+
+      const closeBtn = t.closest("[data-modal-close-button]");
+      if (closeBtn) close();
+    };
+
+    document.addEventListener("click", onDocClick, true);
+
+    if (closeOnEscape) {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && isOpen()) {
+          e.preventDefault();
+          close();
+        }
+      });
     }
-    [data-modal-root][data-open] [data-backdrop] {
-        display: block;
-    }
-    [data-modal-root][data-open] [data-panel] {
-        opacity: 1;
-        transform: translateY(0);
-    }
-</style>
-
-<script define:vars={{ ID }}>
-    window.addEventListener("DOMContentLoaded", () => {
-        const root = document.getElementById(ID);
-        if (!root) return;
-
-        const panel = root.querySelector("[data-panel]");
-        const isOpen = () => root.hasAttribute("data-open");
-        const close = () => {
-            root.removeAttribute("data-open");
-            if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur?.();
-            }
-        };
-
-        root.addEventListener(
-            "click",
-            (e) => {
-                if (!isOpen()) return;
-                const t = e.target;
-                if (!(t instanceof Element)) return;
-
-                if (t.closest("[data-backdrop]") || t.closest("[data-close]")) {
-                    e.preventDefault();
-                    close();
-                }
-            },
-            true,
-        );
-
-        window.addEventListener(
-            "keydown",
-            (e) => {
-                if (isOpen() && e.key === "Escape") {
-                    e.preventDefault();
-                    close();
-                }
-            },
-            true,
-        );
-
-        // focus panel on open
-        const mo = new MutationObserver(() => {
-            if (isOpen()) panel?.focus();
-        });
-        mo.observe(root, { attributes: true, attributeFilter: ["data-open"] });
-    });
+  })();
 </script>

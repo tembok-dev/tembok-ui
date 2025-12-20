@@ -1,0 +1,61 @@
+---
+const { type = "energyspin", size = "md", color = "#E72AAE" } = Astro.props;
+
+const sizeToClass = {
+  sm: "loader-size-sm",
+  md: "loader-size-md",
+  lg: "loader-size-lg",
+};
+
+const sizeClass = sizeToClass[size] || sizeToClass.md;
+const loaderColor = color || "#E72AAE";
+---
+
+{type === "spintrail" ? (
+  <div class={`loader-shell ${sizeClass}`} style={`--loader-color:${loaderColor};`}>
+    <div class="spintrail-shell">
+      <div class="spintrail-layer">
+        {Array.from({ length: 5 })
+          .map((_, i) => i)
+          .reverse()
+          .map((i) => (
+            <div
+              class="spintrail-dot-wrapper"
+              style={`animation: orbitEase 1100ms cubic-bezier(.45,0,.55,1) infinite; animation-delay: ${-((4 - i) * 55)}ms; transform-origin: 50% 50%;`}
+            >
+              <div
+                class="spintrail-dot"
+                style={`opacity: ${1 - (i / 4) * 0.92}; transform: translateY(0px) scale(${1 - (i / 4) * 0.25}); filter: blur(${(i / 4) * 2.2}px) brightness(${i === 0 ? 5 : 1 + (1 - i / 4) * 2}); ${i === 0 ? `box-shadow: 0 0 14px ${loaderColor};` : ""}`}
+              />
+            </div>
+          ))}
+      </div>
+      <div class="spintrail-layer" style="transform: rotate(180deg);">
+        {Array.from({ length: 5 })
+          .map((_, i) => i)
+          .reverse()
+          .map((i) => (
+            <div
+              class="spintrail-dot-wrapper"
+              style={`animation: orbitEase 1100ms cubic-bezier(.45,0,.55,1) infinite; animation-delay: ${-((4 - i) * 55)}ms; transform-origin: 50% 50%;`}
+            >
+              <div
+                class="spintrail-dot"
+                style={`opacity: ${1 - (i / 4) * 0.92}; transform: translateY(0px) scale(${1 - (i / 4) * 0.25}); filter: blur(${(i / 4) * 2.2}px) brightness(${i === 0 ? 5 : 1 + (1 - i / 4) * 2}); ${i === 0 ? `box-shadow: 0 0 14px ${loaderColor};` : ""}`}
+              />
+            </div>
+          ))}
+      </div>
+    </div>
+  </div>
+) : (
+  <div class={`loader-shell ${sizeClass}`} style={`--loader-color:${loaderColor};`}>
+    <div class="energyspin-spinner">
+      <div class="energyspin-ring energyspin-ring--glow" />
+      <div class="energyspin-ring energyspin-ring--base" />
+      <div class="energyspin-ring energyspin-ring--arc energyspin-ring--bright energyspin-rotate-40" style="filter: brightness(5);" />
+      <div class="energyspin-ring energyspin-ring--arc energyspin-ring--soft energyspin-rotate-20" style="filter: brightness(2);" />
+      <div class="energyspin-ring energyspin-ring--arc" />
+    </div>
+  </div>
+)}

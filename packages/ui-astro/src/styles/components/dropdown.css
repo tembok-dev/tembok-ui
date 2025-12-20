@@ -1,0 +1,107 @@
+/* =========================================================
+   @tembok/ui-react — Dropdown (headless, dual-scope)
+   Works with either:
+   - inside a .tmbk-theme ancestor, OR
+   - the panel itself having .tmbk-theme
+   ========================================================= */
+
+/* Panel chrome (tight padding & min-width for menus) */
+:where(.tmbk-theme .tmbk-dropdown, .tmbk-dropdown.tmbk-theme) {
+  /* Popover already provides surface; we only tweak dropdown feel */
+  padding: .25rem;                 /* = p-1 */
+  border-radius: .75rem;           /* = rounded-xl */
+  min-width: 11rem;                /* ~ min-w-44 */
+  /* Inherit bg/fg/border/backdrop/shadow from Popover styles */
+}
+
+/* Wrapper scrolling */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap) {
+  max-height: var(--tmbk-dropdown-maxh, 320px);
+  overflow: auto;
+}
+
+/* ----------------------------------------------
+   Generic items (wrapper-aware, classless children)
+   Supports:
+   - wrapper > any > (a|button|div)
+   - wrapper > ul > li > (a|button|div)
+   ---------------------------------------------- */
+
+/* Base block + sizing + resets */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > a,
+       .tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > button,
+       .tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > ul > li > *,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > a,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > button,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > ul > li > *) {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border-radius: .5rem;
+  padding: .5rem .75rem;           /* = py-2 px-3 */
+  font-size: .875rem;              /* = text-sm */
+  color: var(--tmbk-fg);
+  background: transparent;
+  border: 0;
+  text-decoration: none;
+  line-height: 1.25;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Hover */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > a:hover,
+       .tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > button:hover,
+       .tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > ul > li > *:hover,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > a:hover,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > button:hover,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > ul > li > *:hover) {
+  background-color: color-mix(in oklab, var(--tmbk-bg-light) 70%, transparent);
+}
+
+/* Focus-visible ring (uses theme ring + bg) */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > a:focus-visible,
+       .tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > button:focus-visible,
+       .tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > ul > li > *:focus-visible,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > a:focus-visible,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > button:focus-visible,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > ul > li > *:focus-visible) {
+  box-shadow: 0 0 0 2px var(--tmbk-ring), 0 0 0 4px var(--tmbk-bg);
+}
+
+/* Disabled */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > *:disabled,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > *:disabled) {
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* UL reset */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > ul,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > ul) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Separators inside wrapper (hr) */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > hr,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > hr) {
+  margin: .25rem 0;
+  border: 0;
+  border-top: 1px solid color-mix(in oklab, var(--tmbk-border) 60%, transparent);
+  background: transparent;
+  height: 0;
+}
+
+/* Optional: icons within items align nicely */
+:where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap > * > * > .tmbk-icon,
+       .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap > * > * > .tmbk-icon) {
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  margin-right: .5rem;
+  line-height: 1;
+}

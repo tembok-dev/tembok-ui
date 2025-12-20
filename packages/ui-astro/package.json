@@ -1,6 +1,6 @@
 {
   "name": "@tembok/ui-astro",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,7 +20,9 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "require": "./src/index.ts"
-    }
+    },
+    "./styles.css": "./src/styles/styles.css",
+    "./styles/*": "./src/styles/*"
   },
   "files": [
     "src",
@@ -29,10 +31,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "peerDependencies": {
-    "astro": "^4 || ^5",
-    "tailwindcss": "^4"
+    "astro": "^4 || ^5"
   },
   "scripts": {
     "build": "echo 'Astro components are published as source - no build needed'",

@@ -1,0 +1,103 @@
+/* aliases.css — was the tail of styles.css */
+:where(.tmbk-theme) :where(.bg-bg) {
+  background-color: var(--tmbk-bg);
+}
+
+:where(.tmbk-theme) :where(.bg-bg-light) {
+  background-color: var(--tmbk-bg-light);
+}
+
+:where(.tmbk-theme) :where(.bg-bg-dark) {
+  background-color: var(--tmbk-bg-dark);
+}
+
+:where(.tmbk-theme) :where(.bg-primary) {
+  background-color: var(--tmbk-primary);
+}
+
+:where(.tmbk-theme) :where(.text-primary-fg) {
+  color: var(--tmbk-primary-fg);
+}
+
+:where(.tmbk-theme) :where(.text-fg) {
+  color: var(--tmbk-fg);
+}
+
+:where(.tmbk-theme) :where(.text-fg-light) {
+  color: var(--tmbk-fg-light);
+}
+
+:where(.tmbk-theme) :where(.text-fg-muted) {
+  color: var(--tmbk-fg-muted);
+}
+
+:where(.tmbk-theme) :where(.bg-secondary) {
+  background-color: var(--tmbk-secondary);
+}
+
+:where(.tmbk-theme) :where(.text-secondary-fg) {
+  color: var(--tmbk-secondary-fg);
+}
+
+:where(.tmbk-theme) :where(.border-border) {
+  border-color: var(--tmbk-border);
+}
+
+/* Estados (opcionales) */
+:where(.tmbk-theme) :where(.bg-success) {
+  background-color: var(--tmbk-success);
+}
+
+:where(.tmbk-theme) :where(.text-success-fg) {
+  color: var(--tmbk-success-fg);
+}
+
+:where(.tmbk-theme) :where(.bg-warning) {
+  background-color: var(--tmbk-warning);
+}
+
+:where(.tmbk-theme) :where(.text-warning-fg) {
+  color: var(--tmbk-warning-fg);
+}
+
+:where(.tmbk-theme) :where(.bg-info) {
+  background-color: var(--tmbk-info);
+}
+
+:where(.tmbk-theme) :where(.text-info-fg) {
+  color: var(--tmbk-info-fg);
+}
+
+:where(.tmbk-theme) :where(.bg-danger) {
+  background-color: var(--tmbk-danger);
+}
+
+:where(.tmbk-theme) :where(.text-danger-fg) {
+  color: var(--tmbk-danger-fg);
+}
+
+/* Ring/offset: fallback + mejora con color-mix */
+:where(.tmbk-theme) :where(.ring-primary) {
+  --tw-ring-color: var(--tmbk-ring);
+}
+
+@supports (color: color-mix(in oklab, black, white)) {
+  :where(.tmbk-theme) :where(.ring-primary) {
+    --tw-ring-color: color-mix(in oklab, var(--tmbk-primary) 40%, transparent);
+  }
+}
+
+:where(.tmbk-theme) :where(.ring-fg) {
+  --tw-ring-color: var(--tmbk-fg);
+}
+
+:where(.tmbk-theme) :where(.ring-offset-bg) {
+  --tw-ring-offset-color: var(--tmbk-bg);
+}
+
+/* Normaliza svg en botones/iconos (escala por font-size del contenedor) */
+:where(.tmbk-theme) :where(.tmbk-icon svg) {
+  width: 1em;
+  height: 1em;
+  display: block;
+}

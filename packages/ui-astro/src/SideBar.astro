@@ -1,290 +1,183 @@
 ---
-/** Reusable Sidebar (checkbox-driven, fully self-contained)
- *
- * QUICK START — BASIC USAGE (copy–paste and edit)
- * ------------------------------------------------
- * <Sidebar
- *   id="main-menu"
- *   side="right"
- *   widthClass="w-[86vw] max-w-[360px]"
- *   panelClass="px-6 pt-10 pb-10"
- *   defaultOpen={false}
- * >
- *   <Fragment slot="header">
- *     <!-- Optional custom header content (logo, title, etc.) -->
- *     <span class="text-sm text-muted">Menu</span>
- *   </Fragment>
- *
- *   <!-- Your panel content -->
- *   <nav class="flex flex-col gap-3">
- *     <a href="/about" class="hover:text-fg">About</a>
- *     <a href="/work" class="hover:text-fg">Work</a>
- *     <a href="/contact" class="hover:text-fg" data-close-menu>Contact</a>
- *   </nav>
- * </Sidebar>
- *
- * <!-- Anywhere on the page (no extra JS needed) -->
- * <button data-sidebar-toggle="main-menu" class="btn">Toggle Menu</button>
- *
- * Notes:
- * - The button above uses the built-in global trigger. Replace "main-menu" with your Sidebar's `id`.
- * - Add `data-close-menu` to any element inside the panel to close on click.
- * - To auto-close when clicking links (`<a>`), set `closeOnLinkClick={true}` on the Sidebar.
- *
- * PROPS
- * -----
- * - id: string (required) Unique checkbox id used by global triggers and overlay/label.
- * - side: "right" | "left" (default "right") Slide-in side.
- * - widthClass: string Tailwind width classes (default "w-[86vw] max-w-[360px]").
- * - panelClass: string Extra classes for CONTENT area (default "px-6 pt-10 pb-10").
- * - overlayClass: string Extra classes for the overlay element.
- * - showClose: boolean (default true) Show built-in sticky close button in header slot if no custom header is provided.
- * - closeAriaLabel: string (default "Close menu") ARIA label for the built-in close button.
- * - defaultOpen: boolean (default false) Start opened.
- * - useGlobalTriggers: boolean (default true) Enable [data-sidebar-open|close|toggle] anywhere in the document.
- * - debug: boolean (default false) Console logs lifecycle + interactions.
- * - closeOnLinkClick: boolean (default false) If true, <a> inside panel will close the sidebar on click.
- * - closeOnEscape: boolean (default true) Press Escape to close.
- * - closeOnOverlayClick: boolean (default true) Click the dimmed overlay to close.
- *
- * SLOTS
- * -----
- * - <slot name="header"> Sticky topbar content. If omitted and `showClose` is true, a close IconButton is rendered.
- * - <slot> Main scrollable panel content.
- *
- * GLOBAL TRIGGERS (no scripts required)
- * -------------------------------------
- * data-sidebar-open="ID"      // open specific sidebar
- * data-sidebar-close="ID"     // close specific sidebar
- * data-sidebar-toggle="ID"    // toggle specific sidebar
- *
- * INSIDE THE PANEL
- * ----------------
- * - Add `data-close-menu` to any element to close on click (e.g., a button).
- * - If `closeOnLinkClick` is true, anchors (<a>) will also close automatically.
- *
- * ACCESSIBILITY
- * -------------
- * - The close button includes an ARIA label.
- * - Overlay is aria-hidden, state is a native checkbox.
- * - You can add aria-controls/aria-expanded to your external trigger if desired.
- */
-
-import IconButton from "./IconButton.astro";
+import { cx } from "./utils/variants";
 
 const {
   id = "sidebar",
   side = "right",
-  widthClass = "w-[86vw] max-w-[360px]",
-  panelClass = "px-6 pt-10 pb-10",
-  overlayClass = "",
+  width,
+  maxWidth,
+  panelClassName,
+  overlayClassName,
   showClose = true,
   closeAriaLabel = "Close menu",
   defaultOpen = false,
-  useGlobalTriggers = true,
-  debug = false,
   closeOnLinkClick = false,
   closeOnEscape = true,
   closeOnOverlayClick = true,
+  bgColor,
+  textColor,
+  borderColor,
+  backdrop,
+  themeScoped = true,
 } = Astro.props;
 
-const sideTranslate =
-  side === "left"
-    ? "translate-x-[-100%] peer-checked/sidebar:translate-x-0 left-0 border-r"
-    : "translate-x-full peer-checked/sidebar:translate-x-0 right-0 border-l";
+const vars = {};
+if (bgColor) vars["--tmbk-bg"] = bgColor;
+if (textColor) vars["--tmbk-fg"] = textColor;
+if (borderColor) vars["--tmbk-border"] = borderColor;
+if (backdrop) vars["--tmbk-backdrop"] = backdrop;
+if (width) vars["--tmbk-sidebar-w"] = width;
+if (maxWidth) vars["--tmbk-sidebar-maxw"] = maxWidth;
 
-const headerAlign = side === "left" ? "justify-start" : "justify-end";
+const styleAttr = Object.entries(vars)
+  .map(([key, value]) => `${key}:${value}`)
+  .join(";");
+
+const overlayClass = cx(
+  "tmbk-sidebar-overlay",
+  themeScoped && "tmbk-theme",
+  overlayClassName
+);
+const panelClass = cx(
+  "tmbk-sidebar",
+  themeScoped && "tmbk-theme",
+  panelClassName
+);
 ---
 
-<!-- Root (scoping hooks for the inline script) -->
-<div
-  data-sidebar-root
-  data-sidebar-id={id}
-  data-global-triggers={useGlobalTriggers ? "true" : "false"}
-  data-debug={debug ? "true" : "false"}
-  data-close-on-link={closeOnLinkClick ? "true" : "false"}
-  data-close-on-esc={closeOnEscape ? "true" : "false"}
-  style="isolation: isolate;"
->
-  <!-- State -->
-  <input
-    id={id}
-    type="checkbox"
-    class="peer/sidebar sr-only"
-    {...defaultOpen ? { checked: true } : {}}
+<div data-sidebar-root data-sidebar-id={id}>
+  <div
+    class={overlayClass}
+    data-open={defaultOpen ? "true" : "false"}
+    data-sidebar-overlay
+    aria-hidden="true"
+    style={styleAttr || undefined}
   />
 
-  <!-- Overlay (click-to-close optional) -->
-  {
-    closeOnOverlayClick ? (
-      <label
-        for={id}
-        class={`fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 peer-checked/sidebar:opacity-100 peer-checked/sidebar:pointer-events-auto motion-reduce:transition-none ${overlayClass}`}
-        aria-hidden="true"
-      />
-    ) : (
-      <div
-        class={`fixed inset-0 z-[2147483646] bg-bg/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 peer-checked/sidebar:opacity-100 motion-reduce:transition-none ${overlayClass}`}
-        aria-hidden="true"
-      />
-    )
-  }
-
-  <!-- Panel -->
   <aside
-    class={`fixed top-0 bottom-0 z-[2147483647] ${widthClass}
-            ${sideTranslate}
-            transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]
-            bg-bg/90 backdrop-blur-xl border-border shadow-2xl will-change-transform`}
+    class={panelClass}
+    data-open={defaultOpen ? "true" : "false"}
+    data-side={side}
+    data-sidebar-panel
+    role="dialog"
+    aria-modal="true"
+    aria-hidden={defaultOpen ? "false" : "true"}
+    style={styleAttr || undefined}
   >
-    <!-- Scrollable content + sticky header -->
-    <div class="flex h-full flex-col overflow-y-auto">
-      <!-- Sticky topbar -->
-      <div
-        class="sticky top-0 z-10 w-full bg-bg/80 backdrop-blur-xl border-b border-border"
-      >
-        <div class={`flex ${headerAlign} items-center gap-2 px-6 py-4`}>
+    <div class="tmbk-sidebar-shell">
+      <div class="tmbk-sidebar-header" data-side={side}>
+        <div class="tmbk-sidebar-header-row">
           <slot name="header">
-            {
-              showClose && (
-                <IconButton
-                  label={closeAriaLabel}
-                  data-close-menu
-                  intent="ghost"
+            {showClose && (
+              <button
+                data-sidebar-close-button
+                aria-label={closeAriaLabel}
+                class="tmbk-sidebar-close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-x"
-                  >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
-                </IconButton>
-              )
-            }
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            )}
           </slot>
         </div>
       </div>
 
-      <!-- Content area -->
-      <div class={`flex-1 flex flex-col gap-8 ${panelClass}`}>
+      <div class="tmbk-sidebar-content" data-sidebar-content>
         <slot />
       </div>
     </div>
   </aside>
-
-  <!-- Encapsulated behavior: close logic, global triggers, escape -->
-  <script is:inline define:vars={{ id }}>
-    (function () {
-      // Production-safe initialization with DOMContentLoaded
-      function initSidebar() {
-        const root = document.querySelector('[data-sidebar-id="' + id + '"]');
-        if (!root) {
-          console.warn("[Sidebar] Root not found for id:", id);
-          return;
-        }
-
-        const useGlobal = root.getAttribute("data-global-triggers") === "true";
-        const dbg = root.getAttribute("data-debug") === "true";
-        const closeLink = root.getAttribute("data-close-on-link") === "true";
-        const closeEsc = root.getAttribute("data-close-on-esc") === "true";
-
-        const checkbox = root.querySelector('input[type="checkbox"]');
-        const panel = root.querySelector("aside");
-
-        if (!checkbox || !panel) {
-          console.warn("[Sidebar] Missing checkbox or panel for id:", id);
-          return;
-        }
-
-        if (dbg) console.log("[Sidebar]", id, "mounted");
-
-        // Close only on explicit [data-close-menu] (or links if opt-in)
-        panel.addEventListener(
-          "click",
-          (e) => {
-            const selector = closeLink
-              ? "a, [data-close-menu]"
-              : "[data-close-menu]";
-            const t = e.target.closest(selector);
-            if (!t) return;
-            checkbox.checked = false;
-            if (dbg)
-              console.log(
-                "[Sidebar]",
-                id,
-                "closed via",
-                t.matches("a") ? "link" : "[data-close-menu]",
-              );
-          },
-          { capture: true },
-        );
-
-        // Escape to close (optional)
-        if (closeEsc) {
-          window.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && checkbox.checked) {
-              checkbox.checked = false;
-              if (dbg) console.log("[Sidebar]", id, "closed via Escape");
-            }
-          });
-        }
-
-        // Global triggers anywhere in the document
-        if (useGlobal) {
-          document.addEventListener(
-            "click",
-            (e) => {
-              const opener = e.target.closest(
-                "[data-sidebar-open],[data-sidebar-close],[data-sidebar-toggle]",
-              );
-              if (!opener) return;
-
-              const openId = opener.getAttribute("data-sidebar-open");
-              const closeId = opener.getAttribute("data-sidebar-close");
-              const toggleId = opener.getAttribute("data-sidebar-toggle");
-              const tgt = openId || closeId || toggleId;
-              if (tgt !== id) return;
-
-              if (openId) checkbox.checked = true;
-              if (closeId) checkbox.checked = false;
-              if (toggleId) checkbox.checked = !checkbox.checked;
-
-              if (dbg)
-                console.log(
-                  "[Sidebar]",
-                  id,
-                  "global -> checked:",
-                  checkbox.checked,
-                );
-
-              // prevent accidental nav if trigger is a "#" link
-              if (opener.tagName === "A" && opener.getAttribute("href") === "#") {
-                e.preventDefault();
-              }
-            },
-            { capture: true },
-          );
-        }
-      }
-
-      // Initialize immediately if DOM is ready, otherwise wait
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initSidebar);
-      } else {
-        initSidebar();
-      }
-
-      // Re-init on Astro view transitions
-      document.addEventListener("astro:page-load", initSidebar);
-    })();
-  </script>
 </div>
+
+<script is:inline define:vars={{ id, closeOnLinkClick, closeOnEscape, closeOnOverlayClick }}>
+  (() => {
+    const root = document.querySelector('[data-sidebar-id="' + id + '"]');
+    if (!root) return;
+
+    const overlay = root.querySelector("[data-sidebar-overlay]");
+    const panel = root.querySelector("[data-sidebar-panel]");
+    if (!overlay || !panel) return;
+
+    const isOpen = () => panel.getAttribute("data-open") === "true";
+    const setOpen = (next) => {
+      overlay.setAttribute("data-open", next ? "true" : "false");
+      panel.setAttribute("data-open", next ? "true" : "false");
+      panel.setAttribute("aria-hidden", next ? "false" : "true");
+
+      const body = document.body;
+      if (next) {
+        body.dataset.tmbkSidebarScroll = body.style.overflow || "";
+        body.style.overflow = "hidden";
+      } else if (body.dataset.tmbkSidebarScroll !== undefined) {
+        body.style.overflow = body.dataset.tmbkSidebarScroll;
+        delete body.dataset.tmbkSidebarScroll;
+      }
+    };
+
+    const close = () => setOpen(false);
+
+    if (closeOnOverlayClick) {
+      overlay.addEventListener("click", close, true);
+    }
+
+    panel.addEventListener(
+      "click",
+      (e) => {
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        if (t.closest("[data-sidebar-close-button],[data-close-menu]")) {
+          close();
+          return;
+        }
+        if (closeOnLinkClick && t.closest("a")) close();
+      },
+      true
+    );
+
+    if (closeOnEscape) {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && isOpen()) {
+          e.preventDefault();
+          close();
+        }
+      });
+    }
+
+    document.addEventListener(
+      "click",
+      (e) => {
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        const opener = t.closest("[data-sidebar-open],[data-sidebar-close],[data-sidebar-toggle]");
+        if (!opener) return;
+
+        const openId = opener.getAttribute("data-sidebar-open");
+        const closeId = opener.getAttribute("data-sidebar-close");
+        const toggleId = opener.getAttribute("data-sidebar-toggle");
+        const tgt = openId || closeId || toggleId;
+        if (tgt !== id) return;
+
+        if (openId) setOpen(true);
+        if (closeId) setOpen(false);
+        if (toggleId) setOpen(!isOpen());
+
+        if (opener.tagName === "A" && opener.getAttribute("href") === "#") {
+          e.preventDefault();
+        }
+      },
+      true
+    );
+  })();
+</script>

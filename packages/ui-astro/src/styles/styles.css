@@ -1,0 +1,18 @@
+/* 0) Import tokens classes for each components */
+@import "./tokens.css";
+@import "./aliases.css";
+
+
+/* 1) Import helper classes for each components */
+@import "./components/buttons.css";
+@import "./components/overlay.css";
+@import "./components/modal.css";
+@import "./components/popover.css";
+@import "./components/dropdown.css";
+@import "./components/sidebar.css";
+@import "./components/toast.css";
+@import "./components/datatable.css";
+@import "./components/inputfield.css";
+@import "./components/loaders.css";
+
+
