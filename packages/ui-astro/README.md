@@ -1,5 +1,11 @@
 # @tembok/ui-astro
 
+[![npm version](https://badge.fury.io/js/%40tembok%2Fui-astro.svg)](https://badge.fury.io/js/%40tembok%2Fui-astro)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Astro](https://img.shields.io/badge/Astro-4%2B-ff5d01.svg)](https://astro.build/)
+
+📦 **NPM Package**: [@tembok/ui-astro](https://www.npmjs.com/package/@tembok/ui-astro)
+
 Headless Astro components for the Tembok design system. No Tailwind dependency.
 
 ## Installation

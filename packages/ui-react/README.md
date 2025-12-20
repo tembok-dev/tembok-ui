@@ -1,5 +1,11 @@
 # @tembok/ui-react
 
+[![npm version](https://badge.fury.io/js/%40tembok%2Fui-react.svg)](https://badge.fury.io/js/%40tembok%2Fui-react)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-18%2B-61dafb.svg)](https://react.dev/)
+
+📦 **NPM Package**: [@tembok/ui-react](https://www.npmjs.com/package/@tembok/ui-react)
+
 Headless React UI components for the Tembok Design System - automatically styled, zero setup.
 
 No Tailwind configuration. No CSS imports.
