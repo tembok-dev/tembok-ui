@@ -66,3 +66,13 @@
     opacity: 1;
     transform: translateY(0);
 }
+/* Modal overlay visibility */
+.tmbk-theme .tmbk-modal[data-state="closed"] .tmbk-modal-overlay,
+.tmbk-modal.tmbk-theme[data-state="closed"] .tmbk-modal-overlay {
+    display: none;
+}
+
+.tmbk-theme .tmbk-modal[data-state="open"] .tmbk-modal-overlay,
+.tmbk-modal.tmbk-theme[data-state="open"] .tmbk-modal-overlay {
+    display: block;
+}
