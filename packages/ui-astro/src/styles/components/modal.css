@@ -76,3 +76,14 @@
 .tmbk-modal.tmbk-theme[data-state="open"] .tmbk-modal-overlay {
     display: block;
 }
+
+/* Modal open/close interactivity */
+.tmbk-theme .tmbk-modal[data-state="closed"],
+.tmbk-modal.tmbk-theme[data-state="closed"] {
+    pointer-events: none;
+}
+
+.tmbk-theme .tmbk-modal[data-state="open"],
+.tmbk-modal.tmbk-theme[data-state="open"] {
+    pointer-events: auto;
+}
