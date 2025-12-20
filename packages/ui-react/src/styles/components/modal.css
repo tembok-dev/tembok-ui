@@ -21,13 +21,13 @@
 .tmbk-modal-panel.tmbk-theme {
     position: relative;
     z-index: calc(var(--modal-z, 2147483646) + 1);
-    width: min(92vw, 560px);
+    width: var(--tmbk-modal-width, min(92vw, 560px));
     border-radius: .75rem;
 
-    background-color: var(--tmbk-bg, #fff);
-    color: var(--tmbk-fg, #111);
-    border: 1px solid var(--tmbk-border, rgba(0, 0, 0, .12));
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .18), 0 4px 12px rgba(0, 0, 0, .12);
+    background-color: var(--tmbk-modal-bg, var(--tmbk-bg, #fff));
+    color: var(--tmbk-modal-fg, var(--tmbk-fg, #111));
+    border: 1px solid var(--tmbk-modal-border, var(--tmbk-border, rgba(0, 0, 0, .12)));
+    box-shadow: var(--tmbk-modal-shadow, 0 10px 30px rgba(0, 0, 0, .18), 0 4px 12px rgba(0, 0, 0, .12));
     padding: 1.5rem;
 
     opacity: 1;
