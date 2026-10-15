@@ -21,7 +21,9 @@
 .tmbk-modal-panel.tmbk-theme {
     position: relative;
     z-index: calc(var(--modal-z, 2147483646) + 1);
+    box-sizing: border-box;
     width: var(--tmbk-modal-width, min(92vw, 560px));
+    max-width: calc(100vw - 32px);
     border-radius: .75rem;
 
     background-color: var(--tmbk-modal-bg, var(--tmbk-bg, #fff));

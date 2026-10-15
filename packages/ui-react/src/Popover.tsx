@@ -90,6 +90,14 @@ export function Popover({
   }>({});
 
   const handleClose = useCallback(() => setIsOpen(false), []);
+  const closeWithFocusReturn = useCallback(() => {
+    setIsOpen(false);
+    const target = document.activeElement;
+    if (panelRef.current?.contains(target) && triggerRef.current) {
+      const trigger = triggerRef.current.querySelector<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])');
+      trigger?.focus();
+    }
+  }, []);
 
   // Positioning engine (kept as-is)
   usePosition({ triggerRef, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
@@ -121,7 +129,7 @@ export function Popover({
     }, [ref, handler, active, extraIgnoreRefs]);
   }
 
-  useEscapeKey(handleClose, isOpen);
+  useEscapeKey(closeWithFocusReturn, isOpen);
   useClickOutside(panelRef, handleClose, isOpen && openOn === "click", [triggerRef]);
 
   // Trigger handlers
@@ -208,7 +216,7 @@ export function Popover({
       <span ref={triggerRef} className="tmbk-popover-trigger">
         {triggerElement}
       </span>
-      {typeof window !== "undefined" ? createPortal(panel, document.body) : null}
+      {isOpen && typeof window !== "undefined" ? createPortal(panel, document.body) : null}
     </div>
   );
 }

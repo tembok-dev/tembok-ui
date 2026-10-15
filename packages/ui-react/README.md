@@ -11,7 +11,7 @@ Headless React UI components for the Tembok Design System - automatically styled
 No Tailwind configuration. No CSS imports.
 Just install and use.
 
-Current stable: 0.0.19
+Current package source: 0.0.22 (pending npm publication; install the latest published version for production)
 You can install prerelease builds using the @next tag if needed.
 
 --------------------------------------------------------------------
@@ -79,7 +79,7 @@ Icon-only button with automatic icon scaling.
 
 ### Modal
 
-Accessible modal dialog rendered via portal, with focus trap and backdrop blur.
+Accessible modal dialog rendered via portal, with initial focus, Tab/Shift+Tab containment, and focus restoration to the opener on close. Panel width includes padding/border and is capped to the viewport. Long-content vertical scrolling and coordinated nested overlay behavior remain follow-up work.
 
 const [open, setOpen] = useState(false);
 
@@ -164,7 +164,7 @@ export default function Example() {
 
 ### Dropdown
 
-Menu anchored to a trigger.
+Menu anchored to a trigger. Defaults to collision-aware automatic vertical placement; an explicit `side="up"` or `side="down"` is a preference and can flip when space is insufficient.
 
 ```tsx
 import { Dropdown } from "@tembok/ui-react";
@@ -185,7 +185,7 @@ export default function Example() {
 
 ### Popover
 
-Floating panel attached to any trigger.
+Floating panel attached to any trigger. Panels unmount on close; Escape returns keyboard focus to the trigger if focus is inside. Explicit `side` values are preferred directions, not strict placement guarantees.
 
 ```tsx
 import { Popover } from "@tembok/ui-react";
@@ -289,6 +289,9 @@ Dark mode activates automatically via .dark or [data-theme="dark"].
 
 ## Changelog
 
+- 0.0.22 (source prepared, not yet published) - React overlay hardening: Popover/Dropdown collision flipping and viewport/ancestor scroll repositioning; closed Popover unmounting; Escape focus return; Modal focus ownership and mobile-width safety. Chrome QA passed at 375, 900, 1280px; package typecheck/build passed. Nested layers, strict positioning, and tall Modal scrolling are not covered by this release.
+- 0.0.21 - Previously published React package version at start of overlay work; see Git history for preceding changes.
+
 - 0.0.19 - Added Loaders component (energyspin, spintrail)
 - 0.0.18 - Added InputField component
 - 0.0.17 - Added DataTable component
@@ -299,3 +302,14 @@ Dark mode activates automatically via .dark or [data-theme="dark"].
 ## License
 
 MIT (c) 2025 Tembok Dev
+
+## React overlay QA and release checklist
+
+Source: `tembok-dev/tembok-ui`, React package `packages/ui-react`.
+
+1. Run `pnpm --filter @tembok/ui-react typecheck` and `pnpm --filter @tembok/ui-react build`.
+2. Use the local-build React/Vite overlay QA fixture in `agmitre/tembok-ui-kit-preview` at `/qa/overlays`. Verify it resolves the linked sibling package, not the published npm artifact.
+3. Check 375px, 900px and 1280px: Popover/Dropdown corner flipping and overflow, Escape focus restoration, closed panel unmounting; Modal initial focus, Tab wrap, Escape restoration and mobile width.
+4. After approving the changes and checking downstream compatibility, publish explicitly with the project's npm release credentials and verify the registry version. A Git merge or source version bump **does not** publish npm automatically.
+
+**Scope:** These changes apply only to `@tembok/ui-react` (React 18/19). `@tembok/ui-astro` was not modified or validated. Review Astro separately if shared tokens, CSS, overlay behavior or public APIs change.

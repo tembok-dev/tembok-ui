@@ -26,7 +26,7 @@ export type DropdownProps = {
 export function Dropdown({
   trigger,
   children,
-  side = "down",
+  side = "auto",
   align = "start",
   className,
   maxHeight = 320,

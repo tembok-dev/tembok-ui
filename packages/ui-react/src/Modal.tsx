@@ -62,7 +62,7 @@ export interface ModalProps {
  *   <p>Modal content here</p>
  * </Modal>
  */
-export function Modal({
+function ModalContent({
   open,
   onOpenChange,
   children,
@@ -98,10 +98,7 @@ export function Modal({
     }
   }, [open]);
 
-  if (!open) return null;
-
   return (
-    <Portal>
       <div
         id={id}
         // Scope + layout shell (no Tailwind)
@@ -128,6 +125,16 @@ export function Modal({
           {footer && <footer className="tmbk-modal-footer">{footer}</footer>}
         </div>
       </div>
+  );
+}
+
+
+/** Mount focus handling with the portaled panel, not before the portal exists. */
+export function Modal(props: ModalProps) {
+  if (!props.open) return null;
+  return (
+    <Portal>
+      <ModalContent {...props} />
     </Portal>
   );
 }
