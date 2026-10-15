@@ -2,9 +2,12 @@ import { useEffect, RefObject } from 'react';
 
 export type Side = 'auto' | 'down' | 'up';
 export type Align = 'start' | 'center' | 'end';
+export type VirtualAnchor = { x: number; y: number; width?: number; height?: number };
 
 interface PositionConfig<T extends HTMLElement = HTMLElement, P extends HTMLElement = HTMLElement, A extends HTMLElement = HTMLElement> {
   triggerRef: RefObject<T>;
+  anchorRect?: VirtualAnchor | DOMRect | null;
+  anchorElement?: HTMLElement | null;
   panelRef: RefObject<P>;
   arrowRef?: RefObject<A>;
   side?: Side;
@@ -18,7 +21,7 @@ interface PositionConfig<T extends HTMLElement = HTMLElement, P extends HTMLElem
  * Explicit sides are preferences: flip when the opposite side fits better.
  */
 export function usePosition<T extends HTMLElement = HTMLElement, P extends HTMLElement = HTMLElement, A extends HTMLElement = HTMLElement>({
-  triggerRef, panelRef, arrowRef, side = 'auto', align = 'center',
+  triggerRef, anchorRect, anchorElement, panelRef, arrowRef, side = 'auto', align = 'center',
   offset = 10, edgePad = 16, isOpen,
 }: PositionConfig<T, P, A>) {
   useEffect(() => {
@@ -28,9 +31,11 @@ export function usePosition<T extends HTMLElement = HTMLElement, P extends HTMLE
       const trigger = triggerRef.current;
       const panel = panelRef.current;
       const arrow = arrowRef?.current;
-      if (!trigger || !panel) return;
-
-      const tr = trigger.getBoundingClientRect();
+      if (!panel) return;
+      if (!anchorRect && !anchorElement && !trigger) return;
+      const rect = anchorRect ?? anchorElement?.getBoundingClientRect() ?? trigger!.getBoundingClientRect();
+      const tr = { left: rect.x, top: rect.y, width: rect.width ?? 0, height: rect.height ?? 0,
+        right: rect.x + (rect.width ?? 0), bottom: rect.y + (rect.height ?? 0) };
       const viewport = window.visualViewport;
       const vx = viewport?.offsetLeft ?? 0;
       const vy = viewport?.offsetTop ?? 0;
@@ -99,5 +104,5 @@ export function usePosition<T extends HTMLElement = HTMLElement, P extends HTMLE
       window.visualViewport?.removeEventListener('resize', position);
       window.visualViewport?.removeEventListener('scroll', position);
     };
-  }, [triggerRef, panelRef, arrowRef, side, align, offset, edgePad, isOpen]);
+  }, [triggerRef, anchorRect, anchorElement, panelRef, arrowRef, side, align, offset, edgePad, isOpen]);
 }

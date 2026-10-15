@@ -1,11 +1,17 @@
 // tembok/components/src/react/Dropdown.tsx
 import { ReactElement, ReactNode } from "react";
-import { Popover } from "./Popover";
-import { Side, Align } from "./hooks/usePosition";
+import { Popover, PopoverChangeReason } from "./Popover";
+import { Side, Align, VirtualAnchor } from "./hooks/usePosition";
 import { cx } from "./utils/variants";
 
 export type DropdownProps = {
-  trigger: ReactElement;
+  trigger?: ReactElement;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean, reason: PopoverChangeReason) => void;
+  anchorRect?: VirtualAnchor | DOMRect | null;
+  anchorElement?: HTMLElement | null;
+  ariaLabel?: string;
   children: ReactNode;     // direct items OR <ul><li>…</li></ul>
   side?: Side;
   align?: Align;
@@ -25,6 +31,12 @@ export type DropdownProps = {
 
 export function Dropdown({
   trigger,
+  open,
+  defaultOpen,
+  onOpenChange,
+  anchorRect,
+  anchorElement,
+  ariaLabel,
   children,
   side = "auto",
   align = "start",
@@ -55,6 +67,12 @@ export function Dropdown({
   return (
     <Popover
       trigger={trigger}
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange}
+      anchorRect={anchorRect}
+      anchorElement={anchorElement}
+      ariaLabel={ariaLabel}
       side={side}
       align={align}
       role="menu"

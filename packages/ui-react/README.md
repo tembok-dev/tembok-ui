@@ -199,6 +199,41 @@ export default function Example() {
 }
 ```
 
+### Controlled Popover and context menus (unreleased)
+
+`Popover` and `Dropdown` support the same optional controlled behavior:
+
+```tsx
+const [open, setOpen] = useState(false);
+const [point, setPoint] = useState({ x: 0, y: 0 });
+
+<div onContextMenu={(event) => {
+  event.preventDefault();
+  setPoint({ x: event.clientX, y: event.clientY });
+  setOpen(true);
+}}>
+  Right-click here
+</div>
+<Dropdown
+  open={open}
+  onOpenChange={(next, reason) => {
+    setOpen(next);
+    // reason: "trigger" | "hover" | "outside" | "escape" | "select"
+  }}
+  anchorRect={point}
+  ariaLabel="Context actions"
+>
+  <button>Rename</button>
+</Dropdown>
+```
+
+- Existing click/hover trigger usage remains uncontrolled by default.
+- `defaultOpen` supplies the initial state for uncontrolled components.
+- `anchorRect` accepts x/y and optional width/height; `anchorElement` is also supported. They reuse collision positioning, with `anchorRect` taking precedence.
+- A triggerless controlled menu should supply an accessible `ariaLabel`. It focuses its first action when opened and restores the previous focused control on Escape where possible.
+- Pointer-outside dismissal does not move focus back to the opener.
+- Coordinated nested Escape/outside dismissal and shared layer stacks are **not** solved by this API addition; see #4.
+
 ### SideBar
 
 Slide-out panel with simple data-attribute triggers.
