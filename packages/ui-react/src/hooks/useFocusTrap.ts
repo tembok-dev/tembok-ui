@@ -19,7 +19,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLElement>(
     initial.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab' || event.defaultPrevented || !ownsKeyboard()) return;
+      if (event.key !== 'Tab' || event.defaultPrevented || (ownsKeyboard && !ownsKeyboard())) return;
       const items = focusables();
       const active = document.activeElement;
       if (!items.length) {
