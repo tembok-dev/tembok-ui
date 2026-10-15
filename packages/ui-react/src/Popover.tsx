@@ -102,6 +102,7 @@ export function Popover({
   const triggerRef = useRef<HTMLSpanElement>(null!);
   const panelRef = useRef<HTMLDivElement>(null!);
   const arrowRef = useRef<HTMLDivElement>(null!);
+  const virtualOpenerRef = useRef<HTMLElement | null>(null);
   const hoverTimeoutRef = useRef<{
     enter?: ReturnType<typeof setTimeout>;
     leave?: ReturnType<typeof setTimeout>;
@@ -111,11 +112,24 @@ export function Popover({
   const closeWithFocusReturn = useCallback(() => {
     changeOpen(false, "escape");
     const target = document.activeElement;
-    if (panelRef.current?.contains(target) && triggerRef.current) {
-      const trigger = triggerRef.current.querySelector<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])');
-      trigger?.focus();
+    if (panelRef.current?.contains(target)) {
+      const trigger = triggerRef.current?.querySelector<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])');
+      const opener = trigger ?? virtualOpenerRef.current;
+      if (opener?.isConnected) opener.focus();
     }
   }, [changeOpen]);
+
+  // Triggerless menus own focus on open; normal Popover behavior is unchanged.
+  useEffect(() => {
+    if (!isOpen || trigger) return;
+    virtualOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const raf = requestAnimationFrame(() => {
+      const panel = panelRef.current;
+      const first = panel?.querySelector<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      (first ?? panel)?.focus();
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [isOpen, trigger]);
 
   // Positioning engine (kept as-is)
   usePosition({ triggerRef, anchorRect, anchorElement, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
@@ -209,6 +223,7 @@ export function Popover({
       ref={panelRef}
       id={panelId}
       role={role}
+      tabIndex={-1}
       aria-labelledby={trigger ? triggerId : undefined}
       aria-label={!trigger ? ariaLabel : undefined}
       className={cx(
