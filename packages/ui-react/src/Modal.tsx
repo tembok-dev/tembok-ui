@@ -84,10 +84,10 @@ function ModalContent({
   useFocusTrap(panelRef, open);
 
   // Escape key to close
-  useEscapeKey(handleClose, open);
+  const isTopLayer = useEscapeKey(handleClose, open);
 
   // Click outside to close
-  useClickOutside(panelRef, handleClose, open);
+  useClickOutside(panelRef, () => { if (isTopLayer()) handleClose(); }, open);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
