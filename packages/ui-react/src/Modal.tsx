@@ -81,13 +81,12 @@ function ModalContent({
   }, [onOpenChange]);
 
   // Focus trap when open
-  useFocusTrap(panelRef, open);
-
-  // Escape key to close
-  useEscapeKey(handleClose, open);
+  // Escape key to close; also determines ownership of Tab navigation.
+  const isTopLayer = useEscapeKey(handleClose, open);
+  useFocusTrap(panelRef, open, isTopLayer);
 
   // Click outside to close
-  useClickOutside(panelRef, handleClose, open);
+  useClickOutside(panelRef, () => { if (isTopLayer()) handleClose(); }, open);
 
   // Prevent body scroll when modal is open
   useEffect(() => {

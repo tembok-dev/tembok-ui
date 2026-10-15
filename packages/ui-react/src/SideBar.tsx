@@ -111,7 +111,7 @@ export function SideBar({
   const handleClose = () => setIsOpen(false);
 
   // Escape
-  useEscapeKey(handleClose, isOpen && closeOnEscape);
+  const isTopLayer = useEscapeKey(() => { if (closeOnEscape) handleClose(); }, isOpen);
 
   // Body scroll lock
   useEffect(() => {
@@ -177,7 +177,7 @@ export function SideBar({
         )}
         data-open={isOpen ? "true" : "false"}
         aria-hidden="true"
-        onClick={closeOnOverlayClick ? handleClose : undefined}
+        onClick={closeOnOverlayClick ? () => { if (isTopLayer()) handleClose(); } : undefined}
         style={vars}
       />
 
