@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Modal, Popover, Dropdown, IconButton } from '@tembok/ui-react';
+import { Button, Modal, Popover, Dropdown, IconButton, SideBar } from '@tembok/ui-react';
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 type Side = 'auto' | 'up' | 'down';
@@ -67,6 +67,7 @@ export function Playground() {
             <label><input type="checkbox" checked={tall} onChange={event => setTall(event.target.checked)} /> Tall menu</label>
             <label><input type="checkbox" checked={emptyModal} onChange={event => setEmptyModal(event.target.checked)} /> Modal without focusables</label>
             <Button onClick={() => setModalOpen(true)}>Open modal</Button>
+            <Button data-sidebar-open="qa-sidebar" intent="neutral">Open sidebar</Button>
             <button type="button">Outside focus target</button>
           </div>
           <p className="qa-note">Tab through each overlay, press Escape, verify focus returns to its trigger. Test at 375, 900 and 1280px.</p>
@@ -110,6 +111,14 @@ export function Playground() {
           </div>
         </main>
       )}
+      <SideBar id="qa-sidebar" closeOnEscape={false} showClose header={<strong>QA sidebar (Escape disabled)</strong>}>
+        <div className="fixture-content">
+          <button data-close-menu type="button">Close sidebar</button>
+          <Popover trigger={<Button intent="neutral">Sidebar popover</Button>}>
+            <div className="fixture-content"><button type="button">Sidebar nested action</button></div>
+          </Popover>
+        </div>
+      </SideBar>
       <Modal open={modalOpen} onOpenChange={setModalOpen}
         header={<h2>QA modal</h2>}
         footer={emptyModal ? undefined : <Button onClick={() => setModalOpen(false)}>Close modal</Button>}>
