@@ -113,7 +113,7 @@ export function Playground() {
       <Modal open={modalOpen} onOpenChange={setModalOpen}
         header={<h2>QA modal</h2>}
         footer={emptyModal ? undefined : <Button onClick={() => setModalOpen(false)}>Close modal</Button>}>
-        {!emptyModal && <div className="modal-fixture"><label>Modal input <input aria-label="Modal input" /></label><button type="button" disabled>Disabled (skip)</button><a href="#focus-check" onClick={event => event.preventDefault()}>Modal link</a></div>}
+        {!emptyModal && <div className="modal-fixture"><label>Modal input <input aria-label="Modal input" /></label><button type="button" disabled>Disabled (skip)</button><a href="#focus-check" onClick={event => event.preventDefault()}>Modal link</a><Popover trigger={<Button type="button" intent="neutral">Nested popover</Button>}><div className="fixture-content"><button type="button">Nested action</button></div></Popover></div>}
       </Modal>
     </div>
   );
