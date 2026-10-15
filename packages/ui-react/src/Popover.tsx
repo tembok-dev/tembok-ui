@@ -10,11 +10,12 @@ import {
   useEffect,
 } from "react";
 import { cx } from "./utils/variants";
-import { usePosition, Side, Align } from "./hooks/usePosition";
+import { usePosition, Side, Align, VirtualAnchor } from "./hooks/usePosition";
 import { useEscapeKey } from "./hooks/useEscapeKey";
 import { createPortal } from "react-dom";
 
 type OpenMode = "click" | "hover";
+export type PopoverChangeReason = "trigger" | "hover" | "outside" | "escape" | "select";
 
 /**
  * Headless Popover — attach a floating panel to any trigger element.
@@ -39,7 +40,13 @@ type OpenMode = "click" | "hover";
  */
 
 export interface PopoverProps {
-  trigger: ReactElement;
+  trigger?: ReactElement;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean, reason: PopoverChangeReason) => void;
+  anchorRect?: VirtualAnchor | DOMRect | null;
+  anchorElement?: HTMLElement | null;
+  ariaLabel?: string;
   children: ReactNode;
   openOn?: OpenMode;
   side?: Side;
@@ -65,6 +72,12 @@ export interface PopoverProps {
 
 export function Popover({
   trigger,
+  open,
+  defaultOpen = false,
+  onOpenChange,
+  anchorRect,
+  anchorElement,
+  ariaLabel,
   children,
   openOn = "click",
   side = "auto",
@@ -80,7 +93,12 @@ export function Popover({
   themeScoped = true,
   zIndex,
 }: PopoverProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const isOpen = open ?? internalOpen;
+  const changeOpen = useCallback((next: boolean, reason: PopoverChangeReason) => {
+    if (open === undefined) setInternalOpen(next);
+    if (next !== isOpen) onOpenChange?.(next, reason);
+  }, [open, isOpen, onOpenChange]);
   const triggerRef = useRef<HTMLSpanElement>(null!);
   const panelRef = useRef<HTMLDivElement>(null!);
   const arrowRef = useRef<HTMLDivElement>(null!);
@@ -89,18 +107,18 @@ export function Popover({
     leave?: ReturnType<typeof setTimeout>;
   }>({});
 
-  const handleClose = useCallback(() => setIsOpen(false), []);
+  const handleClose = useCallback(() => changeOpen(false, "outside"), [changeOpen]);
   const closeWithFocusReturn = useCallback(() => {
-    setIsOpen(false);
+    changeOpen(false, "escape");
     const target = document.activeElement;
     if (panelRef.current?.contains(target) && triggerRef.current) {
       const trigger = triggerRef.current.querySelector<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])');
       trigger?.focus();
     }
-  }, []);
+  }, [changeOpen]);
 
   // Positioning engine (kept as-is)
-  usePosition({ triggerRef, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
+  usePosition({ triggerRef, anchorRect, anchorElement, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
 
   // Local click-outside (click-mode only)
   function useClickOutside(
@@ -137,20 +155,20 @@ export function Popover({
     if (openOn !== "click") return;
     e.preventDefault();
     e.stopPropagation();
-    setIsOpen((prev) => !prev);
+    changeOpen(!isOpen, "trigger");
   };
 
   const handleMouseEnter = () => {
     if (openOn === "hover") {
       clearTimeout(hoverTimeoutRef.current.leave);
-      hoverTimeoutRef.current.enter = setTimeout(() => setIsOpen(true), 80);
+      hoverTimeoutRef.current.enter = setTimeout(() => changeOpen(true, "hover"), 80);
     }
   };
 
   const handleMouseLeave = () => {
     if (openOn === "hover") {
       clearTimeout(hoverTimeoutRef.current.enter);
-      hoverTimeoutRef.current.leave = setTimeout(() => setIsOpen(false), 120);
+      hoverTimeoutRef.current.leave = setTimeout(() => changeOpen(false, "hover"), 120);
     }
   };
 
@@ -160,7 +178,7 @@ export function Popover({
     const clickable = target.closest('a, button, [role="menuitem"]');
     if (clickable) {
       const dataAttr = clickable.getAttribute("data-close-popover");
-      if (dataAttr !== "false") setIsOpen(false);
+      if (dataAttr !== "false") changeOpen(false, "select");
     }
   };
 
@@ -168,7 +186,7 @@ export function Popover({
   const triggerId = useRef(`tmbk-popover-trigger-${Math.random().toString(36).slice(2)}`).current;
   const panelId = useRef(`tmbk-popover-panel-${Math.random().toString(36).slice(2)}`).current;
 
-  const triggerElement = cloneElement(trigger, {
+  const triggerElement = trigger ? cloneElement(trigger, {
     onClick: handleTriggerClick,
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
@@ -176,7 +194,7 @@ export function Popover({
     "aria-expanded": isOpen,
     "aria-controls": panelId,
     id: triggerId,
-  } as any);
+  } as any) : null;
 
   // CSS variable overrides to avoid style bleeding
   const variableOverrides: React.CSSProperties = {
@@ -191,7 +209,8 @@ export function Popover({
       ref={panelRef}
       id={panelId}
       role={role}
-      aria-labelledby={triggerId}
+      aria-labelledby={trigger ? triggerId : undefined}
+      aria-label={!trigger ? ariaLabel : undefined}
       className={cx(
         "tmbk-popover",
         themeScoped && "tmbk-theme",
@@ -213,9 +232,7 @@ export function Popover({
 
   return (
     <div className="tmbk-popover-root">
-      <span ref={triggerRef} className="tmbk-popover-trigger">
-        {triggerElement}
-      </span>
+      {trigger && <span ref={triggerRef} className="tmbk-popover-trigger">{triggerElement}</span>}
       {isOpen && typeof window !== "undefined" ? createPortal(panel, document.body) : null}
     </div>
   );
