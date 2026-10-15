@@ -26,4 +26,5 @@ export function useEscapeKey(
       document.removeEventListener('keydown', listener, true);
     };
   }, [handler, enabled, isTop]);
+  return isTop;
 }
