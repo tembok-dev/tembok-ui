@@ -153,7 +153,7 @@ export function Popover({
         const clickedInIgnored = extraIgnoreRefs.some(
           (r) => r.current && r.current.contains(target)
         );
-        if (!clickedInPanel && !clickedInIgnored) handler();
+        if (!clickedInPanel && !clickedInIgnored && isTopLayer()) handler();
       };
 
       document.addEventListener("pointerdown", onPointerDown, { capture: true });
@@ -161,7 +161,7 @@ export function Popover({
     }, [ref, handler, active, extraIgnoreRefs]);
   }
 
-  useEscapeKey(closeWithFocusReturn, isOpen);
+  const isTopLayer = useEscapeKey(closeWithFocusReturn, isOpen);
   useClickOutside(panelRef, handleClose, isOpen && openOn === "click", [triggerRef]);
 
   // Trigger handlers
