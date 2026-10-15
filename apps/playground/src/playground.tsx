@@ -11,6 +11,9 @@ export function Playground() {
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
   const [emptyModal, setEmptyModal] = useState(false);
+  const [contextOpen, setContextOpen] = useState(false);
+  const [contextPoint, setContextPoint] = useState({ x: 120, y: 200 });
+  const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
     <div className="tmbk-theme playground">
@@ -67,6 +70,30 @@ export function Playground() {
             <button type="button">Outside focus target</button>
           </div>
           <p className="qa-note">Tab through each overlay, press Escape, verify focus returns to its trigger. Test at 375, 900 and 1280px.</p>
+          <section className="playground-card">
+            <h2>Controlled context menu</h2>
+            <p>Right-click in the dashed region, or use the keyboard button to open without a synthetic trigger click.</p>
+            <div data-testid="context-zone" tabIndex={0}
+              onContextMenu={event => {
+                event.preventDefault();
+                setContextPoint({ x: event.clientX, y: event.clientY });
+                setContextOpen(true);
+              }}
+              style={{ border: '1px dashed currentColor', padding: 24 }}>
+              Right-click here
+            </div>
+            <Button type="button" onClick={() => { setContextPoint({ x: 120, y: 240 }); setContextOpen(true); }}>Open context menu by keyboard</Button>
+            <p data-testid="dismissal-reason">Last dismissal: {lastDismissal}</p>
+            <Dropdown open={contextOpen} onOpenChange={(next, reason) => {
+              setContextOpen(next);
+              if (!next) setLastDismissal(reason);
+            }} anchorRect={contextPoint} ariaLabel="Context actions" side="auto">
+              <div className="fixture-content" data-testid="context-menu">
+                <button type="button">Rename</button>
+                <button type="button" data-close-popover="false">Keep open</button>
+              </div>
+            </Dropdown>
+          </section>
           <div className={`qa-anchors qa-${corner}`}>
             <Popover key={`popover-${corner}-${side}-${tall}`} trigger={<Button intent="neutral">Open popover</Button>} side={side} align="end">
               <div className="fixture-content" data-testid="popover-content">
