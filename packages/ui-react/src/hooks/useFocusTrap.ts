@@ -1,60 +1,48 @@
 import { useEffect, RefObject } from 'react';
 
-/**
- * Custom hook to trap focus within a container element
- * Used for Modal accessibility - keeps focus inside when open
- */
+const focusableSelector =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/** Trap keyboard navigation and restore focus to the opening control. */
 export function useFocusTrap<T extends HTMLElement = HTMLElement>(
-  containerRef: RefObject<T>,
-  isActive: boolean
+  containerRef: RefObject<T>, isActive: boolean
 ) {
   useEffect(() => {
     if (!isActive || !containerRef.current) return;
-
     const container = containerRef.current;
-    const focusableSelector = 
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const focusables = () => Array.from(container.querySelectorAll<HTMLElement>(focusableSelector))
+      .filter(el => !el.hidden && !el.closest('[hidden], [inert], [aria-hidden="true"]') &&
+        el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden');
+    const initial = container.querySelector<HTMLElement>('[autofocus]') ??
+      focusables()[0] ?? container;
+    initial.focus();
 
-    const getFocusableElements = () => {
-      return Array.from(
-        container.querySelectorAll<HTMLElement>(focusableSelector)
-      );
-    };
-
-    // Focus first element on mount
-    const focusables = getFocusableElements();
-    if (focusables.length > 0) {
-      focusables[0].focus();
-    }
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-
-      const focusables = getFocusableElements();
-      if (focusables.length === 0) return;
-
-      const firstFocusable = focusables[0];
-      const lastFocusable = focusables[focusables.length - 1];
-
-      if (e.shiftKey) {
-        // Shift + Tab
-        if (document.activeElement === firstFocusable) {
-          e.preventDefault();
-          lastFocusable.focus();
-        }
-      } else {
-        // Tab
-        if (document.activeElement === lastFocusable) {
-          e.preventDefault();
-          firstFocusable.focus();
-        }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab' || event.defaultPrevented) return;
+      const items = focusables();
+      const active = document.activeElement;
+      if (!items.length) {
+        event.preventDefault();
+        container.focus();
+        return;
+      }
+      const first = items[0], last = items[items.length - 1];
+      if (!container.contains(active)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && (active === first || active === container)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || active === container)) {
+        event.preventDefault();
+        first.focus();
       }
     };
-
-    container.addEventListener('keydown', handleTabKey);
-
+    document.addEventListener('keydown', onKeyDown, true);
     return () => {
-      container.removeEventListener('keydown', handleTabKey);
+      document.removeEventListener('keydown', onKeyDown, true);
+      if (previous?.isConnected) previous.focus();
     };
-  }, [isActive, containerRef]);
+  }, [containerRef, isActive]);
 }
