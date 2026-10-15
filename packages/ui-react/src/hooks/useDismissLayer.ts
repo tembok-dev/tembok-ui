@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /** An internal registry for Escape/outside dismissal priority.
  * Last activated layer receives Escape; underlying layers remain untouched.
@@ -18,5 +18,5 @@ export function useDismissLayer(active: boolean) {
       if (index !== -1) layers.splice(index, 1);
     };
   }, [active, id]);
-  return () => isTopDismissLayer(id);
+  return useCallback(() => isTopDismissLayer(id), [id]);
 }
