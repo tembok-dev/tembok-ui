@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useDismissLayer } from './useDismissLayer';
 
 /**
  * Custom hook to handle Escape key press
@@ -8,11 +9,13 @@ export function useEscapeKey(
   handler: (event: KeyboardEvent) => void,
   enabled: boolean = true
 ) {
+  const isTop = useDismissLayer(enabled);
   useEffect(() => {
     if (!enabled) return;
 
     const listener = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && !event.defaultPrevented && isTop()) {
+        event.preventDefault();
         handler(event);
       }
     };
@@ -22,5 +25,5 @@ export function useEscapeKey(
     return () => {
       document.removeEventListener('keydown', listener, true);
     };
-  }, [handler, enabled]);
+  }, [handler, enabled, isTop]);
 }
