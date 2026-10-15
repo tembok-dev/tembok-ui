@@ -8,6 +8,7 @@ import {
   ReactElement,
   RefObject,
   useEffect,
+  useLayoutEffect,
 } from "react";
 import { cx } from "./utils/variants";
 import { usePosition, Side, Align, VirtualAnchor } from "./hooks/usePosition";
@@ -129,6 +130,42 @@ export function Popover({
       (first ?? panel)?.focus();
     });
     return () => cancelAnimationFrame(raf);
+  }, [isOpen, trigger]);
+
+  // A child surface is portaled outside its parent's stacking context.
+  // Raise only nested surfaces, leaving standalone z-index behavior unchanged.
+  useLayoutEffect(() => {
+    if (!isOpen || !panelRef.current || zIndex != null) return;
+    const anchor = triggerRef.current ?? anchorElement;
+    const nested = anchor?.closest('.tmbk-modal, .tmbk-sidebar');
+    if (nested) panelRef.current.style.zIndex = '2147483647';
+  }, [isOpen, zIndex, anchorElement]);
+
+  // When a Popover opens inside a modal/sidebar, keyboard interaction belongs
+  // to its portaled panel. Restore parent focus on Escape via existing handler.
+  useEffect(() => {
+    if (!isOpen || !trigger) return;
+    const anchor = triggerRef.current;
+    if (!anchor?.closest('.tmbk-modal, .tmbk-sidebar')) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    const selector = 'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = () => Array.from(panel.querySelectorAll<HTMLElement>(selector))
+      .filter(el => !el.closest('[hidden], [inert]') && el.getClientRects().length > 0);
+    (focusables()[0] ?? panel).focus();
+    const onTab = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab' || event.defaultPrevented || !isTopLayer()) return;
+      const items = focusables();
+      if (!items.length) { event.preventDefault(); panel.focus(); return; }
+      const active = document.activeElement;
+      if (!panel.contains(active) || (event.shiftKey && active === items[0]) ||
+        (!event.shiftKey && active === items[items.length - 1])) {
+        event.preventDefault();
+        (event.shiftKey ? items[items.length - 1] : items[0]).focus();
+      }
+    };
+    document.addEventListener('keydown', onTab, true);
+    return () => document.removeEventListener('keydown', onTab, true);
   }, [isOpen, trigger]);
 
   // Positioning engine (kept as-is)
