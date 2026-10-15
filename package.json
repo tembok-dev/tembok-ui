@@ -12,12 +12,16 @@
     "url": "https://github.com/tembok-dev/tembok-ui/issues"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "build": "pnpm -r --filter ./packages/** run build",
     "typecheck": "pnpm -r --filter ./packages/** run typecheck",
-    "clean": "rimraf \"packages/*/dist\""
+    "clean": "rimraf \"packages/*/dist\"",
+    "dev": "pnpm --filter @tembok/playground dev",
+    "playground:build": "pnpm --filter @tembok/playground build",
+    "playground:typecheck": "pnpm --filter @tembok/playground typecheck"
   },
   "devDependencies": {
     "@types/react": "^18",
