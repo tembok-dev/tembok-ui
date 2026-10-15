@@ -1,0 +1,26 @@
+:root { font-family: system-ui, sans-serif; color: #232526; background: #f7f7f7; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.playground { min-height: 100dvh; }
+.playground-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 16px 24px; border-bottom: 1px solid #dedede; background: white; }
+.playground-header > div { display: flex; flex-direction: column; gap: 3px; }
+.playground-header span { font-size: 12px; color: #666; }
+.playground-header nav, .playground-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.playground-main { padding: 24px; }
+.playground-main h1 { font-size: 24px; }
+.playground-main h2 { font-size: 17px; }
+.playground-main p { color: #555; }
+.playground-card { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 20px; margin-top: 20px; max-width: 760px; }
+.fixture-content { padding: 14px; min-width: 180px; display: grid; gap: 10px; }
+.fixture-content button { display: block; }
+.fixture-tall { display: grid; gap: 6px; }
+.fixture-tall p { margin: 0; }
+.qa-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.qa-note { max-width: 600px; }
+.qa-anchors { position: fixed; display: flex; flex-wrap: wrap; gap: 8px; z-index: 1; }
+.qa-top-left { top: 88px; left: 16px; }
+.qa-top-right { top: 88px; right: 16px; }
+.qa-bottom-left { bottom: 16px; left: 16px; }
+.qa-bottom-right { bottom: 16px; right: 16px; }
+.modal-fixture { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+@media(max-width: 600px) { .playground-main { padding: 16px; } .playground-header { padding: 12px 16px; } }
