@@ -111,7 +111,7 @@ export function SideBar({
   const handleClose = () => setIsOpen(false);
 
   // Escape
-  const isTopLayer = useEscapeKey(handleClose, isOpen && closeOnEscape);
+  const isTopLayer = useEscapeKey(() => { if (closeOnEscape) handleClose(); }, isOpen);
 
   // Body scroll lock
   useEffect(() => {
