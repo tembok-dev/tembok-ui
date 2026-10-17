@@ -35,10 +35,17 @@ These scripts only run when a developer invokes them. **No GitHub Actions, CI wo
 
 When adding dependencies, regenerate and commit `pnpm-lock.yaml` locally using `pnpm install`, then verify `pnpm install --frozen-lockfile`. Do not merge before completing this step.
 
-## Showcase (Gallery)
+## Component workbench (Gallery)
 
-The Gallery is now a curated visual showcase using the actual `@tembok/ui-react` Button, IconButton, Popover, Dropdown and Modal components, with supplementary demo-only examples clearly labeled. The existing Overlay QA route is preserved.
+The private playground Gallery is a compact inspection workbench with component navigation, real React component previews and an appearance inspector. Components remain imported from `@tembok/ui-react`, not reimplemented as visual stand-ins.
 
-The light/dark selector and radius/motion controls are local showcase experiments, not exported component APIs. Theme controls scope the page, while overlays portal to `document.body`; global application-level portal theme inheritance is a separate design-system concern, so do not use this demo as proof that portaled themes propagate.
+Preview controls:
+- Light / dark for the workbench and portaled Modal, Popover and SideBar surfaces.
+- Primary accent color via a native color input (defaults to Tembok cyan).
+- Surface radius and optional motion for demonstration.
 
-Run `pnpm check` locally before merging. No additional dependencies, CI workflows or automated cloud testing are introduced.
+Theme settings are ephemeral, local to this app, and are not persisted or published. For portaled surfaces the playground sets a temporary body data attribute and CSS variable, then cleans them up; consumer apps must still provide their own theme integration. The separate Overlay QA page stays isolated from those preview overrides.
+
+This page is an engineering tool, **not a marketing landing page**. Prefer useful live component states, interaction examples and property controls over slogans, numbered feature grids or decorative motion-only demos.
+
+Run `pnpm check` locally. No GitHub Actions or hosted CI is configured.
