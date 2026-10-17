@@ -74,7 +74,7 @@ body { margin: 0; }
 
 
 /* Component workbench: purposeful tooling, not a marketing landing page. */
-.playground:has(.workbench) { --wb-bg:#f5f6f7; --wb-panel:#fff; --wb-border:#e1e5e7; --wb-text:#253037; --wb-muted:#68777e; background:var(--wb-bg); color:var(--wb-text); font-family:Outfit,Inter,system-ui,sans-serif; --tmbk-primary:var(--tmbk-preview-primary,#5aedea); }
+.playground:has(.workbench) { --wb-bg:#f5f6f7; --wb-panel:#fff; --wb-border:#e1e5e7; --wb-text:#253037; --wb-muted:#68777e; background:var(--wb-bg); color:var(--wb-text); font-family:Outfit,Inter,system-ui,sans-serif; }
 .playground[data-showcase-theme="dark"]:has(.workbench) { --wb-bg:#11181c; --wb-panel:#1b262b; --wb-border:#344247; --wb-text:#eaf0ef; --wb-muted:#a6b2b5; --tmbk-bg:#11181c; --tmbk-bg-light:#1b262b; --tmbk-fg:#eaf0ef; --tmbk-fg-muted:#a6b2b5; --tmbk-border:#344247; --tmbk-surface:var(--wb-panel); --tmbk-surface-raised:var(--wb-panel); --tmbk-surface-text:var(--wb-text); --tmbk-surface-border:var(--wb-border); color-scheme:dark; }
 .playground:has(.workbench) .playground-header { background:var(--wb-panel); border-color:var(--wb-border); color:var(--wb-text); padding:13px 22px; }
 .playground:has(.workbench) .playground-header span { color:var(--wb-muted); }
@@ -117,28 +117,6 @@ body { margin: 0; }
 .workbench-surface-card small { color:var(--wb-muted); }.workbench-surface-card strong { font-size:18px; }.workbench-surface-card span { color:var(--wb-muted); font-size:12px; }
 @media(max-width:980px) { .workbench { grid-template-columns:160px minmax(0,1fr); }.workbench-inspector { grid-column:2; border-left:none; border-top:1px solid var(--wb-border); display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }.workbench-inspector-title,.workbench-inspector-note { grid-column:1/-1; } }
 @media(max-width:620px) { .workbench { display:flex; flex-direction:column; }.workbench-nav { border-right:0; border-bottom:1px solid var(--wb-border); padding:12px; display:flex; align-items:center; gap:6px; overflow-x:auto; }.workbench-nav-title,.workbench-nav-tools { display:none; }.workbench-nav-item { width:auto; white-space:nowrap; margin:0; }.workbench-content { padding:18px; }.workbench-inspector { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); padding:18px; }.workbench-source { display:none; }.workbench-stage { min-height:260px; }.workbench-preview-top span:last-child { display:none; } }
-/* Body-level preview contract for components portaled outside .playground.
-   Scoped by explicit body attribute; never alters published UI package defaults. */
-body[data-tmbk-preview-theme="dark"] .tmbk-modal.tmbk-theme,
-body[data-tmbk-preview-theme="dark"] .tmbk-popover.tmbk-theme,
-body[data-tmbk-preview-theme="dark"] .tmbk-sidebar.tmbk-theme {
- --tmbk-bg:#11181c; --tmbk-bg-light:#1b262b; --tmbk-fg:#eaf0ef; --tmbk-border:#344247;
- --tmbk-surface:#1b262b; --tmbk-surface-raised:#1b262b; --tmbk-surface-text:#eaf0ef; --tmbk-surface-border:#344247;
- --tmbk-modal-bg:#1b262b; --tmbk-modal-fg:#eaf0ef; --tmbk-modal-border:#344247;
- --tmbk-primary:var(--tmbk-preview-primary,#5aedea); color-scheme:dark;
-}
-body[data-tmbk-preview-theme="light"] .tmbk-modal.tmbk-theme,
-body[data-tmbk-preview-theme="light"] .tmbk-popover.tmbk-theme,
-body[data-tmbk-preview-theme="light"] .tmbk-sidebar.tmbk-theme { --tmbk-primary:var(--tmbk-preview-primary,#5aedea); }
-
-
-/* Preview-only overrides must beat the self-scoped .tmbk-theme on Button.
-   Otherwise theme tokens on the parent have no visual effect. */
-.playground:has(.workbench) .tmbk-btn.tmbk-theme {
-  --tmbk-primary: var(--tmbk-preview-primary, #5aedea);
-  --tmbk-primary-fg: var(--tmbk-preview-primary-fg, #172427);
-  --tmbk-ring: color-mix(in srgb, var(--tmbk-preview-primary, #5aedea) 35%, transparent);
-}
 .workbench-mode-tabs { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--wb-border); border-radius:9px; padding:3px; gap:3px; background:var(--wb-bg); }
 .workbench-mode-tabs button { border:0; border-radius:6px; display:flex; align-items:center; justify-content:center; gap:7px; padding:9px 6px; background:transparent; color:var(--wb-muted); cursor:pointer; font:inherit; font-size:12px; }
 .workbench-mode-tabs button.active { background:var(--wb-panel); color:var(--wb-text); box-shadow:0 1px 4px #0002; }
@@ -147,28 +125,10 @@ body[data-tmbk-preview-theme="light"] .tmbk-sidebar.tmbk-theme { --tmbk-primary:
 .workbench-swatches button { width:25px; height:25px; border:2px solid var(--wb-panel); border-radius:50%; cursor:pointer; box-shadow:0 0 0 1px var(--wb-border); }
 .workbench-swatches button.selected { box-shadow:0 0 0 2px var(--wb-text); }
 .workbench-custom-label { margin-top:4px; font-size:11px; color:var(--wb-muted); }
-body[data-tmbk-preview-theme] .tmbk-modal.tmbk-theme .tmbk-btn.tmbk-theme,
-body[data-tmbk-preview-theme] .tmbk-popover.tmbk-theme .tmbk-btn.tmbk-theme,
-body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
-  --tmbk-primary:var(--tmbk-preview-primary,#5aedea);
-  --tmbk-primary-fg:var(--tmbk-preview-primary-fg,#172427);
-}
-
 /* Compact, icon-only appearance switch. */
 .workbench-mode-tabs { max-width:112px; }
 .workbench-mode-tabs button { min-width:44px; min-height:40px; padding:8px; }
 .workbench-mode-tabs button svg { display:block; width:20px; height:20px; flex:none; }
-
-/* The kit self-scopes tokens on each Button, so dark preview values must
-   reach that scope too, not only the workbench container. */
-.playground[data-showcase-theme="dark"]:has(.workbench) .tmbk-btn.tmbk-theme {
-  --tmbk-bg: var(--wb-bg);
-  --tmbk-bg-light: var(--wb-panel);
-  --tmbk-fg: var(--wb-text);
-  --tmbk-fg-muted: var(--wb-muted);
-  --tmbk-border: var(--wb-border);
-  color-scheme: dark;
-}
 
 /* Reference fixture derived from Taskel develop/core palette.
    Playground-only: the package must consume the inherited token contract. */
@@ -188,7 +148,8 @@ body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
   --tmbk-bg:#1d242a; --tmbk-bg-light:#353e46; --tmbk-fg:#eff0f0;
   --tmbk-border:#48545e; --tmbk-secondary-fg:#eff0f0;
 }
-.playground[data-preset="reference"]:has(.workbench) .tmbk-btn.tmbk-theme {
+/* Reference styling is expressed through inherited public semantic tokens. */
+.playground[data-preset="reference"]:has(.workbench) {
   --tmbk-primary-hover:#af8701; --tmbk-primary-active:#af8701;
   --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
   --tmbk-secondary-fg:var(--wb-text);
@@ -198,9 +159,25 @@ body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
 /* Taskel-inspired floating ink surfaces are deliberately dark in BOTH preview
    modes. Set scoped component tokens at the source, not on document.body:
    usePortalTheme carries these through to the portaled panel. */
-.playground[data-preset="reference"] .workbench-stage {
+.playground[data-preset="reference"]:has(.workbench) {
   --tmbk-popover-bg:#252c37;
   --tmbk-popover-fg:#f6f7f9;
   --tmbk-popover-border:#5b6a80;
   --tmbk-menu-hover:#394656;
+}
+
+/* Preview colors live on the existing playground root, not on body or individual
+   kit components. Portals copy the public computed tokens from their opener. */
+.playground[data-showcase-theme="dark"]:has(.workbench) {
+  color-scheme: dark;
+  --tmbk-surface: var(--wb-panel);
+  --tmbk-surface-raised: var(--wb-panel);
+  --tmbk-surface-text: var(--wb-text);
+  --tmbk-surface-border: var(--wb-border);
+  --tmbk-modal-bg: var(--wb-panel);
+  --tmbk-modal-fg: var(--wb-text);
+  --tmbk-modal-border: var(--wb-border);
+}
+.playground[data-showcase-theme="light"]:has(.workbench) {
+  color-scheme: light;
 }
