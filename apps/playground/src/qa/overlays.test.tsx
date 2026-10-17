@@ -151,6 +151,23 @@ describe('React overlay regressions', () => {
     expect(document.querySelector('.tmbk-dropdown')).toBeNull();
   });
 
+  it('portaled Modal and Popover render with product theme source present', async () => {
+    function Fixture() {
+      const [open, setOpen] = useState(false);
+      return <div data-theme="dark" style={{ '--tmbk-primary': '#f8c61e' } as React.CSSProperties}>
+        <Button onClick={() => setOpen(true)}>Launch</Button>
+        <Popover trigger={<Button>Options</Button>}><button>Action</button></Popover>
+        <Modal open={open} onOpenChange={setOpen}><button>Close</button></Modal>
+      </div>;
+    }
+    await render(<Fixture />);
+    await click(findButton('Options'));
+    expect(document.querySelector('.tmbk-popover')).not.toBeNull();
+    await click(findButton('Launch'));
+    expect(document.querySelector('.tmbk-modal')).not.toBeNull();
+    expect(document.querySelector('.tmbk-modal')?.parentElement).toBe(document.body);
+  });
+
   it('Escape dismisses nested Popover before Modal', async () => {
     function Example() {
       const [open, setOpen] = useState(false);
