@@ -182,6 +182,28 @@ export default function Example() {
 }
 ```
 
+### Choosing Menu, Popover or Modal
+
+| Component | Use it for | Typical contents |
+| --- | --- | --- |
+| `Dropdown` + `MenuItem` | Compact actions anchored to a button or context point | Edit, Duplicate, Delete, shortcuts, icons |
+| `Popover` | Rich contextual content that does not require a blocking dialog | Help text, compact forms, filters |
+| `Modal` | Focused tasks that require a dialog and background interaction lock | Settings, confirmations, long forms |
+
+`Dropdown` reuses `Popover` for positioning and dismissal but deliberately applies denser menu styling. Use `Popover` directly when the content is not primarily a command list.
+
+```tsx
+import { Dropdown, MenuItem, Button } from "@tembok/ui-react";
+
+<Dropdown trigger={<Button intent="neutral">Actions</Button>}>
+  <MenuItem icon={<EditIcon />} trailing="⌘ E">Rename</MenuItem>
+  <MenuItem description="Retain the current menu" keepOpen>Appearance</MenuItem>
+  <MenuItem danger>Delete</MenuItem>
+</Dropdown>
+```
+
+`MenuItem` supports `icon`, `trailing`, `description`, `danger`, `selected`, `disabled` and `keepOpen`. Icons are user-supplied React nodes, so there is no icon-library dependency. Prefer an action-oriented `Dropdown` for command menus; simple children remain supported for backward compatibility.
+
 ### Dropdown
 
 Menu anchored to a trigger. Defaults to collision-aware automatic vertical placement; an explicit `side="up"` or `side="down"` is a preference and can flip when space is insufficient.
