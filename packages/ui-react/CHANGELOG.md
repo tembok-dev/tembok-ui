@@ -19,6 +19,8 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- Modal and SideBar now coordinate body scroll locks, preserving the original inline overflow after the last overlay closes.
+- SideBar panel and backdrop inherit product-scoped theme tokens across their portal.
 - Compact non-scrolling Popovers/Dropdowns no longer reserve a permanent right-side scrollbar gutter.
 - Reworked Popover/Dropdown scrolling into one inset content viewport; removed native scrollbar-corner patches and prevented positioning recalculation on internal scroll to avoid panel size jumps.
 - Portaled overlay surfaces no longer lose semantic theme colors when opened from locally themed application regions.
