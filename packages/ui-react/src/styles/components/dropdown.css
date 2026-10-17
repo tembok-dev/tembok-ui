@@ -105,3 +105,6 @@
   margin-right: .5rem;
   line-height: 1;
 }
+
+.tmbk-popover.tmbk-dropdown { padding:5px; min-width:176px; --tmbk-menu-hover:color-mix(in srgb,var(--tmbk-surface-text,var(--tmbk-fg)) 7%,transparent); }
+.tmbk-dropdown .tmbk-dropdown-wrap { overflow-x:hidden; }
