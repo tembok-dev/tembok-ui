@@ -167,6 +167,28 @@ export function Playground() {
               </div>
             </Dropdown>
           </section>
+          <section className="playground-card" aria-label="Scoped portal theme comparison">
+            <h2>Portal inheritance: two product scopes</h2>
+            <p>Open both menus and compare their colors. Neither should inherit the other product's palette or require a body theme override.</p>
+            <div className="qa-controls">
+              <div style={{ padding: 12, background: '#f8fafc', color: '#1f2937', borderRadius: 8,
+                '--tmbk-primary': '#f8c61e', '--tmbk-primary-fg': '#111111',
+                '--tmbk-surface-raised': '#252c37', '--tmbk-surface-text': '#f6f7f9',
+                '--tmbk-surface-border': '#5b6a80' } as React.CSSProperties}>
+                <Dropdown trigger={<Button intent="primary">Product A menu</Button>}>
+                  <MenuItem>Product A action</MenuItem>
+                </Dropdown>
+              </div>
+              <div style={{ padding: 12, background: '#e0f2fe', color: '#142d42', borderRadius: 8,
+                '--tmbk-primary': '#2563eb', '--tmbk-primary-fg': '#ffffff',
+                '--tmbk-surface-raised': '#f0f9ff', '--tmbk-surface-text': '#142d42',
+                '--tmbk-surface-border': '#93c5fd' } as React.CSSProperties}>
+                <Dropdown trigger={<Button intent="primary">Product B menu</Button>}>
+                  <MenuItem>Product B action</MenuItem>
+                </Dropdown>
+              </div>
+            </div>
+          </section>
           <div className={`qa-anchors qa-${corner}`}>
             <Popover key={`popover-${corner}-${side}-${tall}`} trigger={<Button intent="neutral">Open popover</Button>} side={side} align="end">
               <div className="fixture-content" data-testid="popover-content">
