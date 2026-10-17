@@ -5,6 +5,8 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- Inherited neutral slate default theme, with optional app-level semantic token overrides and no required wrapper.
+- Optional Button hover/active and secondary-state token overrides, plus neutral/Tembok/product-reference playground presets.
 - `IconButton size="xs"` for dense 28px actions, customizable with `--tmbk-icon-button-xs-size`.
 - `MenuItem` component for compact dropdown actions with icon, trailing text, description and danger/disabled states.
 - Clear human-facing guidance distinguishing Dropdown, Popover and Modal.
@@ -14,6 +16,8 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- Removed per-component theme token resets that previously overrode application-scope colors.
+- Repaired invalid secondary Button background CSS value.
 - Dropdown no longer inherits spacious Popover panel padding; menus use compact spacing.
 - Coordinated dismissal/focus of nested overlays.
 - Popover/Dropdown collision positioning, context-menu anchors and Escape focus restoration.
