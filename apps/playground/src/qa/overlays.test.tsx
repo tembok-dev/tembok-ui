@@ -1,7 +1,7 @@
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Button, Dropdown, Modal, Popover } from '@tembok/ui-react';
+import { Button, Dropdown, MenuItem, Modal, Popover } from '@tembok/ui-react';
 
 let host: HTMLDivElement;
 let root: Root;
@@ -121,6 +121,22 @@ describe('React overlay regressions', () => {
     expect(panel.style.getPropertyValue('--tmbk-modal-width')).toBe('680px');
     expect(panel.querySelector('.tmbk-modal-body')).not.toBeNull();
     expect(panel.querySelector('.tmbk-modal-footer')).not.toBeNull();
+  });
+
+  it('MenuItem supports action details and per-item keep-open', async () => {
+    await render(<Dropdown trigger={<Button>Commands</Button>}>
+      <MenuItem icon={<span>✎</span>} trailing="Ctrl R" keepOpen>Rename</MenuItem>
+      <MenuItem danger disabled>Delete</MenuItem>
+      <MenuItem>Duplicate</MenuItem>
+    </Dropdown>);
+    await click(findButton('Commands'));
+    const rename = findButton('RenameCtrl R');
+    expect(rename.getAttribute('data-close-popover')).toBe('false');
+    expect(findButton('Delete').disabled).toBe(true);
+    await click(rename);
+    expect(document.querySelector('.tmbk-dropdown')).not.toBeNull();
+    await click(findButton('Duplicate'));
+    expect(document.querySelector('.tmbk-dropdown')).toBeNull();
   });
 
   it('Escape dismisses nested Popover before Modal', async () => {
