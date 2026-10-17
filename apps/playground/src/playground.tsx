@@ -15,6 +15,7 @@ export function Playground() {
   useEffect(() => {
     // Portals mount under body, not inside the playground theme scope.
     // Scope this demo's theme on body and undo every mutation on unmount.
+    if (page !== 'gallery') return;
     const body = document.body;
     const previousTheme = body.getAttribute('data-tmbk-preview-theme');
     const previousColor = body.style.getPropertyValue('--tmbk-preview-primary');
@@ -26,7 +27,7 @@ export function Playground() {
       if (previousColor) body.style.setProperty('--tmbk-preview-primary', previousColor);
       else body.style.removeProperty('--tmbk-preview-primary');
     };
-  }, [showcaseTheme, primaryColor]);
+  }, [showcaseTheme, primaryColor, page]);
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
