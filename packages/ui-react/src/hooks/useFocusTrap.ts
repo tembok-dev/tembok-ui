@@ -5,7 +5,7 @@ const focusableSelector =
 
 /** Trap keyboard navigation and restore focus to the opening control. */
 export function useFocusTrap<T extends HTMLElement = HTMLElement>(
-  containerRef: RefObject<T>, isActive: boolean
+  containerRef: RefObject<T>, isActive: boolean, ownsKeyboard?: () => boolean
 ) {
   useEffect(() => {
     if (!isActive || !containerRef.current) return;
