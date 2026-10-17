@@ -130,3 +130,26 @@ body[data-tmbk-preview-theme="dark"] .tmbk-sidebar.tmbk-theme {
 body[data-tmbk-preview-theme="light"] .tmbk-modal.tmbk-theme,
 body[data-tmbk-preview-theme="light"] .tmbk-popover.tmbk-theme,
 body[data-tmbk-preview-theme="light"] .tmbk-sidebar.tmbk-theme { --tmbk-primary:var(--tmbk-preview-primary,#5aedea); }
+
+
+/* Preview-only overrides must beat the self-scoped .tmbk-theme on Button.
+   Otherwise theme tokens on the parent have no visual effect. */
+.playground:has(.workbench) .tmbk-btn.tmbk-theme {
+  --tmbk-primary: var(--tmbk-preview-primary, #5aedea);
+  --tmbk-primary-fg: var(--tmbk-preview-primary-fg, #172427);
+  --tmbk-ring: color-mix(in srgb, var(--tmbk-preview-primary, #5aedea) 35%, transparent);
+}
+.workbench-mode-tabs { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--wb-border); border-radius:9px; padding:3px; gap:3px; background:var(--wb-bg); }
+.workbench-mode-tabs button { border:0; border-radius:6px; display:flex; align-items:center; justify-content:center; gap:7px; padding:9px 6px; background:transparent; color:var(--wb-muted); cursor:pointer; font:inherit; font-size:12px; }
+.workbench-mode-tabs button.active { background:var(--wb-panel); color:var(--wb-text); box-shadow:0 1px 4px #0002; }
+.workbench-mode-tabs button:focus-visible,.workbench-swatches button:focus-visible { outline:2px solid var(--tmbk-preview-primary,#5aedea); outline-offset:2px; }
+.workbench-swatches { display:flex; gap:9px; flex-wrap:wrap; }
+.workbench-swatches button { width:25px; height:25px; border:2px solid var(--wb-panel); border-radius:50%; cursor:pointer; box-shadow:0 0 0 1px var(--wb-border); }
+.workbench-swatches button.selected { box-shadow:0 0 0 2px var(--wb-text); }
+.workbench-custom-label { margin-top:4px; font-size:11px; color:var(--wb-muted); }
+body[data-tmbk-preview-theme] .tmbk-modal.tmbk-theme .tmbk-btn.tmbk-theme,
+body[data-tmbk-preview-theme] .tmbk-popover.tmbk-theme .tmbk-btn.tmbk-theme,
+body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
+  --tmbk-primary:var(--tmbk-preview-primary,#5aedea);
+  --tmbk-primary-fg:var(--tmbk-preview-primary-fg,#172427);
+}
