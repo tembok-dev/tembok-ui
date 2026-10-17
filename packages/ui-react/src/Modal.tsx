@@ -1,13 +1,14 @@
 // Modal.tsx
 // Headless styling
 
-import { ReactNode, useRef, useCallback, useEffect, useId } from 'react';
+import { ReactNode, useRef, useCallback, useId } from 'react';
 import { Portal } from './utils/Portal';
 import { cx } from './utils/variants';
 import { useFocusTrap } from './hooks/useFocusTrap';
 import { useEscapeKey } from './hooks/useEscapeKey';
 import { useClickOutside } from './hooks/useClickOutside';
 import { usePortalTheme } from './hooks/usePortalTheme';
+import { useBodyScrollLock } from './hooks/useBodyScrollLock';
 
 
 /**
@@ -100,14 +101,7 @@ function ModalContent({
   // Click outside to close
   useClickOutside(panelRef, () => { if (isTopLayer()) handleClose(); }, open);
 
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (open) {
-      const originalStyle = window.getComputedStyle(document.body).overflow;
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = originalStyle; };
-    }
-  }, [open]);
+  useBodyScrollLock(open);
 
   return (
       <div
