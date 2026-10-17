@@ -9,13 +9,13 @@
   box-sizing: border-box;
 
   /* Surface */
-  background-color: var(--tmbk-bg);
-  color: var(--tmbk-fg);
-  border: 1px solid var(--tmbk-border);
-  border-radius: 0.5rem;
+  background-color: var(--tmbk-surface-raised, var(--tmbk-bg));
+  color: var(--tmbk-surface-text, var(--tmbk-fg));
+  border: 1px solid var(--tmbk-surface-border, var(--tmbk-border));
+  border-radius: var(--tmbk-popover-radius, var(--tmbk-radius-surface, .75rem));
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 10px 35px rgba(0,0,0,.22), 0 4px 12px rgba(0,0,0,.12);
+  box-shadow: var(--tmbk-popover-shadow, var(--tmbk-shadow-floating, 0 10px 35px rgba(0,0,0,.22)));
 
   /* Sizing */
   max-width: min(90vw, 42rem);
@@ -26,7 +26,7 @@
   opacity: 0;
   transform: scale(.96);
   pointer-events: none;
-  transition: opacity .15s ease, transform .15s ease;
+  transition: opacity var(--tmbk-motion-fast, 140ms) var(--tmbk-motion-ease, ease), transform var(--tmbk-motion-fast, 140ms) var(--tmbk-motion-ease, ease);
 
   /* Arrow size var (used below) */
   --tmbk-popover-arrow: 10px;
