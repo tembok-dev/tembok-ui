@@ -7,6 +7,9 @@ type Side = 'auto' | 'up' | 'down';
 export function Playground() {
   const [page, setPage] = useState<'gallery' | 'qa'>('gallery');
   const [modalOpen, setModalOpen] = useState(false);
+  const [showcaseTheme, setShowcaseTheme] = useState<'light' | 'dark'>('light');
+  const [showcaseRadius, setShowcaseRadius] = useState(12);
+  const [showcaseMotion, setShowcaseMotion] = useState(true);
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
@@ -16,7 +19,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground">
+    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px` }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
@@ -25,32 +28,34 @@ export function Playground() {
         </nav>
       </header>
       {page === 'gallery' ? (
-        <main className="playground-main">
-          <h1>Component gallery</h1>
-          <p>Examples render actual local React components. Changes hot reload.</p>
-          <section className="playground-card">
-            <h2>Buttons</h2>
-            <div className="playground-actions">
-              <Button intent="primary">Primary</Button>
-              <Button intent="secondary">Secondary</Button>
-              <Button intent="ghost">Ghost</Button>
-              <Button intent="danger">Danger</Button>
-              <Button disabled>Disabled</Button>
-              <IconButton label="Example icon action"><span aria-hidden="true">✦</span></IconButton>
+        <main className="playground-main showcase">
+          <section className="showcase-hero">
+            <div className="showcase-eyebrow">TEMBOK / DESIGN SYSTEM / REACT</div>
+            <div className="showcase-heading">
+              <div><h1>Interfaces with intention.</h1><p>Refined foundations. Flexible composition. Real components, ready for real products.</p></div>
+              <span className="showcase-version">FOUNDATIONS / 01</span>
+            </div>
+            <div className="showcase-metrics"><span>01 <b>Surface language</b></span><span>02 <b>Interaction</b></span><span>03 <b>Motion</b></span></div>
+          </section>
+          <section className="showcase-panel showcase-config" aria-label="Showcase theme controls">
+            <div><div className="showcase-kicker">LIVE CONTROLS</div><h2>Make it yours.</h2><p>Try presentation settings without modifying any component.</p></div>
+            <div className="showcase-controls">
+              <label>Appearance <select value={showcaseTheme} onChange={e => setShowcaseTheme(e.target.value as 'light' | 'dark')}><option value="light">Light</option><option value="dark">Dark</option></select></label>
+              <label>Surface radius <input aria-label="Surface radius" type="range" min="4" max="24" step="2" value={showcaseRadius} onChange={e => setShowcaseRadius(Number(e.target.value))} /><span>{showcaseRadius}px</span></label>
+              <label className="showcase-toggle"><input type="checkbox" checked={showcaseMotion} onChange={e => setShowcaseMotion(e.target.checked)} /> Motion enabled</label>
             </div>
           </section>
-          <section className="playground-card">
-            <h2>Overlays</h2>
-            <div className="playground-actions">
-              <Button onClick={() => setModalOpen(true)}>Open modal</Button>
-              <Popover trigger={<Button intent="neutral">Popover</Button>}>
-                <div className="fixture-content">Popover content <button type="button">Focusable action</button></div>
-              </Popover>
-              <Dropdown trigger={<Button intent="neutral">Dropdown</Button>}>
-                <div className="fixture-content"><button type="button">Action one</button><button type="button">Action two</button></div>
-              </Dropdown>
-            </div>
-          </section>
+          <div className="showcase-grid">
+            <section className="showcase-panel"><div className="showcase-kicker">01 / ACTIONS</div><h2>Clear hierarchy.</h2><p>Actions stay identifiable without unnecessary decoration.</p>
+              <div className="playground-actions"><Button intent="primary">Continue <span aria-hidden="true">↗</span></Button><Button intent="neutral">Secondary</Button><Button intent="ghost">Ghost</Button><Button intent="danger">Delete</Button><IconButton label="Favorite"><span aria-hidden="true">✦</span></IconButton><Button disabled>Disabled</Button></div>
+            </section>
+            <section className="showcase-panel"><div className="showcase-kicker">02 / FLOATING UI</div><h2>Focused interactions.</h2><p>Portaled overlays with tested keyboard and dismissal behavior.</p>
+              <div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content">A focused surface <button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><div className="fixture-content"><button type="button">Edit</button><button type="button">Duplicate</button></div></Dropdown></div>
+            </section>
+            <section className="showcase-panel showcase-surface"><div className="showcase-kicker">03 / SURFACES</div><h2>Quiet depth.</h2><p>Semantic surfaces, borders and elevation build the composition.</p><div className="showcase-surface-demo"><div className="showcase-mini-card"><span className="showcase-status">● SYSTEM HEALTHY</span><strong>Everything in place.</strong><small>Tokens carry the design language.</small></div></div></section>
+            <section className="showcase-panel"><div className="showcase-kicker">04 / MOTION</div><h2>Purpose, not noise.</h2><p>Subtle feedback responds to interaction. Reduced-motion preferences remain respected.</p><div className="showcase-motion-demo"><div className="showcase-motion-tile" tabIndex={0}><span>Hover or focus</span><strong>↗</strong></div><span className="showcase-footnote">Demo-only motion · not a package component</span></div></section>
+          </div>
+          <div className="showcase-footer"><span>BUILT WITH ACTUAL @TEMBOK/UI-REACT COMPONENTS</span><span>Overlay QA remains available for functional stress testing.</span></div>
         </main>
       ) : (
         <main className="playground-main">
