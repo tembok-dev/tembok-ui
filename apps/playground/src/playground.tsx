@@ -10,6 +10,12 @@ const brandSwatches = [
   { name: 'Lime', value: '#c5e836' },
   { name: 'Ink', value: '#1a2332' },
 ] as const;
+function primaryTextColor(hex: string) {
+  const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const luminance = rgb.map(c => c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4)
+    .reduce((sum, c, i) => sum + c * [.2126, .7152, .0722][i], 0);
+  return luminance > .18 ? '#172427' : '#ffffff';
+}
 function ThemeIcon({ mode }: { mode: 'light' | 'dark' }) {
   // Material light_mode / dark_mode glyph paths supplied for this workbench.
   return <svg aria-hidden="true" viewBox="0 0 960 960" width="18" height="18" fill="currentColor">
@@ -34,13 +40,17 @@ export function Playground() {
     const body = document.body;
     const previousTheme = body.getAttribute('data-tmbk-preview-theme');
     const previousColor = body.style.getPropertyValue('--tmbk-preview-primary');
+    const previousText = body.style.getPropertyValue('--tmbk-preview-primary-fg');
     body.setAttribute('data-tmbk-preview-theme', showcaseTheme);
     body.style.setProperty('--tmbk-preview-primary', primaryColor);
+    body.style.setProperty('--tmbk-preview-primary-fg', primaryTextColor(primaryColor));
     return () => {
       if (previousTheme === null) body.removeAttribute('data-tmbk-preview-theme');
       else body.setAttribute('data-tmbk-preview-theme', previousTheme);
       if (previousColor) body.style.setProperty('--tmbk-preview-primary', previousColor);
       else body.style.removeProperty('--tmbk-preview-primary');
+      if (previousText) body.style.setProperty('--tmbk-preview-primary-fg', previousText);
+      else body.style.removeProperty('--tmbk-preview-primary-fg');
     };
   }, [showcaseTheme, primaryColor, page]);
   const [corner, setCorner] = useState<Corner>('bottom-right');
@@ -52,7 +62,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
+    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-primary-fg" as string]: primaryTextColor(primaryColor), ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
