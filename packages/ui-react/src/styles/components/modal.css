@@ -24,17 +24,17 @@
     box-sizing: border-box;
     width: var(--tmbk-modal-width, min(92vw, 560px));
     max-width: calc(100vw - 32px);
-    border-radius: .75rem;
+    border-radius: var(--tmbk-modal-radius, var(--tmbk-radius-surface, .75rem));
 
-    background-color: var(--tmbk-modal-bg, var(--tmbk-bg, #fff));
-    color: var(--tmbk-modal-fg, var(--tmbk-fg, #111));
-    border: 1px solid var(--tmbk-modal-border, var(--tmbk-border, rgba(0, 0, 0, .12)));
-    box-shadow: var(--tmbk-modal-shadow, 0 10px 30px rgba(0, 0, 0, .18), 0 4px 12px rgba(0, 0, 0, .12));
+    background-color: var(--tmbk-modal-bg, var(--tmbk-surface, var(--tmbk-bg, #fff)));
+    color: var(--tmbk-modal-fg, var(--tmbk-surface-text, var(--tmbk-fg, #111)));
+    border: 1px solid var(--tmbk-modal-border, var(--tmbk-surface-border, var(--tmbk-border, rgba(0, 0, 0, .12))));
+    box-shadow: var(--tmbk-modal-shadow, var(--tmbk-shadow-surface, 0 10px 30px rgba(0, 0, 0, .18)));
     padding: 1.5rem;
 
     opacity: 1;
     transform: translateY(0);
-    transition: opacity .2s ease, transform .2s ease;
+    transition: opacity var(--tmbk-motion-normal, 220ms) var(--tmbk-motion-ease, ease), transform var(--tmbk-motion-normal, 220ms) var(--tmbk-motion-ease, ease);
 }
 
 /* Sections */

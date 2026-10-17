@@ -348,3 +348,27 @@ Source: `tembok-dev/tembok-ui`, React package `packages/ui-react`.
 4. After approving the changes and checking downstream compatibility, publish explicitly with the project's npm release credentials and verify the registry version. A Git merge or source version bump **does not** publish npm automatically.
 
 **Scope:** These changes apply only to `@tembok/ui-react` (React 18/19). `@tembok/ui-astro` was not modified or validated. Review Astro separately if shared tokens, CSS, overlay behavior or public APIs change.
+
+## Premium surface and motion foundations
+
+The optional semantic values below give Modal and Popover coherent surfaces without locking applications into a brand. Set them on the relevant `.tmbk-theme` scope. Portaled surfaces receive their own `.tmbk-theme` scope, so application-wide overrides should target those portaled surfaces too (for example through a global CSS rule).
+
+```css
+/* Example theme override; keep your existing brand palette. */
+.tmbk-theme {
+  --tmbk-surface: #ffffff;
+  --tmbk-surface-raised: #ffffff;
+  --tmbk-surface-text: #202329;
+  --tmbk-surface-border: rgba(32, 35, 41, .12);
+  --tmbk-radius-surface: .75rem;
+  --tmbk-shadow-surface: 0 12px 36px rgba(0,0,0,.12);
+  --tmbk-shadow-floating: 0 16px 48px rgba(0,0,0,.18);
+  --tmbk-motion-fast: 140ms;
+  --tmbk-motion-normal: 220ms;
+  --tmbk-motion-ease: cubic-bezier(.22,1,.36,1);
+}
+```
+
+Modal additionally supports `--tmbk-modal-bg`, `--tmbk-modal-fg`, `--tmbk-modal-border`, `--tmbk-modal-radius` and `--tmbk-modal-shadow`. Popover supports `--tmbk-popover-radius` and `--tmbk-popover-shadow`. Existing component props and token aliases remain valid. Motion duration tokens become `0ms` under `prefers-reduced-motion: reduce`.
+
+These visual defaults are CSS-only; they do not change z-index, focus, dismissal or positioning behavior. Run `pnpm check` locally before merging. No hosted CI is configured.

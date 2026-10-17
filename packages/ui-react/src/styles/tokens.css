@@ -13,10 +13,31 @@
   --tmbk-brand-lime:#c5e836; --tmbk-brand-lime-fg:#1a1a1a;
   --tmbk-brand-ink:#1a2332;  --tmbk-brand-ink-fg:#fff;
 
-  color-scheme: light dark;
+  /* Semantic surface/motion values; apps may override any of these. */
+  --tmbk-surface: var(--tmbk-bg-light);
+  --tmbk-surface-raised: var(--tmbk-bg-light);
+  --tmbk-surface-text: var(--tmbk-fg);
+  --tmbk-surface-border: var(--tmbk-border);
+  --tmbk-radius-surface: .75rem;
+  --tmbk-shadow-surface: 0 12px 36px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  --tmbk-shadow-floating: 0 16px 48px rgba(0,0,0,.18), 0 4px 14px rgba(0,0,0,.10);
+  --tmbk-motion-fast: 140ms;
+  --tmbk-motion-normal: 220ms;
+  --tmbk-motion-ease: cubic-bezier(.22,1,.36,1);
+  color-scheme: light;
 }
 .dark .tmbk-theme, [data-theme="dark"] .tmbk-theme {
   --tmbk-bg:#0a0a0a; --tmbk-bg-light:#1a1a1a; --tmbk-bg-dark:#050505;
   --tmbk-fg:#f5f5f5; --tmbk-fg-light:#a3a3a3; --tmbk-fg-muted:#a3a3a3;
   --tmbk-border:rgba(245,245,245,.15);
+  --tmbk-shadow-surface: 0 12px 36px rgba(0,0,0,.32), 0 2px 8px rgba(0,0,0,.20);
+  --tmbk-shadow-floating: 0 16px 48px rgba(0,0,0,.42), 0 4px 14px rgba(0,0,0,.24);
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tmbk-theme {
+    --tmbk-motion-fast: 0ms;
+    --tmbk-motion-normal: 0ms;
+  }
 }
