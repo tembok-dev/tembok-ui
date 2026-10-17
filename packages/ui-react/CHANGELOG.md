@@ -19,6 +19,7 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- Popover native scrollbar track avoids rounded-corner overlap where supported, without clipping its positioning arrow.
 - Portaled overlay surfaces no longer lose semantic theme colors when opened from locally themed application regions.
 - Removed per-component theme token resets that previously overrode application-scope colors.
 - Repaired invalid secondary Button background CSS value.
