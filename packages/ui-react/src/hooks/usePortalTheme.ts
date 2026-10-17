@@ -34,14 +34,19 @@ function transfer(source: Element, panel: HTMLElement) {
 export function usePortalTheme(
   panelRef: RefObject<HTMLElement>,
   source: () => Element | null,
-  active: boolean
+  active: boolean,
+  preserve: readonly string[] = []
 ) {
   useLayoutEffect(() => {
     if (!active || !panelRef.current) return;
     const panel = panelRef.current;
     const anchor = source();
     if (!anchor) return;
-    const update = () => transfer(anchor, panel);
+    const update = () => {
+      const overrides = preserve.map(key => [key, panel.style.getPropertyValue(key)] as const);
+      transfer(anchor, panel);
+      for (const [key, value] of overrides) if (value) panel.style.setProperty(key, value);
+    };
     update();
 
     const observer = new MutationObserver(update);
