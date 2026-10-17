@@ -49,7 +49,20 @@ Common tokens: `--tmbk-primary`, `--tmbk-primary-fg`, `--tmbk-bg`, `--tmbk-bg-li
 
 `tone="red" | "lime" | "cyan" | "ink"` remains available for deliberate Tembok brand color choices. The generic default is now neutral.
 
-**Current limitation:** Modal and Popover use portals under `document.body`, outside a locally scoped application theme. Portal inheritance is the next separate milestone; the temporary playground reference preset compensates for it only during testing. Do not treat the playground workaround as a public theme API.
+**Portaled components (source behavior, pending release):** Modal, Popover and Dropdown render outside the local DOM tree but now copy documented semantic CSS tokens from their opening location into their portaled root. No theme provider or manual document.body styling is needed. App-specific scopes and nested themes work when the triggering element is inside the intended scope.
+
+```tsx
+<div className="my-product">
+  <Button intent="primary">Save</Button>
+  <Dropdown trigger={<Button intent="neutral">Actions</Button>}>
+    <MenuItem>Rename</MenuItem>
+  </Dropdown>
+</div>
+```
+
+Floating surfaces can intentionally use a different appearance than the app. Set `--tmbk-popover-bg`, `--tmbk-popover-fg`, and `--tmbk-popover-border` on the existing product scope; both Popover and Dropdown inherit them, including in light mode. `--tmbk-menu-hover` controls MenuItem hover. These tokens do not recolor ordinary Buttons or Modals.
+
+The same .my-product CSS token overrides apply to the Dropdown surface. Explicit per-instance color overrides take precedence. For triggerless context menus, pass `anchorElement` for a specific local theme; otherwise root values are used. Class/style changes on theme ancestors are observed while open. Arbitrary host CSS classes and unrelated custom properties are not copied.
 
 ---
 

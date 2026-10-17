@@ -7,6 +7,7 @@ import { cx } from './utils/variants';
 import { useFocusTrap } from './hooks/useFocusTrap';
 import { useEscapeKey } from './hooks/useEscapeKey';
 import { useClickOutside } from './hooks/useClickOutside';
+import { usePortalTheme } from './hooks/usePortalTheme';
 
 
 /**
@@ -79,10 +80,13 @@ function ModalContent({
   id = 'tembok-modal',
   size = 'md',
   width,
-}: ModalProps) {
+  themeSourceRef,
+}: ModalProps & { themeSourceRef: React.RefObject<HTMLSpanElement> }) {
   const panelRef = useRef<HTMLDivElement>(null!);
   const headerId = useId();
   const bodyId = useId();
+  const modalRootRef = useRef<HTMLDivElement>(null!);
+  usePortalTheme(modalRootRef, () => themeSourceRef.current, open);
 
   const handleClose = useCallback(() => {
     onOpenChange(false);
@@ -108,6 +112,7 @@ function ModalContent({
   return (
       <div
         id={id}
+        ref={modalRootRef}
         // Scope + layout shell (no Tailwind)
         className="tmbk-theme tmbk-modal"
       >
@@ -140,10 +145,14 @@ function ModalContent({
 
 /** Mount focus handling with the portaled panel, not before the portal exists. */
 export function Modal(props: ModalProps) {
+  return <ModalPortalBridge {...props} />;
+}
+
+function ModalPortalBridge(props: ModalProps) {
+  const themeSourceRef = useRef<HTMLSpanElement>(null!);
   if (!props.open) return null;
-  return (
-    <Portal>
-      <ModalContent {...props} />
-    </Portal>
-  );
+  return <>
+    <span ref={themeSourceRef} hidden aria-hidden="true" />
+    <Portal><ModalContent {...props} themeSourceRef={themeSourceRef} /></Portal>
+  </>;
 }

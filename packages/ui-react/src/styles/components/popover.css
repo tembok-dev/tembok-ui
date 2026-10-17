@@ -9,9 +9,9 @@
   box-sizing: border-box;
 
   /* Surface */
-  background-color: var(--tmbk-surface-raised, var(--tmbk-bg));
-  color: var(--tmbk-surface-text, var(--tmbk-fg));
-  border: 1px solid var(--tmbk-surface-border, var(--tmbk-border));
+  background-color: var(--tmbk-popover-bg, var(--tmbk-surface-raised, var(--tmbk-bg)));
+  color: var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg)));
+  border: 1px solid var(--tmbk-popover-border, var(--tmbk-surface-border, var(--tmbk-border)));
   border-radius: var(--tmbk-popover-radius, var(--tmbk-radius-surface, .75rem));
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -62,7 +62,7 @@
   width: var(--tmbk-popover-arrow);
   height: var(--tmbk-popover-arrow);
   /* Match the raised panel surface without a contrasting square border. */
-  background-color: var(--tmbk-surface-raised, var(--tmbk-bg));
+  background-color: var(--tmbk-popover-bg, var(--tmbk-surface-raised, var(--tmbk-bg)));
   border: none;
   transform: rotate(45deg);
 }
