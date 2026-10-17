@@ -13,6 +13,7 @@ import {
 import { cx } from "./utils/variants";
 import { usePosition, Side, Align, VirtualAnchor } from "./hooks/usePosition";
 import { useEscapeKey } from "./hooks/useEscapeKey";
+import { usePortalTheme } from "./hooks/usePortalTheme";
 import { createPortal } from "react-dom";
 
 type OpenMode = "click" | "hover";
@@ -167,6 +168,10 @@ export function Popover({
     document.addEventListener('keydown', onTab, true);
     return () => document.removeEventListener('keydown', onTab, true);
   }, [isOpen, trigger]);
+
+  // Copy the trigger's inherited design tokens into the body-level portal.
+  // Controlled context menus fall back to the supplied element or app root.
+  usePortalTheme(panelRef, () => triggerRef.current ?? anchorElement ?? document.documentElement, isOpen);
 
   // Positioning engine (kept as-is)
   usePosition({ triggerRef, anchorRect, anchorElement, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
