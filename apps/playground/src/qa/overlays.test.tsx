@@ -135,7 +135,7 @@ describe('React overlay regressions', () => {
     expect(rename).toBeDefined();
     expect(rename.getAttribute('data-close-popover')).toBe('false');
     expect(findButton('Delete').disabled).toBe(true);
-    await click(rename);
+    await click(rename!);
     expect(document.querySelector('.tmbk-dropdown')).not.toBeNull();
     await click(findButton('Duplicate'));
     expect(document.querySelector('.tmbk-dropdown')).toBeNull();
