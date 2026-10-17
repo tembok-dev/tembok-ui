@@ -222,7 +222,7 @@ Long Dropdowns use compact, theme-aware scrollbars. Two optional semantic tokens
 }
 ```
 
-By default, the thumb derives from the floating surface foreground, including intentionally dark menus in light apps. No global scrollbar CSS is changed. The tokens follow the same portal-inheritance contract as other surface variables. For roundness, `--tmbk-radius-surface` sets the standard panel radius and `--tmbk-popover-radius` overrides just Popover/Dropdown. The scroll track attempts to inset from curved panel corners in Chromium/WebKit; browser and operating-system scrollbar appearances may differ.
+By default, the thumb derives from the floating surface foreground, including intentionally dark menus in light apps. No global scrollbar CSS is changed. The tokens follow the same portal-inheritance contract as other surface variables. For roundness, `--tmbk-radius-surface` sets the standard panel radius and `--tmbk-popover-radius` overrides just Popover/Dropdown. The outer floating surface remains stable and non-scrolling; a single inset viewport owns scrolling so native scrollbars do not overlap rounded outer corners or the positioning arrow. Browser and operating-system scrollbar appearances may differ.
 
 ### Choosing Menu, Popover or Modal
 
