@@ -25,8 +25,8 @@
     padding: .375rem .75rem;
     /* default = sm */
     box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 1px 1px rgba(0, 0, 0, .04);
-    transition: filter .15s ease, transform .15s ease,
-        background-color .15s ease, color .15s ease, border-color .15s ease;
+    transition: filter var(--tmbk-motion-fast, 140ms) ease, transform var(--tmbk-motion-fast, 140ms) var(--tmbk-motion-ease, ease),
+        background-color var(--tmbk-motion-fast, 140ms) ease, color var(--tmbk-motion-fast, 140ms) ease, border-color var(--tmbk-motion-fast, 140ms) ease;
 }
 
 /* Hover/Active/Focus */
