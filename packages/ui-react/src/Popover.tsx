@@ -171,7 +171,8 @@ export function Popover({
 
   // Copy the trigger's inherited design tokens into the body-level portal.
   // Controlled context menus fall back to the supplied element or app root.
-  usePortalTheme(panelRef, () => triggerRef.current ?? anchorElement ?? document.documentElement, isOpen);
+  usePortalTheme(panelRef, () => triggerRef.current ?? anchorElement ?? document.documentElement, isOpen,
+    [bgColor ? "--tmbk-bg" : "", textColor ? "--tmbk-fg" : "", borderColor ? "--tmbk-border" : ""].filter(Boolean));
 
   // Positioning engine (kept as-is)
   usePosition({ triggerRef, anchorRect, anchorElement, panelRef, arrowRef, side, align, offset, edgePad, isOpen });
