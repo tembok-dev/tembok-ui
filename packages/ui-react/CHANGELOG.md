@@ -5,12 +5,15 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- `MenuItem` component for compact dropdown actions with icon, trailing text, description and danger/disabled states.
+- Clear human-facing guidance distinguishing Dropdown, Popover and Modal.
 - Modal `size` presets (`sm`, `md`, `lg`, `xl`, `full`) and optional `width` override.
 - Modal viewport-safe scrolling with independently scrollable body and persistent footer.
 - Local React regression tests and `pnpm check` command (manual only).
 - Semantic surface and motion theme values.
 
 ### Fixed
+- Dropdown no longer inherits spacious Popover panel padding; menus use compact spacing.
 - Coordinated dismissal/focus of nested overlays.
 - Popover/Dropdown collision positioning, context-menu anchors and Escape focus restoration.
 - Popover arrow styling for dark surfaces.
