@@ -13,6 +13,7 @@
     display: grid;
     place-items: center;
     pointer-events: auto;
+    padding: 16px;
     z-index: var(--modal-z, 2147483646);
 }
 
@@ -22,8 +23,12 @@
     position: relative;
     z-index: calc(var(--modal-z, 2147483646) + 1);
     box-sizing: border-box;
-    width: var(--tmbk-modal-width, min(92vw, 560px));
-    max-width: calc(100vw - 32px);
+    width: var(--tmbk-modal-width, min(92vw, var(--tmbk-modal-preset-width, 560px)));
+    max-width: 100%;
+    max-height: calc(100dvh - 32px);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     border-radius: var(--tmbk-modal-radius, var(--tmbk-radius-surface, .75rem));
 
     background-color: var(--tmbk-modal-bg, var(--tmbk-surface, var(--tmbk-bg, #fff)));
@@ -45,12 +50,15 @@
 
 .tmbk-theme .tmbk-modal-body,
 .tmbk-modal-body.tmbk-theme {
-    /* default flow */
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .tmbk-theme .tmbk-modal-footer,
 .tmbk-modal-footer.tmbk-theme {
     margin-top: 1rem;
+    flex-shrink: 0;
     display: flex;
     justify-content: end;
     gap: .5rem;
@@ -68,3 +76,10 @@
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Width presets remain overridable through --tmbk-modal-width or width prop. */
+.tmbk-modal-panel[data-size="sm"] { --tmbk-modal-preset-width: 400px; }
+.tmbk-modal-panel[data-size="md"] { --tmbk-modal-preset-width: 560px; }
+.tmbk-modal-panel[data-size="lg"] { --tmbk-modal-preset-width: 720px; }
+.tmbk-modal-panel[data-size="xl"] { --tmbk-modal-preset-width: 960px; }
+.tmbk-modal-panel[data-size="full"] { --tmbk-modal-preset-width: 100%; }

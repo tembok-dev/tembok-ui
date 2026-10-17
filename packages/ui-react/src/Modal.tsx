@@ -36,7 +36,13 @@ import { useClickOutside } from './hooks/useClickOutside';
  * </div>
  */
 
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+
 export interface ModalProps {
+  /** Preset panel width. Defaults to md, preserving the existing 560px width. */
+  size?: ModalSize;
+  /** Optional width override; any valid CSS width value. */
+  width?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
@@ -71,6 +77,8 @@ function ModalContent({
   className,
   overlayClassName,
   id = 'tembok-modal',
+  size = 'md',
+  width,
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null!);
   const headerId = useId();
@@ -117,6 +125,8 @@ function ModalContent({
           {...(header ? { 'aria-labelledby': headerId } : {})}
           {...(children ? { 'aria-describedby': bodyId } : {})}
           tabIndex={-1}
+          data-size={size}
+          style={width ? { ['--tmbk-modal-width' as string]: width } : undefined}
           className={cx('tmbk-modal-panel', className)}
         >
           {header && <header id={headerId} className="tmbk-modal-header">{header}</header>}
