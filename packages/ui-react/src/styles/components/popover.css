@@ -90,6 +90,12 @@
     var(--tmbk-scrollbar-track, transparent);
 }
 .tmbk-popover::-webkit-scrollbar { width: 8px; height: 8px; }
+/* Keep the native scroll track inside rounded corners; do not clip the
+   floating panel itself because the positioning arrow must remain visible. */
+.tmbk-popover::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
+.tmbk-popover::-webkit-scrollbar-track-piece:start { margin-top: var(--tmbk-popover-radius, var(--tmbk-radius-surface, 12px)); }
+.tmbk-popover::-webkit-scrollbar-track-piece:end { margin-bottom: var(--tmbk-popover-radius, var(--tmbk-radius-surface, 12px)); }
+.tmbk-popover::-webkit-scrollbar-track { border-radius: 999px; }
 .tmbk-popover::-webkit-scrollbar-track { background: var(--tmbk-scrollbar-track, transparent); }
 .tmbk-popover::-webkit-scrollbar-thumb {
   background: var(--tmbk-scrollbar-thumb, color-mix(in srgb, var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg))) 32%, transparent));
