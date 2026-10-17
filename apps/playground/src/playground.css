@@ -153,3 +153,8 @@ body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
   --tmbk-primary:var(--tmbk-preview-primary,#5aedea);
   --tmbk-primary-fg:var(--tmbk-preview-primary-fg,#172427);
 }
+
+/* Compact, icon-only appearance switch. */
+.workbench-mode-tabs { max-width:112px; }
+.workbench-mode-tabs button { min-width:44px; min-height:40px; padding:8px; }
+.workbench-mode-tabs button svg { display:block; width:20px; height:20px; flex:none; }
