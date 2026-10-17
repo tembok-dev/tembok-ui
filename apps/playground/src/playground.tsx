@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Modal, Popover, Dropdown, IconButton, SideBar } from '@tembok/ui-react';
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -10,6 +10,23 @@ export function Playground() {
   const [showcaseTheme, setShowcaseTheme] = useState<'light' | 'dark'>('light');
   const [showcaseRadius, setShowcaseRadius] = useState(12);
   const [showcaseMotion, setShowcaseMotion] = useState(true);
+  const [primaryColor, setPrimaryColor] = useState('#5aedea');
+  const [section, setSection] = useState<'buttons' | 'overlays' | 'surfaces'>('buttons');
+  useEffect(() => {
+    // Portals mount under body, not inside the playground theme scope.
+    // Scope this demo's theme on body and undo every mutation on unmount.
+    const body = document.body;
+    const previousTheme = body.getAttribute('data-tmbk-preview-theme');
+    const previousColor = body.style.getPropertyValue('--tmbk-preview-primary');
+    body.setAttribute('data-tmbk-preview-theme', showcaseTheme);
+    body.style.setProperty('--tmbk-preview-primary', primaryColor);
+    return () => {
+      if (previousTheme === null) body.removeAttribute('data-tmbk-preview-theme');
+      else body.setAttribute('data-tmbk-preview-theme', previousTheme);
+      if (previousColor) body.style.setProperty('--tmbk-preview-primary', previousColor);
+      else body.style.removeProperty('--tmbk-preview-primary');
+    };
+  }, [showcaseTheme, primaryColor]);
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
@@ -19,7 +36,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px` }}>
+    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
@@ -28,34 +45,38 @@ export function Playground() {
         </nav>
       </header>
       {page === 'gallery' ? (
-        <main className="playground-main showcase">
-          <section className="showcase-hero">
-            <div className="showcase-eyebrow">TEMBOK / DESIGN SYSTEM / REACT</div>
-            <div className="showcase-heading">
-              <div><h1>Interfaces with intention.</h1><p>Refined foundations. Flexible composition. Real components, ready for real products.</p></div>
-              <span className="showcase-version">FOUNDATIONS / 01</span>
+        <main className="workbench" aria-label="Component workbench">
+          <aside className="workbench-nav" aria-label="Component navigation">
+            <div className="workbench-nav-title">COMPONENTS</div>
+            {(['buttons','overlays','surfaces'] as const).map(item =>
+              <button key={item} className={section === item ? 'workbench-nav-item selected' : 'workbench-nav-item'} aria-current={section === item ? 'page' : undefined} onClick={() => setSection(item)}>
+                {item === 'buttons' ? 'Buttons' : item === 'overlays' ? 'Overlays' : 'Surfaces'}
+              </button>
+            )}
+            <div className="workbench-nav-title workbench-nav-tools">TOOLS</div>
+            <button className="workbench-nav-item" onClick={() => setPage('qa')}>Overlay QA ↗</button>
+          </aside>
+          <div className="workbench-content">
+            <div className="workbench-heading"><div><div className="workbench-breadcrumb">React / Components / {section}</div><h1>{section === 'buttons' ? 'Buttons' : section === 'overlays' ? 'Overlays' : 'Surfaces'}</h1><p>{section === 'buttons' ? 'Actions, sizes and states.' : section === 'overlays' ? 'Modal, popover and menu behavior.' : 'Appearance, depth and radius tokens.'}</p></div><span className="workbench-source">LOCAL SOURCE</span></div>
+            <div className="workbench-preview">
+              <div className="workbench-preview-top"><span>PREVIEW</span><span>Actual @tembok/ui-react components</span></div>
+              <div className="workbench-stage">
+                {section === 'buttons' && <div className="workbench-examples"><div className="workbench-example-label">Intents</div><div className="playground-actions"><Button intent="primary">Primary</Button><Button intent="neutral">Neutral</Button><Button intent="ghost">Ghost</Button><Button intent="danger">Danger</Button><Button disabled>Disabled</Button><IconButton label="Favorite"><span aria-hidden="true">✦</span></IconButton></div><div className="workbench-example-label">Sizes</div><div className="playground-actions"><Button size="sm">Small</Button><Button size="md">Medium</Button><Button size="lg">Large</Button></div></div>}
+                {section === 'overlays' && <div className="workbench-examples"><div className="workbench-example-label">Floating components</div><div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content"><span>Popover content</span><button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><div className="fixture-content"><button type="button">Edit</button><button type="button">Duplicate</button></div></Dropdown></div><p className="workbench-hint">Try Escape, keyboard focus and clicking outside.</p></div>}
+                {section === 'surfaces' && <div className="workbench-surface-example"><div className="workbench-surface-card"><small>STATUS</small><strong>Ready for review</strong><span>Semantic surface and elevation tokens.</span><Button size="sm">Review</Button></div></div>}
+              </div>
+              <div className="workbench-preview-bottom"><span>{section === 'buttons' ? 'Hover · Focus · Disabled' : section === 'overlays' ? 'Portals · Focus · Dismissal' : 'Colors · Radius · Elevation'}</span><span>PREVIEW / 01</span></div>
             </div>
-            <div className="showcase-metrics"><span>01 <b>Surface language</b></span><span>02 <b>Interaction</b></span><span>03 <b>Motion</b></span></div>
-          </section>
-          <section className="showcase-panel showcase-config" aria-label="Showcase theme controls">
-            <div><div className="showcase-kicker">LIVE CONTROLS</div><h2>Make it yours.</h2><p>Try presentation settings without modifying any component.</p></div>
-            <div className="showcase-controls">
-              <label>Appearance <select value={showcaseTheme} onChange={e => setShowcaseTheme(e.target.value as 'light' | 'dark')}><option value="light">Light</option><option value="dark">Dark</option></select></label>
-              <label>Surface radius <input aria-label="Surface radius" type="range" min="4" max="24" step="2" value={showcaseRadius} onChange={e => setShowcaseRadius(Number(e.target.value))} /><span>{showcaseRadius}px</span></label>
-              <label className="showcase-toggle"><input type="checkbox" checked={showcaseMotion} onChange={e => setShowcaseMotion(e.target.checked)} /> Motion enabled</label>
-            </div>
-          </section>
-          <div className="showcase-grid">
-            <section className="showcase-panel"><div className="showcase-kicker">01 / ACTIONS</div><h2>Clear hierarchy.</h2><p>Actions stay identifiable without unnecessary decoration.</p>
-              <div className="playground-actions"><Button intent="primary">Continue <span aria-hidden="true">↗</span></Button><Button intent="neutral">Secondary</Button><Button intent="ghost">Ghost</Button><Button intent="danger">Delete</Button><IconButton label="Favorite"><span aria-hidden="true">✦</span></IconButton><Button disabled>Disabled</Button></div>
-            </section>
-            <section className="showcase-panel"><div className="showcase-kicker">02 / FLOATING UI</div><h2>Focused interactions.</h2><p>Portaled overlays with tested keyboard and dismissal behavior.</p>
-              <div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content">A focused surface <button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><div className="fixture-content"><button type="button">Edit</button><button type="button">Duplicate</button></div></Dropdown></div>
-            </section>
-            <section className="showcase-panel showcase-surface"><div className="showcase-kicker">03 / SURFACES</div><h2>Quiet depth.</h2><p>Semantic surfaces, borders and elevation build the composition.</p><div className="showcase-surface-demo"><div className="showcase-mini-card"><span className="showcase-status">● SYSTEM HEALTHY</span><strong>Everything in place.</strong><small>Tokens carry the design language.</small></div></div></section>
-            <section className="showcase-panel"><div className="showcase-kicker">04 / MOTION</div><h2>Purpose, not noise.</h2><p>Subtle feedback responds to interaction. Reduced-motion preferences remain respected.</p><div className="showcase-motion-demo"><div className="showcase-motion-tile" tabIndex={0}><span>Hover or focus</span><strong>↗</strong></div><span className="showcase-footnote">Demo-only motion · not a package component</span></div></section>
+            <div className="workbench-reference"><h2>Component notes</h2><p>{section === 'buttons' ? 'Use intent to communicate priority. Theme tokens define the appearance.' : section === 'overlays' ? 'Overlays mount in document.body. The preview applies appearance and accent to portals as well as the workbench.' : 'Adjust surface radius and appearance in the inspector. These values are configurable, not hard-coded into consumer apps.'}</p></div>
           </div>
-          <div className="showcase-footer"><span>BUILT WITH ACTUAL @TEMBOK/UI-REACT COMPONENTS</span><span>Overlay QA remains available for functional stress testing.</span></div>
+          <aside className="workbench-inspector" aria-label="Preview inspector">
+            <div className="workbench-inspector-title">PREVIEW SETTINGS</div>
+            <label className="workbench-field">Appearance<select value={showcaseTheme} onChange={e => setShowcaseTheme(e.target.value as 'light' | 'dark')}><option value="light">Light</option><option value="dark">Dark</option></select></label>
+            <div className="workbench-field"><label htmlFor="workbench-primary">Primary color</label><div className="workbench-color"><input id="workbench-primary" type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} /><output>{primaryColor.toUpperCase()}</output></div></div>
+            <label className="workbench-field">Corner radius <div className="workbench-range"><input aria-label="Surface radius" type="range" min="4" max="24" step="2" value={showcaseRadius} onChange={e => setShowcaseRadius(Number(e.target.value))} /><output>{showcaseRadius}px</output></div></label>
+            <label className="workbench-check"><input type="checkbox" checked={showcaseMotion} onChange={e => setShowcaseMotion(e.target.checked)} /> Enable motion</label>
+            <p className="workbench-inspector-note">Preview only. No changes to package defaults.</p>
+          </aside>
         </main>
       ) : (
         <main className="playground-main">
