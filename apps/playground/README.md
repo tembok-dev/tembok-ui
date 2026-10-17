@@ -16,3 +16,21 @@ Use **Gallery** to explore actual Tembok UI components. Use **Overlay QA** for k
 Before release also run `pnpm typecheck`, `pnpm build`, and verify the package build independently. Test additional nested/stacked overlays and longer Modal content before claiming full accessibility compliance.
 
 Astro is a separate future QA surface; do not assume React tests validate `@tembok/ui-astro`.
+
+## Local-only quality gates
+
+From the repository root:
+
+```bash
+pnpm install
+pnpm test
+pnpm check
+```
+
+- `pnpm test` runs the deterministic React overlay regression tests using Vitest + jsdom.
+- `pnpm check` runs package and playground typechecks, regression tests, and builds.
+- `pnpm dev` launches the visual playground for manual QA.
+
+These scripts only run when a developer invokes them. **No GitHub Actions, CI workflows, pre-commit hooks, pre-push hooks or scheduled testing are added.** The jsdom tests verify behavior, not visual stacking or browser layout. Use Chrome QA only for visual or interaction scenarios that need a real browser.
+
+When adding dependencies, regenerate and commit `pnpm-lock.yaml` locally using `pnpm install`, then verify `pnpm install --frozen-lockfile`. Do not merge before completing this step.
