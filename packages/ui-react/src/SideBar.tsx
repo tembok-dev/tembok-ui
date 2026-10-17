@@ -118,6 +118,9 @@ export function SideBar({
   useBodyScrollLock(isOpen);
   const themeSourceRef = useRef<HTMLSpanElement>(null!);
   const sidebarRef = useRef<HTMLElement>(null!);
+  const backdropRef = useRef<HTMLDivElement>(null!);
+  usePortalTheme(backdropRef, () => themeSourceRef.current, isOpen,
+    [backdrop ? '--tmbk-backdrop' : ''].filter(Boolean));
   usePortalTheme(sidebarRef, () => themeSourceRef.current, isOpen,
     [bgColor ? '--tmbk-bg' : '', textColor ? '--tmbk-fg' : '', borderColor ? '--tmbk-border' : ''].filter(Boolean));
 
@@ -170,6 +173,7 @@ export function SideBar({
     <Portal>
       {/* Overlay */}
       <div
+        ref={backdropRef}
         className={cx(
           "tmbk-sidebar-overlay",
           themeScoped && "tmbk-theme",
