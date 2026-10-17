@@ -60,9 +60,9 @@
 }
 
 :where(.tmbk-theme .tmbk-btn[data-intent="secondary"], .tmbk-btn.tmbk-theme[data-intent="secondary"]) {
-    --btn-bg: var(--tmbk-primary) '80%';
-    --btn-fg: var(--tmbk-primary-fg);
-    --btn-bd: var(--tmbk-primary);
+    --btn-bg: var(--tmbk-secondary-bg, color-mix(in srgb, var(--tmbk-primary) 8%, var(--tmbk-bg-light)));
+    --btn-fg: var(--tmbk-secondary-fg, var(--tmbk-fg));
+    --btn-bd: var(--tmbk-secondary-border, color-mix(in srgb, var(--tmbk-primary) 30%, var(--tmbk-border)));
 }
 
 :where(.tmbk-theme .tmbk-btn[data-intent="neutral"], .tmbk-btn.tmbk-theme[data-intent="neutral"]) {
@@ -106,6 +106,16 @@
     --btn-bd: transparent;
 }
 
+/* Product state tokens: adjust without overriding internal selectors. */
+:where(.tmbk-theme .tmbk-btn[data-intent="primary"]:hover, .tmbk-btn.tmbk-theme[data-intent="primary"]:hover) {
+  background-color: var(--tmbk-primary-hover, var(--tmbk-primary));
+}
+:where(.tmbk-theme .tmbk-btn[data-intent="primary"]:active, .tmbk-btn.tmbk-theme[data-intent="primary"]:active) {
+  background-color: var(--tmbk-primary-active, var(--tmbk-primary-hover, var(--tmbk-primary)));
+}
+:where(.tmbk-theme .tmbk-btn[data-intent="secondary"]:hover, .tmbk-btn.tmbk-theme[data-intent="secondary"]:hover) {
+  background-color: var(--tmbk-secondary-hover, color-mix(in srgb, var(--tmbk-primary) 13%, var(--tmbk-bg-light)));
+}
 /* Tones */
 :where(.tmbk-theme .tmbk-btn[data-tone="ink"], .tmbk-btn.tmbk-theme[data-tone="ink"]) {
     --btn-bg: var(--tmbk-brand-ink);

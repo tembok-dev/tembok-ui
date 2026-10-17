@@ -1,8 +1,10 @@
-.tmbk-theme {
+:root {
+  /* Namespaced defaults are inherited by components, never reset on a
+     component's own .tmbk-theme class. Product scopes can override freely. */
   --tmbk-bg:#fafafa; --tmbk-bg-light:#fff; --tmbk-bg-dark:#e4e4e7;
   --tmbk-fg:#292929; --tmbk-fg-light:#808080; --tmbk-fg-muted:#808080;
   --tmbk-border:rgba(41,41,41,.15);
-  --tmbk-primary:#5AEDEA; --tmbk-primary-fg:#292929; --tmbk-ring:rgba(90,237,234,.35);
+  --tmbk-primary:#475569; --tmbk-primary-fg:#fff; --tmbk-ring:rgba(71,85,105,.35);
   --tmbk-success:#10b981; --tmbk-success-fg:#fff;
   --tmbk-warning:#f59e0b; --tmbk-warning-fg:#1a1a1a;
   --tmbk-info:#3b82f6;    --tmbk-info-fg:#fff;
@@ -26,17 +28,19 @@
   --tmbk-motion-ease: cubic-bezier(.22,1,.36,1);
   color-scheme: light;
 }
-.dark .tmbk-theme, [data-theme="dark"] .tmbk-theme {
+:root.dark, :root[data-theme="dark"], .dark, [data-theme="dark"] {
+  /* Dark defaults are inherited by descendants, including self-scoped controls. */
   --tmbk-bg:#0a0a0a; --tmbk-bg-light:#1a1a1a; --tmbk-bg-dark:#050505;
   --tmbk-fg:#f5f5f5; --tmbk-fg-light:#a3a3a3; --tmbk-fg-muted:#a3a3a3;
   --tmbk-border:rgba(245,245,245,.15);
+  --tmbk-primary:#94a3b8; --tmbk-primary-fg:#0f172a; --tmbk-ring:rgba(148,163,184,.45);
   --tmbk-shadow-surface: 0 12px 36px rgba(0,0,0,.32), 0 2px 8px rgba(0,0,0,.20);
   --tmbk-shadow-floating: 0 16px 48px rgba(0,0,0,.42), 0 4px 14px rgba(0,0,0,.24);
   color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tmbk-theme {
+  :root, .tmbk-theme {
     --tmbk-motion-fast: 0ms;
     --tmbk-motion-normal: 0ms;
   }

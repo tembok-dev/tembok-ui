@@ -169,3 +169,36 @@ body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
   --tmbk-border: var(--wb-border);
   color-scheme: dark;
 }
+
+/* Reference fixture derived from Taskel develop/core palette.
+   Playground-only: the package must consume the inherited token contract. */
+.playground[data-preset="reference"]:has(.workbench) {
+  --wb-bg:#f9fafb; --wb-panel:#fcfcfd; --wb-border:#e1e4ea;
+  --wb-text:#24292e; --wb-muted:#73808c;
+  --tmbk-bg:#f9fafb; --tmbk-bg-light:#fcfcfd; --tmbk-fg:#24292e;
+  --tmbk-border:#e1e4ea; --tmbk-primary-hover:#af8701; --tmbk-primary-active:#af8701;
+  --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
+  --tmbk-secondary-fg:#24292e;
+  --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));
+  --tmbk-secondary-hover:color-mix(in srgb,var(--tmbk-primary) 12%,var(--tmbk-bg-light));
+}
+.playground[data-preset="reference"][data-showcase-theme="dark"]:has(.workbench) {
+  --wb-bg:#1d242a; --wb-panel:#353e46; --wb-border:#48545e;
+  --wb-text:#eff0f0; --wb-muted:#b1b3b4;
+  --tmbk-bg:#1d242a; --tmbk-bg-light:#353e46; --tmbk-fg:#eff0f0;
+  --tmbk-border:#48545e; --tmbk-secondary-fg:#eff0f0;
+}
+.playground[data-preset="reference"]:has(.workbench) .tmbk-btn.tmbk-theme {
+  --tmbk-primary-hover:#af8701; --tmbk-primary-active:#af8701;
+  --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
+  --tmbk-secondary-fg:var(--wb-text);
+  --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));
+  --tmbk-secondary-hover:color-mix(in srgb,var(--tmbk-primary) 12%,var(--tmbk-bg-light));
+}
+body[data-tmbk-preview-preset="reference"] .tmbk-popover.tmbk-theme,
+body[data-tmbk-preview-preset="reference"] .tmbk-dropdown.tmbk-theme {
+  --tmbk-bg:#252c37; --tmbk-bg-light:#5b6a80; --tmbk-fg:#f6f7f9;
+  --tmbk-surface-raised:#252c37; --tmbk-surface-text:#f6f7f9;
+  --tmbk-surface-border:#5b6a80; --tmbk-border:#5b6a80;
+  color-scheme:dark;
+}

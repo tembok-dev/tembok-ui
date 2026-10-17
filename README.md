@@ -14,6 +14,8 @@ This monorepo contains the following packages:
 
 ## For application developers
 
+React source now uses inherited neutral defaults instead of requiring extra theme wrapper elements. A product can override namespaced `--tmbk-*` CSS variables on its existing app root; see the React theme guide for the current scope and portal limitations.
+
 Each package is independently versioned. Start with the [React package guide](./packages/ui-react/README.md) for installation, themes and copyable component examples.
 
 **Source vs npm:** A feature merged into `main` is not automatically published. Check the version available on [npm](https://www.npmjs.com/package/@tembok/ui-react) before adopting an unreleased API. Review the [React changelog](./packages/ui-react/CHANGELOG.md) for work pending release.
