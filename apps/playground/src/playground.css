@@ -195,10 +195,12 @@ body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
   --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));
   --tmbk-secondary-hover:color-mix(in srgb,var(--tmbk-primary) 12%,var(--tmbk-bg-light));
 }
-body[data-tmbk-preview-preset="reference"] .tmbk-popover.tmbk-theme,
-body[data-tmbk-preview-preset="reference"] .tmbk-dropdown.tmbk-theme {
-  --tmbk-bg:#252c37; --tmbk-bg-light:#5b6a80; --tmbk-fg:#f6f7f9;
-  --tmbk-surface-raised:#252c37; --tmbk-surface-text:#f6f7f9;
-  --tmbk-surface-border:#5b6a80; --tmbk-border:#5b6a80;
-  color-scheme:dark;
+/* Taskel-inspired floating ink surfaces are deliberately dark in BOTH preview
+   modes. Set scoped component tokens at the source, not on document.body:
+   usePortalTheme carries these through to the portaled panel. */
+.playground[data-preset="reference"] .workbench-stage {
+  --tmbk-popover-bg:#252c37;
+  --tmbk-popover-fg:#f6f7f9;
+  --tmbk-popover-border:#5b6a80;
+  --tmbk-menu-hover:#394656;
 }
