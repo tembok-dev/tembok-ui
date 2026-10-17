@@ -79,14 +79,34 @@ Icon-only button with automatic icon scaling.
 
 ### Modal
 
-Accessible modal dialog rendered via portal, with initial focus, Tab/Shift+Tab containment, and focus restoration to the opener on close. Panel width includes padding/border and is capped to the viewport. Long-content vertical scrolling and coordinated nested overlay behavior remain follow-up work.
+Accessible, portaled dialog with focus containment, Escape dismissal, focus restoration, viewport-safe scrolling and built-in size presets.
 
-const [open, setOpen] = useState(false);
+```tsx
+import { useState } from "react";
+import { Button, Modal } from "@tembok/ui-react";
 
-<Modal open={open} onOpenChange={setOpen}>
-  <h2>Modal Title</h2>
-  <p>Modal content here</p>
-</Modal>
+export function SettingsDialog() {
+  const [open, setOpen] = useState(false);
+  return <>
+    <Button onClick={() => setOpen(true)}>Open settings</Button>
+    <Modal
+      open={open}
+      onOpenChange={setOpen}
+      size="lg"
+      header={<h2>Settings</h2>}
+      footer={<Button onClick={() => setOpen(false)}>Done</Button>}
+    >
+      <p>Long forms scroll inside the dialog while the header and footer remain visible.</p>
+    </Modal>
+  </>;
+}
+```
+
+- `size`: `sm` (400px), `md` (560px, default), `lg` (720px), `xl` (960px), `full` (available width).
+- `width`: optional CSS width value such as `"42rem"`; overrides the size preset.
+- On narrow or short screens, the panel stays within the viewport and the body scrolls independently.
+- Existing `--tmbk-modal-width` CSS overrides remain supported; setting `width` takes precedence.
+- Background document scrolling is locked while the dialog is open.
 
 ### Toast
 
