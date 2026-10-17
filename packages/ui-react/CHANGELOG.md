@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- Provider-free scoped theme inheritance for Modal, Popover and Dropdown portals, including product-specific CSS token scopes and live ancestor class/style changes.
 - Inherited neutral slate default theme, with optional app-level semantic token overrides and no required wrapper.
 - Optional Button hover/active and secondary-state token overrides, plus neutral/Tembok/product-reference playground presets.
 - `IconButton size="xs"` for dense 28px actions, customizable with `--tmbk-icon-button-xs-size`.
@@ -16,6 +17,7 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- Portaled overlay surfaces no longer lose semantic theme colors when opened from locally themed application regions.
 - Removed per-component theme token resets that previously overrode application-scope colors.
 - Repaired invalid secondary Button background CSS value.
 - Dropdown no longer inherits spacious Popover panel padding; menus use compact spacing.
