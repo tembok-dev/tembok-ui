@@ -3,6 +3,21 @@ import { Button, Modal, Popover, Dropdown, IconButton, SideBar } from '@tembok/u
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 type Side = 'auto' | 'up' | 'down';
+const brandSwatches = [
+  { name: 'Default', value: '#5aedea' },
+  { name: 'Red', value: '#c31f39' },
+  { name: 'Cyan', value: '#00ffff' },
+  { name: 'Lime', value: '#c5e836' },
+  { name: 'Ink', value: '#1a2332' },
+] as const;
+function ThemeIcon({ mode }: { mode: 'light' | 'dark' }) {
+  // Material light_mode / dark_mode glyph paths supplied for this workbench.
+  return <svg aria-hidden="true" viewBox="0 0 960 960" width="18" height="18" fill="currentColor">
+    <path d={mode === 'light'
+      ? 'M565-395q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Zm-226.5 56.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z'
+      : 'M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z'} />
+  </svg>;
+}
 
 export function Playground() {
   const [page, setPage] = useState<'gallery' | 'qa'>('gallery');
@@ -37,7 +52,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
+    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
@@ -72,8 +87,12 @@ export function Playground() {
           </div>
           <aside className="workbench-inspector" aria-label="Preview inspector">
             <div className="workbench-inspector-title">PREVIEW SETTINGS</div>
-            <label className="workbench-field">Appearance<select value={showcaseTheme} onChange={e => setShowcaseTheme(e.target.value as 'light' | 'dark')}><option value="light">Light</option><option value="dark">Dark</option></select></label>
-            <div className="workbench-field"><label htmlFor="workbench-primary">Primary color</label><div className="workbench-color"><input id="workbench-primary" type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} /><output>{primaryColor.toUpperCase()}</output></div></div>
+            <div className="workbench-field"><span>Appearance</span><div className="workbench-mode-tabs" role="group" aria-label="Appearance">
+              {(['light', 'dark'] as const).map(mode => <button type="button" key={mode} aria-label={mode === 'light' ? 'Light mode' : 'Dark mode'} aria-pressed={showcaseTheme === mode} className={showcaseTheme === mode ? 'active' : ''} onClick={() => setShowcaseTheme(mode)}><ThemeIcon mode={mode}/><span>{mode === 'light' ? 'Light' : 'Dark'}</span></button>)}
+            </div></div>
+            <div className="workbench-field"><span>Primary color</span><div className="workbench-swatches" role="group" aria-label="Preset primary colors">
+              {brandSwatches.map(swatch => <button key={swatch.name} type="button" title={swatch.name} aria-label={swatch.name + ' primary'} aria-pressed={primaryColor.toLowerCase() === swatch.value} className={primaryColor.toLowerCase() === swatch.value ? 'selected' : ''} style={{ backgroundColor: swatch.value }} onClick={() => setPrimaryColor(swatch.value)} />)}
+            </div><label htmlFor="workbench-primary" className="workbench-custom-label">Custom color</label><div className="workbench-color"><input id="workbench-primary" type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} /><output>{primaryColor.toUpperCase()}</output></div></div>
             <label className="workbench-field">Corner radius <div className="workbench-range"><input aria-label="Surface radius" type="range" min="4" max="24" step="2" value={showcaseRadius} onChange={e => setShowcaseRadius(Number(e.target.value))} /><output>{showcaseRadius}px</output></div></label>
             <label className="workbench-check"><input type="checkbox" checked={showcaseMotion} onChange={e => setShowcaseMotion(e.target.checked)} /> Enable motion</label>
             <p className="workbench-inspector-note">Preview only. No changes to package defaults.</p>
