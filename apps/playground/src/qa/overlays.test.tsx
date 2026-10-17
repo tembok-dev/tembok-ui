@@ -111,6 +111,18 @@ describe('React overlay regressions', () => {
     expect(document.querySelector('.tmbk-popover')).toBeNull();
   });
 
+  it('supports modal size presets, custom width, and a scrollable content region', async () => {
+    await render(<Modal open onOpenChange={() => {}} size="lg" width="680px"
+      header={<h2>Long form</h2>} footer={<button>Save</button>}>
+      <div>{Array.from({ length: 40 }, (_, i) => <p key={i}>Row {i}</p>)}</div>
+    </Modal>);
+    const panel = document.querySelector<HTMLElement>('.tmbk-modal-panel')!;
+    expect(panel.dataset.size).toBe('lg');
+    expect(panel.style.getPropertyValue('--tmbk-modal-width')).toBe('680px');
+    expect(panel.querySelector('.tmbk-modal-body')).not.toBeNull();
+    expect(panel.querySelector('.tmbk-modal-footer')).not.toBeNull();
+  });
+
   it('Escape dismisses nested Popover before Modal', async () => {
     function Example() {
       const [open, setOpen] = useState(false);
