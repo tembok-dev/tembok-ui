@@ -108,6 +108,9 @@ Icon-only button with automatic icon scaling.
 
 ### Modal
 
+Modal and SideBar share background scroll locking: opening a second overlay will not unlock the page when the first closes. SideBar now inherits the CSS theme from its original application scope, including panel and backdrop, without requiring a provider.
+
+
 Accessible, portaled dialog with focus containment, Escape dismissal, focus restoration, viewport-safe scrolling and built-in size presets.
 
 ```tsx
