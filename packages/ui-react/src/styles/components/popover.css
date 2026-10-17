@@ -88,7 +88,6 @@
   max-height: min(var(--tmbk-popover-content-maxh, 100000px), var(--tmbk-popover-scroll-limit, 100000px));
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color:
     var(--tmbk-scrollbar-thumb, color-mix(in srgb, var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg))) 32%, transparent))
