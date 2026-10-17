@@ -3,6 +3,8 @@ import { ReactNode, useState, useEffect, useRef } from "react";
 import { Portal } from "./utils/Portal";
 import { cx } from "./utils/variants";
 import { useEscapeKey } from "./hooks/useEscapeKey";
+import { usePortalTheme } from "./hooks/usePortalTheme";
+import { useBodyScrollLock } from "./hooks/useBodyScrollLock";
 
 type SidePosition = "left" | "right";
 
@@ -113,15 +115,11 @@ export function SideBar({
   // Escape
   const isTopLayer = useEscapeKey(() => { if (closeOnEscape) handleClose(); }, isOpen);
 
-  // Body scroll lock
-  useEffect(() => {
-    if (!isOpen) return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, [isOpen]);
+  useBodyScrollLock(isOpen);
+  const themeSourceRef = useRef<HTMLSpanElement>(null!);
+  const sidebarRef = useRef<HTMLElement>(null!);
+  usePortalTheme(sidebarRef, () => themeSourceRef.current, isOpen,
+    [bgColor ? '--tmbk-bg' : '', textColor ? '--tmbk-fg' : '', borderColor ? '--tmbk-border' : ''].filter(Boolean));
 
   // Global toggles via data-* attributes
   useEffect(() => {
@@ -167,6 +165,8 @@ export function SideBar({
   };
 
   return (
+    <>
+    <span ref={themeSourceRef} hidden aria-hidden="true" />
     <Portal>
       {/* Overlay */}
       <div
@@ -183,6 +183,7 @@ export function SideBar({
 
       {/* Panel */}
       <aside
+        ref={sidebarRef}
         className={cx("tmbk-sidebar", themeScoped && "tmbk-theme", panelClassName)}
         data-open={isOpen ? "true" : "false"}
         data-side={side}
@@ -231,5 +232,6 @@ export function SideBar({
         </div>
       </aside>
     </Portal>
+    </>
   );
 }
