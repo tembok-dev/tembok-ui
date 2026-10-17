@@ -7,7 +7,8 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@tembok/ui-react": "workspace:*",
@@ -20,6 +21,8 @@
     "@types/react-dom": "^19.2.3",
     "typescript": "~5.9.3",
     "vite": "^7.2.4",
-    "@types/node": "^24.10.1"
+    "@types/node": "^24.10.1",
+    "vitest": "^4.0.0",
+    "jsdom": "^27.0.0"
   }
 }
