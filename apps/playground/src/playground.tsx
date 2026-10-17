@@ -1,12 +1,53 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Modal, Popover, Dropdown, IconButton, SideBar } from '@tembok/ui-react';
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 type Side = 'auto' | 'up' | 'down';
+const brandSwatches = [
+  { name: 'Default', value: '#5aedea' },
+  { name: 'Red', value: '#c31f39' },
+  { name: 'Cyan', value: '#00ffff' },
+  { name: 'Lime', value: '#c5e836' },
+  { name: 'Ink', value: '#1a2332' },
+] as const;
+function primaryTextColor(hex: string) {
+  const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const luminance = rgb.map(c => c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4)
+    .reduce((sum, c, i) => sum + c * [.2126, .7152, .0722][i], 0);
+  return luminance > .18 ? '#172427' : '#ffffff';
+}
+function ThemeIcon({ mode }: { mode: 'light' | 'dark' }) {
+  return <svg aria-hidden="true" viewBox="0 -960 960 960" width="20" height="20" fill="currentColor"><path d={mode === 'light' ? 'M565-395q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Zm-226.5 56.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z' : 'M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z'} /></svg>;
+}
 
 export function Playground() {
   const [page, setPage] = useState<'gallery' | 'qa'>('gallery');
   const [modalOpen, setModalOpen] = useState(false);
+  const [showcaseTheme, setShowcaseTheme] = useState<'light' | 'dark'>('light');
+  const [showcaseRadius, setShowcaseRadius] = useState(12);
+  const [showcaseMotion, setShowcaseMotion] = useState(true);
+  const [primaryColor, setPrimaryColor] = useState('#5aedea');
+  const [section, setSection] = useState<'buttons' | 'overlays' | 'surfaces'>('buttons');
+  useEffect(() => {
+    // Portals mount under body, not inside the playground theme scope.
+    // Scope this demo's theme on body and undo every mutation on unmount.
+    if (page !== 'gallery') return;
+    const body = document.body;
+    const previousTheme = body.getAttribute('data-tmbk-preview-theme');
+    const previousColor = body.style.getPropertyValue('--tmbk-preview-primary');
+    const previousText = body.style.getPropertyValue('--tmbk-preview-primary-fg');
+    body.setAttribute('data-tmbk-preview-theme', showcaseTheme);
+    body.style.setProperty('--tmbk-preview-primary', primaryColor);
+    body.style.setProperty('--tmbk-preview-primary-fg', primaryTextColor(primaryColor));
+    return () => {
+      if (previousTheme === null) body.removeAttribute('data-tmbk-preview-theme');
+      else body.setAttribute('data-tmbk-preview-theme', previousTheme);
+      if (previousColor) body.style.setProperty('--tmbk-preview-primary', previousColor);
+      else body.style.removeProperty('--tmbk-preview-primary');
+      if (previousText) body.style.setProperty('--tmbk-preview-primary-fg', previousText);
+      else body.style.removeProperty('--tmbk-preview-primary-fg');
+    };
+  }, [showcaseTheme, primaryColor, page]);
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
@@ -16,7 +57,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground">
+    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-primary-fg" as string]: primaryTextColor(primaryColor), ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
@@ -25,32 +66,42 @@ export function Playground() {
         </nav>
       </header>
       {page === 'gallery' ? (
-        <main className="playground-main">
-          <h1>Component gallery</h1>
-          <p>Examples render actual local React components. Changes hot reload.</p>
-          <section className="playground-card">
-            <h2>Buttons</h2>
-            <div className="playground-actions">
-              <Button intent="primary">Primary</Button>
-              <Button intent="secondary">Secondary</Button>
-              <Button intent="ghost">Ghost</Button>
-              <Button intent="danger">Danger</Button>
-              <Button disabled>Disabled</Button>
-              <IconButton label="Example icon action"><span aria-hidden="true">✦</span></IconButton>
+        <main className="workbench" aria-label="Component workbench">
+          <aside className="workbench-nav" aria-label="Component navigation">
+            <div className="workbench-nav-title">COMPONENTS</div>
+            {(['buttons','overlays','surfaces'] as const).map(item =>
+              <button key={item} className={section === item ? 'workbench-nav-item selected' : 'workbench-nav-item'} aria-current={section === item ? 'page' : undefined} onClick={() => setSection(item)}>
+                {item === 'buttons' ? 'Buttons' : item === 'overlays' ? 'Overlays' : 'Surfaces'}
+              </button>
+            )}
+            <div className="workbench-nav-title workbench-nav-tools">TOOLS</div>
+            <button className="workbench-nav-item" onClick={() => setPage('qa')}>Overlay QA ↗</button>
+          </aside>
+          <div className="workbench-content">
+            <div className="workbench-heading"><div><div className="workbench-breadcrumb">React / Components / {section}</div><h1>{section === 'buttons' ? 'Buttons' : section === 'overlays' ? 'Overlays' : 'Surfaces'}</h1><p>{section === 'buttons' ? 'Actions, sizes and states.' : section === 'overlays' ? 'Modal, popover and menu behavior.' : 'Appearance, depth and radius tokens.'}</p></div><span className="workbench-source">LOCAL SOURCE</span></div>
+            <div className="workbench-preview">
+              <div className="workbench-preview-top"><span>PREVIEW</span><span>Actual @tembok/ui-react components</span></div>
+              <div className="workbench-stage">
+                {section === 'buttons' && <div className="workbench-examples"><div className="workbench-example-label">Intents</div><div className="playground-actions"><Button intent="primary">Primary</Button><Button intent="neutral">Neutral</Button><Button intent="ghost">Ghost</Button><Button intent="danger">Danger</Button><Button disabled>Disabled</Button><IconButton label="Favorite"><span aria-hidden="true">✦</span></IconButton></div><div className="workbench-example-label">Sizes</div><div className="playground-actions"><Button size="sm">Small</Button><Button size="md">Medium</Button><Button size="lg">Large</Button></div></div>}
+                {section === 'overlays' && <div className="workbench-examples"><div className="workbench-example-label">Floating components</div><div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content"><span>Popover content</span><button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><div className="fixture-content"><button type="button">Edit</button><button type="button">Duplicate</button></div></Dropdown></div><p className="workbench-hint">Try Escape, keyboard focus and clicking outside.</p></div>}
+                {section === 'surfaces' && <div className="workbench-surface-example"><div className="workbench-surface-card"><small>STATUS</small><strong>Ready for review</strong><span>Semantic surface and elevation tokens.</span><Button size="sm">Review</Button></div></div>}
+              </div>
+              <div className="workbench-preview-bottom"><span>{section === 'buttons' ? 'Hover · Focus · Disabled' : section === 'overlays' ? 'Portals · Focus · Dismissal' : 'Colors · Radius · Elevation'}</span><span>PREVIEW / 01</span></div>
             </div>
-          </section>
-          <section className="playground-card">
-            <h2>Overlays</h2>
-            <div className="playground-actions">
-              <Button onClick={() => setModalOpen(true)}>Open modal</Button>
-              <Popover trigger={<Button intent="neutral">Popover</Button>}>
-                <div className="fixture-content">Popover content <button type="button">Focusable action</button></div>
-              </Popover>
-              <Dropdown trigger={<Button intent="neutral">Dropdown</Button>}>
-                <div className="fixture-content"><button type="button">Action one</button><button type="button">Action two</button></div>
-              </Dropdown>
-            </div>
-          </section>
+            <div className="workbench-reference"><h2>Component notes</h2><p>{section === 'buttons' ? 'Use intent to communicate priority. Theme tokens define the appearance.' : section === 'overlays' ? 'Overlays mount in document.body. The preview applies appearance and accent to portals as well as the workbench.' : 'Adjust surface radius and appearance in the inspector. These values are configurable, not hard-coded into consumer apps.'}</p></div>
+          </div>
+          <aside className="workbench-inspector" aria-label="Preview inspector">
+            <div className="workbench-inspector-title">PREVIEW SETTINGS</div>
+            <div className="workbench-field"><span>Appearance</span><div className="workbench-mode-tabs" role="group" aria-label="Appearance">
+              {(['light', 'dark'] as const).map(mode => <button type="button" key={mode} aria-label={mode === 'light' ? 'Light mode' : 'Dark mode'} aria-pressed={showcaseTheme === mode} className={showcaseTheme === mode ? 'active' : ''} onClick={() => setShowcaseTheme(mode)}><ThemeIcon mode={mode}/></button>)}
+            </div></div>
+            <div className="workbench-field"><span>Primary color</span><div className="workbench-swatches" role="group" aria-label="Preset primary colors">
+              {brandSwatches.map(swatch => <button key={swatch.name} type="button" title={swatch.name} aria-label={swatch.name + ' primary'} aria-pressed={primaryColor.toLowerCase() === swatch.value} className={primaryColor.toLowerCase() === swatch.value ? 'selected' : ''} style={{ backgroundColor: swatch.value }} onClick={() => setPrimaryColor(swatch.value)} />)}
+            </div><label htmlFor="workbench-primary" className="workbench-custom-label">Custom color</label><div className="workbench-color"><input id="workbench-primary" type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} /><output>{primaryColor.toUpperCase()}</output></div></div>
+            <label className="workbench-field">Corner radius <div className="workbench-range"><input aria-label="Surface radius" type="range" min="4" max="24" step="2" value={showcaseRadius} onChange={e => setShowcaseRadius(Number(e.target.value))} /><output>{showcaseRadius}px</output></div></label>
+            <label className="workbench-check"><input type="checkbox" checked={showcaseMotion} onChange={e => setShowcaseMotion(e.target.checked)} /> Enable motion</label>
+            <p className="workbench-inspector-note">Preview only. No changes to package defaults.</p>
+          </aside>
         </main>
       ) : (
         <main className="playground-main">

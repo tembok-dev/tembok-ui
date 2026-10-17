@@ -61,25 +61,14 @@
   position: absolute;
   width: var(--tmbk-popover-arrow);
   height: var(--tmbk-popover-arrow);
-  background-color: var(--tmbk-bg);
-  border: 1px solid var(--tmbk-border);
+  /* Match the raised panel surface without a contrasting square border. */
+  background-color: var(--tmbk-surface-raised, var(--tmbk-bg));
+  border: none;
   transform: rotate(45deg);
 }
 
-/* Trim borders so arrow merges with panel edge */
-:where(.tmbk-theme .tmbk-popover[data-side="up"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="up"] .tmbk-popover-arrow) { 
-  border-top: none; border-left: none; 
-}
-:where(.tmbk-theme .tmbk-popover[data-side="down"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="down"] .tmbk-popover-arrow) { 
-  border-bottom: none; border-right: none; 
-}
-:where(.tmbk-theme .tmbk-popover[data-side="left"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="left"] .tmbk-popover-arrow) { 
-  border-left: none; border-bottom: none; 
-}
-:where(.tmbk-theme .tmbk-popover[data-side="right"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="right"] .tmbk-popover-arrow) { 
-  border-right: none; border-top: none; 
-}
-
+/* The positioned square must remain intact: a clipped half disappears when
+   rotated by usePosition. Its matching background blends with the panel. */
 /* Root/trigger wrappers (unintrusive) */
 .tmbk-popover-root { position: relative; display: inline-block; }
 .tmbk-popover-trigger { display: inline-flex; }
