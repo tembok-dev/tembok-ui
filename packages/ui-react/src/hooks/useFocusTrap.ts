@@ -5,7 +5,7 @@ const focusableSelector =
 
 /** Trap keyboard navigation and restore focus to the opening control. */
 export function useFocusTrap<T extends HTMLElement = HTMLElement>(
-  containerRef: RefObject<T>, isActive: boolean
+  containerRef: RefObject<T>, isActive: boolean, ownsKeyboard?: () => boolean
 ) {
   useEffect(() => {
     if (!isActive || !containerRef.current) return;
@@ -19,7 +19,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLElement>(
     initial.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab' || event.defaultPrevented) return;
+      if (event.key !== 'Tab' || event.defaultPrevented || (ownsKeyboard && !ownsKeyboard())) return;
       const items = focusables();
       const active = document.activeElement;
       if (!items.length) {
@@ -44,5 +44,5 @@ export function useFocusTrap<T extends HTMLElement = HTMLElement>(
       document.removeEventListener('keydown', onKeyDown, true);
       if (previous?.isConnected) previous.focus();
     };
-  }, [containerRef, isActive]);
+  }, [containerRef, isActive, ownsKeyboard]);
 }
