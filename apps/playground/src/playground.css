@@ -158,3 +158,14 @@ body[data-tmbk-preview-theme] .tmbk-sidebar.tmbk-theme .tmbk-btn.tmbk-theme {
 .workbench-mode-tabs { max-width:112px; }
 .workbench-mode-tabs button { min-width:44px; min-height:40px; padding:8px; }
 .workbench-mode-tabs button svg { display:block; width:20px; height:20px; flex:none; }
+
+/* The kit self-scopes tokens on each Button, so dark preview values must
+   reach that scope too, not only the workbench container. */
+.playground[data-showcase-theme="dark"]:has(.workbench) .tmbk-btn.tmbk-theme {
+  --tmbk-bg: var(--wb-bg);
+  --tmbk-bg-light: var(--wb-panel);
+  --tmbk-fg: var(--wb-text);
+  --tmbk-fg-muted: var(--wb-muted);
+  --tmbk-border: var(--wb-border);
+  color-scheme: dark;
+}
