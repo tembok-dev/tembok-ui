@@ -29,9 +29,10 @@ export function Playground() {
   const [page, setPage] = useState<'gallery' | 'qa'>('gallery');
   const [modalOpen, setModalOpen] = useState(false);
   const [showcaseTheme, setShowcaseTheme] = useState<'light' | 'dark'>('light');
+  const [themePreset, setThemePreset] = useState<'neutral' | 'tembok' | 'reference'>('neutral');
   const [showcaseRadius, setShowcaseRadius] = useState(12);
   const [showcaseMotion, setShowcaseMotion] = useState(true);
-  const [primaryColor, setPrimaryColor] = useState('#5aedea');
+  const [primaryColor, setPrimaryColor] = useState('#475569');
   const [section, setSection] = useState<'buttons' | 'overlays' | 'surfaces'>('buttons');
   useEffect(() => {
     // Portals mount under body, not inside the playground theme scope.
@@ -39,12 +40,16 @@ export function Playground() {
     if (page !== 'gallery') return;
     const body = document.body;
     const previousTheme = body.getAttribute('data-tmbk-preview-theme');
+    const previousPreset = body.getAttribute('data-tmbk-preview-preset');
     const previousColor = body.style.getPropertyValue('--tmbk-preview-primary');
     const previousText = body.style.getPropertyValue('--tmbk-preview-primary-fg');
     body.setAttribute('data-tmbk-preview-theme', showcaseTheme);
+    body.setAttribute('data-tmbk-preview-preset', themePreset);
     body.style.setProperty('--tmbk-preview-primary', primaryColor);
     body.style.setProperty('--tmbk-preview-primary-fg', primaryTextColor(primaryColor));
     return () => {
+      if (previousPreset === null) body.removeAttribute('data-tmbk-preview-preset');
+      else body.setAttribute('data-tmbk-preview-preset', previousPreset);
       if (previousTheme === null) body.removeAttribute('data-tmbk-preview-theme');
       else body.setAttribute('data-tmbk-preview-theme', previousTheme);
       if (previousColor) body.style.setProperty('--tmbk-preview-primary', previousColor);
@@ -52,7 +57,7 @@ export function Playground() {
       if (previousText) body.style.setProperty('--tmbk-preview-primary-fg', previousText);
       else body.style.removeProperty('--tmbk-preview-primary-fg');
     };
-  }, [showcaseTheme, primaryColor, page]);
+  }, [showcaseTheme, primaryColor, page, themePreset]);
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
@@ -62,7 +67,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-primary-fg" as string]: primaryTextColor(primaryColor), ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
+    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-preset={themePreset} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-primary-fg" as string]: primaryTextColor(primaryColor), ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
@@ -97,6 +102,17 @@ export function Playground() {
           </div>
           <aside className="workbench-inspector" aria-label="Preview inspector">
             <div className="workbench-inspector-title">PREVIEW SETTINGS</div>
+            <label className="workbench-field">Theme preset
+              <select aria-label="Theme preset" value={themePreset} onChange={event => {
+                const preset = event.target.value as typeof themePreset;
+                setThemePreset(preset);
+                setPrimaryColor(preset === 'reference' ? '#f8c61e' : preset === 'tembok' ? '#5aedea' : '#475569');
+              }}>
+                <option value="neutral">Neutral default</option>
+                <option value="tembok">Tembok brand</option>
+                <option value="reference">Product reference (Taskel)</option>
+              </select>
+            </label>
             <div className="workbench-field"><span>Appearance</span><div className="workbench-mode-tabs" role="group" aria-label="Appearance">
               {(['light', 'dark'] as const).map(mode => <button type="button" key={mode} aria-label={mode === 'light' ? 'Light mode' : 'Dark mode'} aria-pressed={showcaseTheme === mode} className={showcaseTheme === mode ? 'active' : ''} onClick={() => setShowcaseTheme(mode)}><ThemeIcon mode={mode}/></button>)}
             </div></div>
