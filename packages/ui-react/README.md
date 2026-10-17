@@ -26,24 +26,32 @@ npm install @tembok/ui-react@next
 
 --------------------------------------------------------------------
 
-## Setup
+## Setup and product themes (source, unreleased)
 
-No configuration required - all styles are injected automatically.
+Components ship with inherited, neutral slate defaults. No theme provider or `.tmbk-theme` wrapper is needed for basic Button, IconButton, Modal or Popover usage. Existing `.tmbk-theme` classes remain supported, but no longer reset application color tokens on each component.
 
-To enable the design system scope and theme variables, wrap your app with the tmbk-theme class:
+To create an app-specific identity, set variables once on an ordinary CSS scope:
 
-// App.tsx
-export default function App() {
-  return (
-    <div className="tmbk-theme">
-      <AppContent />
-    </div>
-  );
+```css
+/* Your application's existing root, no additional React wrapper required. */
+.my-product {
+  --tmbk-primary: #f8c61e;
+  --tmbk-primary-fg: #111111;
+  --tmbk-primary-hover: #af8701;
+  --tmbk-primary-active: #af8701;
+  --tmbk-bg-light: #fcfcfd;
+  --tmbk-fg: #24292e;
+  --tmbk-radius-surface: 12px;
 }
+```
 
-Without this wrapper, components still render but fallback to plain browser defaults.
+Common tokens: `--tmbk-primary`, `--tmbk-primary-fg`, `--tmbk-bg`, `--tmbk-bg-light`, `--tmbk-fg`, `--tmbk-border`, `--tmbk-ring`; optional `--tmbk-primary-hover`, `--tmbk-primary-active`, `--tmbk-secondary-bg`, `--tmbk-secondary-fg`, `--tmbk-secondary-border`, `--tmbk-secondary-hover`. Dark defaults inherit through `.dark` or `[data-theme="dark"]` scopes; override tokens inside your own app's dark scope as needed.
 
---------------------------------------------------------------------
+`tone="red" | "lime" | "cyan" | "ink"` remains available for deliberate Tembok brand color choices. The generic default is now neutral.
+
+**Current limitation:** Modal and Popover use portals under `document.body`, outside a locally scoped application theme. Portal inheritance is the next separate milestone; the temporary playground reference preset compensates for it only during testing. Do not treat the playground workaround as a public theme API.
+
+---
 
 ## Usage
 
