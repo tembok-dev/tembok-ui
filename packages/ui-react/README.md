@@ -211,6 +211,19 @@ export default function Example() {
 }
 ```
 
+### Floating surface scrollbar colors
+
+Long Dropdowns use compact, theme-aware scrollbars. Two optional semantic tokens control them (also applied to scrolling Popover panels):
+
+```css
+.my-product {
+  --tmbk-scrollbar-thumb: #64748b;
+  --tmbk-scrollbar-track: transparent;
+}
+```
+
+By default, the thumb derives from the floating surface foreground, including intentionally dark menus in light apps. No global scrollbar CSS is changed. The tokens follow the same portal-inheritance contract as other surface variables. Browser and operating-system scrollbar appearances may differ.
+
 ### Choosing Menu, Popover or Modal
 
 | Component | Use it for | Typical contents |
