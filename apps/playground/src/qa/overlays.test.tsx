@@ -1,7 +1,7 @@
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Button, Dropdown, MenuItem, Modal, Popover } from '@tembok/ui-react';
+import { Button, Dropdown, IconButton, MenuItem, Modal, Popover } from '@tembok/ui-react';
 
 let host: HTMLDivElement;
 let root: Root;
@@ -121,6 +121,16 @@ describe('React overlay regressions', () => {
     expect(panel.style.getPropertyValue('--tmbk-modal-width')).toBe('680px');
     expect(panel.querySelector('.tmbk-modal-body')).not.toBeNull();
     expect(panel.querySelector('.tmbk-modal-footer')).not.toBeNull();
+  });
+
+  it('renders accessible extra-small IconButton and disabled state', async () => {
+    await render(<><IconButton size="xs" label="Edit" intent="neutral"><svg /></IconButton>
+      <IconButton size="xs" label="Delete" disabled><svg /></IconButton></>);
+    const edit = document.querySelector<HTMLButtonElement>('button[aria-label="Edit"]');
+    const del = document.querySelector<HTMLButtonElement>('button[aria-label="Delete"]');
+    expect(edit).not.toBeNull();
+    expect(edit!.classList.contains('tmbk-btn--xs')).toBe(true);
+    expect(del?.disabled).toBe(true);
   });
 
   it('MenuItem supports action details and per-item keep-open', async () => {

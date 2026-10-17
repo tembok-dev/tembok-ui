@@ -72,6 +72,14 @@ Props:
 
 ### IconButton
 
+For dense application rails and toolbars, `size="xs"` gives a 28px square action. You can override its dimensions with `--tmbk-icon-button-xs-size` (for example `32px`). Maintain an accessible `label` on every icon-only control; consider larger targets for touch-first interfaces.
+
+```tsx
+<IconButton label="Edit" size="xs" intent="neutral"><EditIcon /></IconButton>
+<IconButton label="More options" size="xs" intent="ghost" style={{ "--tmbk-icon-button-xs-size": "32px" } as React.CSSProperties}><MoreIcon /></IconButton>
+```
+
+
 Icon-only button with automatic icon scaling.
 
 <IconButton label="Edit"><Edit2 /></IconButton>

@@ -160,8 +160,7 @@
     width: 1em;
     height: 1em;
     display: block;
-    stroke: currentColor;
-    fill: none;
+    /* Preserve SVG-authored fill/stroke; supports both filled and outline icons. */
 }
 
 :where(.tmbk-theme .tmbk-btn--icon.tmbk-btn--sm, .tmbk-btn--icon.tmbk-theme.tmbk-btn--sm) {
@@ -177,4 +176,13 @@
 :where(.tmbk-theme .tmbk-btn--icon.tmbk-btn--lg, .tmbk-btn--icon.tmbk-theme.tmbk-btn--lg) {
     padding: .625rem;
     font-size: 1.125rem;
+}
+/* Extra-small icon-only action: a precise 28px hit area for dense toolbars. */
+:where(.tmbk-btn.tmbk-btn--icon.tmbk-btn--xs) {
+  width: var(--tmbk-icon-button-xs-size, 28px);
+  height: var(--tmbk-icon-button-xs-size, 28px);
+  min-width: var(--tmbk-icon-button-xs-size, 28px);
+  padding: 0;
+  font-size: 14px;
+  justify-content: center;
 }

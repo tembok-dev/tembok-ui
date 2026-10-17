@@ -3,7 +3,7 @@ import { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { variants, cx } from "./utils/variants";
 
 type Intent = "primary" | 'secondary' | "neutral" | "ghost" | "success" | "warning" | "info" | "danger";
-type Size = "sm" | "md" | "lg";
+type Size = "xs" | "sm" | "md" | "lg";
 type Tone = "default" | "ink" | "red" | "lime" | "cyan";
 
 type PolymorphicProps<E extends ElementType> = {
@@ -46,6 +46,7 @@ const cls = variants(
     },
     size: {
       // Ajustamos padding y font-size vía clases propias (sin Tailwind)
+      xs: "tmbk-btn--xs",
       sm: "tmbk-btn--sm",
       md: "tmbk-btn--md",
       lg: "tmbk-btn--lg",
