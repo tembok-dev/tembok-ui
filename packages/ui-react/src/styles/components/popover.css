@@ -61,24 +61,18 @@
   position: absolute;
   width: var(--tmbk-popover-arrow);
   height: var(--tmbk-popover-arrow);
-  background-color: var(--tmbk-bg);
-  border: 1px solid var(--tmbk-border);
+  /* Match the raised panel surface. A clipped triangle avoids the
+     visible diamond/seam caused by rotated, bordered squares in dark mode. */
+  background-color: var(--tmbk-surface-raised, var(--tmbk-bg));
+  border: none;
   transform: rotate(45deg);
 }
 
-/* Trim borders so arrow merges with panel edge */
-:where(.tmbk-theme .tmbk-popover[data-side="up"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="up"] .tmbk-popover-arrow) { 
-  border-top: none; border-left: none; 
-}
-:where(.tmbk-theme .tmbk-popover[data-side="down"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="down"] .tmbk-popover-arrow) { 
-  border-bottom: none; border-right: none; 
-}
-:where(.tmbk-theme .tmbk-popover[data-side="left"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="left"] .tmbk-popover-arrow) { 
-  border-left: none; border-bottom: none; 
-}
-:where(.tmbk-theme .tmbk-popover[data-side="right"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="right"] .tmbk-popover-arrow) { 
-  border-right: none; border-top: none; 
-}
+/* Show only the protruding half of the rotated square. */
+:where(.tmbk-theme .tmbk-popover[data-side="up"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="up"] .tmbk-popover-arrow) { clip-path: polygon(0 0,100% 0,0 100%); }
+:where(.tmbk-theme .tmbk-popover[data-side="down"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="down"] .tmbk-popover-arrow) { clip-path: polygon(100% 0,100% 100%,0 100%); }
+:where(.tmbk-theme .tmbk-popover[data-side="left"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="left"] .tmbk-popover-arrow) { clip-path: polygon(0 0,100% 0,0 100%); }
+:where(.tmbk-theme .tmbk-popover[data-side="right"] .tmbk-popover-arrow, .tmbk-popover.tmbk-theme[data-side="right"] .tmbk-popover-arrow) { clip-path: polygon(100% 0,100% 100%,0 100%); }
 
 /* Root/trigger wrappers (unintrusive) */
 .tmbk-popover-root { position: relative; display: inline-block; }
