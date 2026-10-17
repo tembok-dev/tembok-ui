@@ -34,3 +34,11 @@ pnpm check
 These scripts only run when a developer invokes them. **No GitHub Actions, CI workflows, pre-commit hooks, pre-push hooks or scheduled testing are added.** The jsdom tests verify behavior, not visual stacking or browser layout. Use Chrome QA only for visual or interaction scenarios that need a real browser.
 
 When adding dependencies, regenerate and commit `pnpm-lock.yaml` locally using `pnpm install`, then verify `pnpm install --frozen-lockfile`. Do not merge before completing this step.
+
+## Showcase (Gallery)
+
+The Gallery is now a curated visual showcase using the actual `@tembok/ui-react` Button, IconButton, Popover, Dropdown and Modal components, with supplementary demo-only examples clearly labeled. The existing Overlay QA route is preserved.
+
+The light/dark selector and radius/motion controls are local showcase experiments, not exported component APIs. Theme controls scope the page, while overlays portal to `document.body`; global application-level portal theme inheritance is a separate design-system concern, so do not use this demo as proof that portaled themes propagate.
+
+Run `pnpm check` locally before merging. No additional dependencies, CI workflows or automated cloud testing are introduced.
