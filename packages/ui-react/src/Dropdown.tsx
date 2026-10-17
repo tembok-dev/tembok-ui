@@ -61,7 +61,7 @@ export function Dropdown({
     ...(bgColor ? { ["--tmbk-bg" as any]: bgColor } : null),
     ...(textColor ? { ["--tmbk-fg" as any]: textColor } : null),
     ...(borderColor ? { ["--tmbk-border" as any]: borderColor } : null),
-    ["--tmbk-dropdown-maxh" as any]: `${maxHeight}px`,
+
   };
 
   return (
@@ -83,6 +83,7 @@ export function Dropdown({
       textColor={textColor}
       borderColor={borderColor}
       zIndex={zIndex}
+      scrollMaxHeight={maxHeight}
     // keep Popover headless; the classes above drive CSS below
     >
       {/* wrapper keeps scroll and structural selectors stable */}
