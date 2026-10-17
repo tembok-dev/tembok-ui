@@ -160,8 +160,7 @@
     width: 1em;
     height: 1em;
     display: block;
-    stroke: currentColor;
-    fill: none;
+    /* Preserve SVG-authored fill/stroke; supports both filled and outline icons. */
 }
 
 :where(.tmbk-theme .tmbk-btn--icon.tmbk-btn--sm, .tmbk-btn--icon.tmbk-theme.tmbk-btn--sm) {
