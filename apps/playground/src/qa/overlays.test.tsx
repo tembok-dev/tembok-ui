@@ -2,6 +2,7 @@ import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Button, Dropdown, IconButton, MenuItem, Modal, Popover } from '@tembok/ui-react';
+import { Playground } from '../playground';
 
 let host: HTMLDivElement;
 let root: Root;
@@ -42,6 +43,21 @@ afterEach(async () => {
 });
 
 describe('React overlay regressions', () => {
+  it('workbench switches preset without mutating body theme attributes', async () => {
+    await render(<Playground />);
+    const preset = document.querySelector<HTMLSelectElement>('select[aria-label="Theme preset"]');
+    expect(preset).not.toBeNull();
+    expect(document.body.hasAttribute('data-tmbk-preview-preset')).toBe(false);
+    expect(document.body.hasAttribute('data-tmbk-preview-theme')).toBe(false);
+    await act(async () => {
+      preset!.value = 'reference';
+      preset!.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    expect(document.querySelector('.playground')?.getAttribute('data-preset')).toBe('reference');
+    expect(document.body.hasAttribute('data-tmbk-preview-preset')).toBe(false);
+  });
+
+
   it('opens modal, contains keyboard focus and restores opener', async () => {
     function Example() {
       const [open, setOpen] = useState(false);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Modal, Popover, Dropdown, IconButton, SideBar, MenuItem } from '@tembok/ui-react';
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -34,30 +34,6 @@ export function Playground() {
   const [showcaseMotion, setShowcaseMotion] = useState(true);
   const [primaryColor, setPrimaryColor] = useState('#475569');
   const [section, setSection] = useState<'buttons' | 'overlays' | 'surfaces'>('buttons');
-  useEffect(() => {
-    // Portals mount under body, not inside the playground theme scope.
-    // Scope this demo's theme on body and undo every mutation on unmount.
-    if (page !== 'gallery') return;
-    const body = document.body;
-    const previousTheme = body.getAttribute('data-tmbk-preview-theme');
-    const previousPreset = body.getAttribute('data-tmbk-preview-preset');
-    const previousColor = body.style.getPropertyValue('--tmbk-preview-primary');
-    const previousText = body.style.getPropertyValue('--tmbk-preview-primary-fg');
-    body.setAttribute('data-tmbk-preview-theme', showcaseTheme);
-    body.setAttribute('data-tmbk-preview-preset', themePreset);
-    body.style.setProperty('--tmbk-preview-primary', primaryColor);
-    body.style.setProperty('--tmbk-preview-primary-fg', primaryTextColor(primaryColor));
-    return () => {
-      if (previousPreset === null) body.removeAttribute('data-tmbk-preview-preset');
-      else body.setAttribute('data-tmbk-preview-preset', previousPreset);
-      if (previousTheme === null) body.removeAttribute('data-tmbk-preview-theme');
-      else body.setAttribute('data-tmbk-preview-theme', previousTheme);
-      if (previousColor) body.style.setProperty('--tmbk-preview-primary', previousColor);
-      else body.style.removeProperty('--tmbk-preview-primary');
-      if (previousText) body.style.setProperty('--tmbk-preview-primary-fg', previousText);
-      else body.style.removeProperty('--tmbk-preview-primary-fg');
-    };
-  }, [showcaseTheme, primaryColor, page, themePreset]);
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
@@ -67,7 +43,7 @@ export function Playground() {
   const [lastDismissal, setLastDismissal] = useState('none');
 
   return (
-    <div className="tmbk-theme playground" data-showcase-theme={showcaseTheme} data-preset={themePreset} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-primary-fg" as string]: primaryTextColor(primaryColor), ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
+    <div className="playground" data-showcase-theme={showcaseTheme} data-preset={themePreset} data-motion={showcaseMotion ? "on" : "off"} style={{ ["--tmbk-radius-surface" as string]: `${showcaseRadius}px`, ["--tmbk-primary" as string]: primaryColor, ["--tmbk-primary-fg" as string]: primaryTextColor(primaryColor), ["--tmbk-ring" as string]: `${primaryColor}66`, ["--tmbk-motion-fast" as string]: showcaseMotion ? "140ms" : "0ms", ["--tmbk-motion-normal" as string]: showcaseMotion ? "220ms" : "0ms" }}>
       <header className="playground-header">
         <div><strong>Tembok UI</strong><span>React playground · local source</span></div>
         <nav aria-label="Playground sections">
