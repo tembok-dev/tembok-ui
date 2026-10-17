@@ -1,4 +1,4 @@
-.tmbk-dropdown .tmbk-menu-item { display:flex; align-items:center; gap:10px; width:100%; min-height:36px; margin:0; padding:8px 10px; border:0; border-radius:7px; background:transparent; color:var(--tmbk-surface-text,var(--tmbk-fg)); font:inherit; font-size:13px; line-height:1.35; text-align:left; cursor:pointer; }
+.tmbk-dropdown .tmbk-menu-item { display:flex; align-items:center; gap:10px; width:100%; min-height:36px; margin:0; padding:8px 10px; border:0; border-radius:7px; background:transparent; color:var(--tmbk-popover-fg,var(--tmbk-surface-text,var(--tmbk-fg))); font:inherit; font-size:13px; line-height:1.35; text-align:left; cursor:pointer; }
 .tmbk-dropdown .tmbk-menu-item:hover:not(:disabled), .tmbk-dropdown .tmbk-menu-item:focus-visible { background:var(--tmbk-menu-hover,color-mix(in srgb,currentColor 7%,transparent)); }
 .tmbk-dropdown .tmbk-menu-item:focus-visible { outline:2px solid var(--tmbk-ring); outline-offset:-2px; }
 .tmbk-dropdown .tmbk-menu-item:disabled { opacity:.42; cursor:not-allowed; }
