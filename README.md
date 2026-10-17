@@ -12,6 +12,16 @@ This monorepo contains the following packages:
 - **[@tembok/ui-react](./packages/ui-react)** - React UI components
 - **[@tembok/ui-astro](./packages/ui-astro)** - Astro UI components
 
+## For application developers
+
+Each package is independently versioned. Start with the [React package guide](./packages/ui-react/README.md) for installation, themes and copyable component examples.
+
+**Source vs npm:** A feature merged into `main` is not automatically published. Check the version available on [npm](https://www.npmjs.com/package/@tembok/ui-react) before adopting an unreleased API. Review the [React changelog](./packages/ui-react/CHANGELOG.md) for work pending release.
+
+## Local development
+
+Use `pnpm dev` to open the private component workbench. Run `pnpm check` to typecheck, test and build packages locally. These commands are **manual only**; the repository does not introduce GitHub Actions or scheduled checks.
+
 ## Getting Started
 
 ```bash
