@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- `IconButton size="xs"` for dense 28px actions, customizable with `--tmbk-icon-button-xs-size`.
 - `MenuItem` component for compact dropdown actions with icon, trailing text, description and danger/disabled states.
 - Clear human-facing guidance distinguishing Dropdown, Popover and Modal.
 - Modal `size` presets (`sm`, `md`, `lg`, `xl`, `full`) and optional `width` override.
