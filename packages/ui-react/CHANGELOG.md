@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- Floating surface scrollbar tokens (`--tmbk-scrollbar-thumb`, `--tmbk-scrollbar-track`) that inherit across portals and respect dark ink menus.
 - Optional popover surface tokens (`--tmbk-popover-bg`, `--tmbk-popover-fg`, `--tmbk-popover-border`) so menus can retain intentional dark ink styling in light product themes.
 - Provider-free scoped theme inheritance for Modal, Popover and Dropdown portals, including product-specific CSS token scopes and live ancestor class/style changes.
 - Inherited neutral slate default theme, with optional app-level semantic token overrides and no required wrapper.
@@ -18,6 +19,8 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- Compact non-scrolling Popovers/Dropdowns no longer reserve a permanent right-side scrollbar gutter.
+- Reworked Popover/Dropdown scrolling into one inset content viewport; removed native scrollbar-corner patches and prevented positioning recalculation on internal scroll to avoid panel size jumps.
 - Portaled overlay surfaces no longer lose semantic theme colors when opened from locally themed application regions.
 - Removed per-component theme token resets that previously overrode application-scope colors.
 - Repaired invalid secondary Button background CSS value.

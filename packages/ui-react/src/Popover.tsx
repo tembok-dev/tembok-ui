@@ -70,6 +70,8 @@ export interface PopoverProps {
 
   /** Optional: override z-index for this popover panel */
   zIndex?: number;
+  /** Maximum inner scroll viewport height, used by compact Dropdown. */
+  scrollMaxHeight?: number;
 }
 
 export function Popover({
@@ -94,6 +96,7 @@ export function Popover({
   borderColor,
   themeScoped = true,
   zIndex,
+  scrollMaxHeight,
 }: PopoverProps) {
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isOpen = open ?? internalOpen;
@@ -259,6 +262,7 @@ export function Popover({
     ...(textColor ? { ["--tmbk-fg" as any]: textColor } : null),
     ...(borderColor ? { ["--tmbk-border" as any]: borderColor } : null),
     ...(zIndex != null ? { zIndex } : null),
+    ...(scrollMaxHeight != null ? { ["--tmbk-popover-scroll-limit" as string]: `${scrollMaxHeight}px` } : null),
   };
 
   const panel = (
@@ -284,7 +288,7 @@ export function Popover({
       onMouseLeave={handleMouseLeave}
     >
       <div ref={arrowRef} className="tmbk-popover-arrow" />
-      {children}
+      <div className="tmbk-popover-scroll">{children}</div>
     </div>
   );
 

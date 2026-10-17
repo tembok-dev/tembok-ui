@@ -80,3 +80,22 @@
     transform: none !important;
   }
 }
+
+/* The outer floating surface never scrolls. Its inset viewport owns all
+   scrolling, including Dropdown; the positioned arrow remains outside it. */
+.tmbk-popover { overflow: visible; }
+.tmbk-popover-scroll {
+  max-height: min(var(--tmbk-popover-content-maxh, 100000px), var(--tmbk-popover-scroll-limit, 100000px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color:
+    var(--tmbk-scrollbar-thumb, color-mix(in srgb, var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg))) 32%, transparent))
+    var(--tmbk-scrollbar-track, transparent);
+}
+.tmbk-popover-scroll::-webkit-scrollbar { width: 8px; }
+.tmbk-popover-scroll::-webkit-scrollbar-track { background: var(--tmbk-scrollbar-track, transparent); }
+.tmbk-popover-scroll::-webkit-scrollbar-thumb {
+  background: var(--tmbk-scrollbar-thumb, color-mix(in srgb, var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg))) 32%, transparent));
+  border-radius: 999px;
+}

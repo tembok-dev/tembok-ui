@@ -43,12 +43,12 @@ export function usePosition<T extends HTMLElement = HTMLElement, P extends HTMLE
       const vh = viewport?.height ?? window.innerHeight;
       const right = vx + vw;
       const bottom = vy + vh;
+      // Only the inner viewport scrolls. Recalculate its available height when
+      // viewport/anchor geometry changes, never by toggling panel overflow.
+      const scrollViewport = panel.querySelector<HTMLElement>('.tmbk-popover-scroll');
+      panel.style.removeProperty('--tmbk-popover-content-maxh');
       const width = panel.offsetWidth;
-      // Reset old clamps before measuring, so a previous short viewport cannot
-      // permanently force the surface to remain short.
-      panel.style.maxHeight = '';
-      panel.style.overflowY = '';
-      const height = panel.scrollHeight;
+      const height = panel.offsetHeight;
       const below = Math.max(0, bottom - edgePad - tr.bottom - offset);
       const above = Math.max(0, tr.top - offset - vy - edgePad);
       const preferred = side === 'auto' ? 'down' : side;
@@ -59,11 +59,12 @@ export function usePosition<T extends HTMLElement = HTMLElement, P extends HTMLE
           ? (preferred === 'down' ? 'up' : 'down')
           : preferred;
       const available = resolved === 'down' ? below : above;
-      const panelHeight = Math.min(height, available);
-      if (panelHeight < height) {
-        panel.style.maxHeight = `${Math.floor(panelHeight)}px`;
-        panel.style.overflowY = 'auto';
+      if (scrollViewport && height > available) {
+        const shellHeight = height - scrollViewport.offsetHeight;
+        panel.style.setProperty('--tmbk-popover-content-maxh',
+          `${Math.max(0, Math.floor(available - shellHeight))}px`);
       }
+      const panelHeight = panel.offsetHeight;
 
       const centered = tr.left + tr.width / 2;
       const proposedLeft = align === 'start' ? tr.left
@@ -94,13 +95,19 @@ export function usePosition<T extends HTMLElement = HTMLElement, P extends HTMLE
     let rafId = requestAnimationFrame(() => { rafId = requestAnimationFrame(position); });
     window.addEventListener('resize', position, { passive: true });
     // Capture also receives scroll events from nested scroll containers.
-    document.addEventListener('scroll', position, true);
+    const onScroll = (event: Event) => {
+      // Scrolling the portal content changes neither the anchor nor viewport.
+      // Repositioning here previously reset overflow and caused visible jumps.
+      if (event.target instanceof Node && panelRef.current?.contains(event.target)) return;
+      position();
+    };
+    document.addEventListener('scroll', onScroll, true);
     window.visualViewport?.addEventListener('resize', position);
     window.visualViewport?.addEventListener('scroll', position);
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', position);
-      document.removeEventListener('scroll', position, true);
+      document.removeEventListener('scroll', onScroll, true);
       window.visualViewport?.removeEventListener('resize', position);
       window.visualViewport?.removeEventListener('scroll', position);
     };

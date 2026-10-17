@@ -12,7 +12,7 @@ const THEME_KEYS = [
   'brand-red','brand-red-fg','brand-cyan','brand-cyan-fg',
   'brand-lime','brand-lime-fg','brand-ink','brand-ink-fg',
   'modal-bg','modal-fg','modal-border','modal-radius','modal-shadow',
-  'popover-radius','popover-shadow','popover-bg','popover-fg','popover-border','menu-hover','icon-button-xs-size'
+  'popover-radius','popover-shadow','popover-bg','popover-fg','popover-border','menu-hover','scrollbar-thumb','scrollbar-track','icon-button-xs-size'
 ].map(key => '--tmbk-' + key);
 
 function transfer(source: Element, panel: HTMLElement) {

@@ -17,8 +17,8 @@
 /* Wrapper scrolling */
 :where(.tmbk-theme .tmbk-dropdown .tmbk-dropdown-wrap,
        .tmbk-dropdown.tmbk-theme .tmbk-dropdown-wrap) {
-  max-height: var(--tmbk-dropdown-maxh, 320px);
-  overflow: auto;
+  /* Scroll belongs to the shared Popover viewport, not this wrapper. */
+  overflow: visible;
 }
 
 /* ----------------------------------------------
@@ -107,8 +107,14 @@
 }
 
 .tmbk-popover.tmbk-dropdown { padding:5px; min-width:176px; --tmbk-menu-hover:color-mix(in srgb,var(--tmbk-surface-text,var(--tmbk-fg)) 7%,transparent); }
-.tmbk-dropdown .tmbk-dropdown-wrap { overflow-x:hidden; }
+.tmbk-dropdown .tmbk-dropdown-wrap { overflow:visible; }
 
 /* Keep the arrow visually attached but behind menu-row hover surfaces. */
 .tmbk-popover.tmbk-dropdown > .tmbk-popover-arrow { z-index:0; pointer-events:none; }
-.tmbk-popover.tmbk-dropdown > .tmbk-dropdown-wrap { position:relative; z-index:1; }
+.tmbk-popover.tmbk-dropdown > .tmbk-popover-scroll {
+  position: relative;
+  z-index: 1;
+  /* Clip the viewport's corners, never the floating panel or its arrow. */
+  border-radius: max(0px, calc(var(--tmbk-popover-radius, var(--tmbk-radius-surface, 12px)) - 5px));
+}
+

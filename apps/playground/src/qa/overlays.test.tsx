@@ -139,6 +139,28 @@ describe('React overlay regressions', () => {
     expect(panel.querySelector('.tmbk-modal-footer')).not.toBeNull();
   });
 
+  it('uses one inset scrolling viewport for long Popover and Dropdown content', async () => {
+    await render(<>
+      <Popover trigger={<Button>Rich content</Button>}>
+        <div>{Array.from({ length: 25 }, (_, i) => <p key={i}>Row {i}</p>)}</div>
+      </Popover>
+      <Dropdown trigger={<Button>Long menu</Button>} maxHeight={240}>
+        <div>{Array.from({ length: 25 }, (_, i) => <button key={i}>Action {i}</button>)}</div>
+      </Dropdown>
+    </>);
+    await click(findButton('Rich content'));
+    const popover = document.querySelector<HTMLElement>('.tmbk-popover:not(.tmbk-dropdown)')!;
+    expect(popover.querySelectorAll('.tmbk-popover-scroll')).toHaveLength(1);
+    expect(popover.querySelector('.tmbk-popover-arrow')).not.toBeNull();
+    expect(popover.style.overflowY).toBe('');
+    await click(findButton('Long menu'));
+    const dropdown = document.querySelector<HTMLElement>('.tmbk-dropdown')!;
+    expect(dropdown.querySelectorAll('.tmbk-popover-scroll')).toHaveLength(1);
+    expect(dropdown.style.getPropertyValue('--tmbk-popover-scroll-limit')).toBe('240px');
+    expect(dropdown.querySelector('.tmbk-dropdown-wrap')).not.toBeNull();
+    expect(dropdown.style.overflowY).toBe('');
+  });
+
   it('renders accessible extra-small IconButton and disabled state', async () => {
     await render(<><IconButton size="xs" label="Edit" intent="neutral"><svg /></IconButton>
       <IconButton size="xs" label="Delete" disabled><svg /></IconButton></>);
