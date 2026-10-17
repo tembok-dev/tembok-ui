@@ -130,7 +130,9 @@ describe('React overlay regressions', () => {
       <MenuItem>Duplicate</MenuItem>
     </Dropdown>);
     await click(findButton('Commands'));
-    const rename = findButton('RenameCtrl R');
+    const rename = [...document.querySelectorAll<HTMLButtonElement>('.tmbk-menu-item')]
+      .find(button => button.querySelector('.tmbk-menu-item-label')?.textContent === 'Rename');
+    expect(rename).toBeDefined();
     expect(rename.getAttribute('data-close-popover')).toBe('false');
     expect(findButton('Delete').disabled).toBe(true);
     await click(rename);
