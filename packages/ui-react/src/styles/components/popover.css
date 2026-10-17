@@ -80,3 +80,18 @@
     transform: none !important;
   }
 }
+
+/* Popover may hold independently scrolling rich content; inherit readable
+   scrollbar colors without styling scrollbars elsewhere in the app. */
+.tmbk-popover {
+  scrollbar-width: thin;
+  scrollbar-color:
+    var(--tmbk-scrollbar-thumb, color-mix(in srgb, var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg))) 32%, transparent))
+    var(--tmbk-scrollbar-track, transparent);
+}
+.tmbk-popover::-webkit-scrollbar { width: 8px; height: 8px; }
+.tmbk-popover::-webkit-scrollbar-track { background: var(--tmbk-scrollbar-track, transparent); }
+.tmbk-popover::-webkit-scrollbar-thumb {
+  background: var(--tmbk-scrollbar-thumb, color-mix(in srgb, var(--tmbk-popover-fg, var(--tmbk-surface-text, var(--tmbk-fg))) 32%, transparent));
+  border-radius: 999px;
+}
