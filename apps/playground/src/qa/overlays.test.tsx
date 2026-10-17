@@ -121,6 +121,10 @@ describe('React overlay regressions', () => {
     }
     await render(<Example />);
     const opener = findButton('Open Modal');
+    // Synthetic clicks do not move focus like real pointer interaction.
+    // Model an actual keyboard/pointer opener before checking focus return.
+    opener.focus();
+    expect(document.activeElement).toBe(opener);
     await click(opener);
     const trigger = findButton('Nested');
     await click(trigger);
