@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- Optional popover surface tokens (`--tmbk-popover-bg`, `--tmbk-popover-fg`, `--tmbk-popover-border`) so menus can retain intentional dark ink styling in light product themes.
 - Provider-free scoped theme inheritance for Modal, Popover and Dropdown portals, including product-specific CSS token scopes and live ancestor class/style changes.
 - Inherited neutral slate default theme, with optional app-level semantic token overrides and no required wrapper.
 - Optional Button hover/active and secondary-state token overrides, plus neutral/Tembok/product-reference playground presets.
