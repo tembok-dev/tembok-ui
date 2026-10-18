@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { RemainingComponentFixtures } from './RemainingComponentFixtures';
 import { Button, Modal, AlertDialog, Popover, Dropdown, IconButton, SideBar, MenuItem, primaryForeground } from '@tembok/ui-react';
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
@@ -29,7 +30,7 @@ export function Playground() {
   const [showcaseRadius, setShowcaseRadius] = useState(12);
   const [showcaseMotion, setShowcaseMotion] = useState(true);
   const [primaryColor, setPrimaryColor] = useState('#475569');
-  const [section, setSection] = useState<'buttons' | 'overlays' | 'surfaces'>('buttons');
+  const [section, setSection] = useState<'buttons' | 'overlays' | 'surfaces' | 'components'>('buttons');
   const [corner, setCorner] = useState<Corner>('bottom-right');
   const [side, setSide] = useState<Side>('down');
   const [tall, setTall] = useState(false);
@@ -51,7 +52,7 @@ export function Playground() {
         <main className="workbench" aria-label="Component workbench">
           <aside className="workbench-nav" aria-label="Component navigation">
             <div className="workbench-nav-title">COMPONENTS</div>
-            {(['buttons','overlays','surfaces'] as const).map(item =>
+            {(['buttons','overlays','surfaces','components'] as const).map(item =>
               <button key={item} className={section === item ? 'workbench-nav-item selected' : 'workbench-nav-item'} aria-current={section === item ? 'page' : undefined} onClick={() => setSection(item)}>
                 {item === 'buttons' ? 'Buttons' : item === 'overlays' ? 'Overlays' : 'Surfaces'}
               </button>
@@ -60,12 +61,13 @@ export function Playground() {
             <button className="workbench-nav-item" onClick={() => setPage('qa')}>Overlay QA ↗</button>
           </aside>
           <div className="workbench-content">
-            <div className="workbench-heading"><div><div className="workbench-breadcrumb">React / Components / {section}</div><h1>{section === 'buttons' ? 'Buttons' : section === 'overlays' ? 'Overlays' : 'Surfaces'}</h1><p>{section === 'buttons' ? 'Actions, sizes and states.' : section === 'overlays' ? 'Modal, popover and menu behavior.' : 'Appearance, depth and radius tokens.'}</p></div><span className="workbench-source">LOCAL SOURCE</span></div>
+            <div className="workbench-heading"><div><div className="workbench-breadcrumb">React / Components / {section}</div><h1>{section === 'buttons' ? 'Buttons' : section === 'overlays' ? 'Overlays' : section === 'surfaces' ? 'Surfaces' : 'More components'}</h1><p>{section === 'buttons' ? 'Actions, sizes and states.' : section === 'overlays' ? 'Modal, popover and menu behavior.' : section === 'surfaces' ? 'Appearance, depth and radius tokens.' : 'Toast, data, input and developer fixtures.'}</p></div><span className="workbench-source">LOCAL SOURCE</span></div>
             <div className="workbench-preview">
               <div className="workbench-preview-top"><span>PREVIEW</span><span>Actual @tembok/ui-react components</span></div>
               <div className="workbench-stage">
                 {section === 'buttons' && <div className="workbench-examples"><div className="workbench-example-label">Intents</div><div className="playground-actions"><Button intent="primary">Primary</Button><Button intent="secondary">Secondary</Button><Button intent="neutral">Neutral</Button><Button intent="ghost">Ghost</Button><Button intent="danger">Danger</Button><Button disabled>Disabled</Button><IconButton label="Favorite"><span aria-hidden="true">✦</span></IconButton></div><div className="workbench-example-label">Sizes</div><div className="playground-actions"><Button size="sm">Small</Button><Button size="md">Medium</Button><Button size="lg">Large</Button></div><div className="workbench-example-label">Icon buttons · 28px Edit / 32px Duplicate / disabled Delete</div><div className="playground-actions"><IconButton size="xs" intent="neutral" label="Compact edit"><PlaygroundMenuIcon name="edit" /></IconButton><IconButton size="xs" intent="ghost" label="Compact duplicate" style={{ ["--tmbk-icon-button-xs-size" as string]: "32px" }}><PlaygroundMenuIcon name="copy" /></IconButton><IconButton size="xs" intent="neutral" disabled label="Disabled compact delete"><PlaygroundMenuIcon name="delete" /></IconButton></div></div>}
                 {section === 'overlays' && <div className="workbench-examples"><div className="workbench-example-label">Floating components</div><div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Button intent="neutral" data-sidebar-open="qa-sidebar">Open sidebar</Button><Button intent="neutral" onClick={() => setSettingsOpen(true)}>Settings modal</Button><Button intent="danger" onClick={() => setConfirmOpen(true)}>Confirm action</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content"><span>Popover content</span><button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><MenuItem icon={<PlaygroundMenuIcon name="edit" />} trailing="⌘ E">Edit</MenuItem><MenuItem icon={<PlaygroundMenuIcon name="copy" />}>Duplicate</MenuItem><MenuItem danger icon={<PlaygroundMenuIcon name="delete" />}>Delete</MenuItem></Dropdown></div><p className="workbench-hint">Try Escape, keyboard focus and clicking outside.</p></div>}
+                {section === 'components' && <RemainingComponentFixtures />}
                 {section === 'surfaces' && <div className="workbench-surface-example"><div className="workbench-surface-card"><small>STATUS</small><strong>Ready for review</strong><span>Semantic surface and elevation tokens.</span><Button size="sm">Review</Button></div></div>}
               </div>
               <div className="workbench-preview-bottom"><span>{section === 'buttons' ? 'Hover · Focus · Disabled' : section === 'overlays' ? 'Portals · Focus · Dismissal' : 'Colors · Radius · Elevation'}</span><span>PREVIEW / 01</span></div>
