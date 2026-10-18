@@ -4,9 +4,7 @@
 
 A practical, open-source React UI kit with polished defaults and the flexibility to make every interface your own. Build dialogs, menus, notifications, tables, and forms without starting from scratch.
 
-<!-- Add the supplied original banner as docs/assets/tembok-ui-hero.webp, then uncomment this line:
 ![Tembok UI — component showcase](./docs/assets/tembok-ui-hero.webp)
--->
 
 [React package on npm](https://www.npmjs.com/package/@tembok/ui-react) · [Component guide](./packages/ui-react/README.md) · [Changelog](./packages/ui-react/CHANGELOG.md) · [Issues & ideas](https://github.com/tembok-dev/tembok-ui/issues)
 
