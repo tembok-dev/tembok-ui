@@ -108,6 +108,17 @@ Icon-only button with automatic icon scaling.
 
 ### Modal
 
+SideBar supports either controlled `open` / `onOpenChange` or uncontrolled `defaultOpen`. Existing `data-sidebar-open`, `data-sidebar-close`, and `data-sidebar-toggle` triggers remain supported. It moves focus into the panel on opening and returns it to the connected opener on closing:
+
+```tsx
+const [open, setOpen] = useState(false);
+<Button onClick={() => setOpen(true)}>Settings</Button>
+<SideBar open={open} onOpenChange={setOpen} header={<h2>Settings</h2>}>
+  <SettingsContent />
+</SideBar>
+```
+
+
 SideBar is mounted for its slide transition even while closed. Its closed panel is now `inert`, so offscreen links and buttons are excluded from keyboard interaction. This is a lifecycle safeguard, not yet a complete SideBar focus-management or controlled-state API.
 
 
