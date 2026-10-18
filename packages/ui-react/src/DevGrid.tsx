@@ -119,10 +119,13 @@ export function DevGrid({
 
   return (
     <div
-      className={`dg-overlay fixed inset-0 z-[2147483600] select-none pointer-events-none ${isVisible ? '' : 'hidden'}`}
+      className="dg-overlay"
       aria-hidden="true"
       style={{
         isolation: 'isolate',
+        position: 'fixed', inset: 0, zIndex: 2147483600,
+        pointerEvents: 'none', userSelect: 'none',
+        display: isVisible ? 'block' : 'none',
         '--dg-color': '255 0 0',
         '--dg-border': 'rgba(var(--dg-color) / 0.35)',
         '--dg-fill': 'rgba(var(--dg-color) / 0.1)',
@@ -132,27 +135,30 @@ export function DevGrid({
     >
       {/* Optional container frame */}
       <div
-        className="absolute inset-0 mx-auto h-full"
-        style={containerPx > 0 ? { maxWidth: `${containerPx}px` } : undefined}
+        className="dg-container"
+        style={{ position:'absolute', inset:0, height:'100%', marginInline:'auto', width:'100%', ...(containerPx > 0 ? { maxWidth: `${containerPx}px` } : {}) }}
       >
         <div
-          className="absolute inset-0 flex flex-col min-h-full"
+          className="dg-frame"
           style={{
+            position:'absolute', inset:0, display:'flex', flexDirection:'column', minHeight:'100%',
             padding: 'max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left))',
           }}
         >
           {/* Top ruler */}
           <div
-            className="w-full h-6 mb-2 rounded pointer-events-none"
+            className="dg-ruler"
             style={{
+              width:'100%', height:24, marginBottom:8, borderRadius:4, flexShrink:0,
               background: 'repeating-linear-gradient(to right, rgba(255 255 255 / 0.15) 0 1px, transparent 1px 8px)',
             }}
           />
 
           {/* The grid */}
           <div
-            className="grid flex-1"
+            className="dg-columns"
             style={{
+              display:'grid', flex:1, minHeight:0,
               gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
               gap: `${gutterPx}px`,
             }}
@@ -160,15 +166,15 @@ export function DevGrid({
             {cols.map((i) => (
               <div
                 key={i}
-                className="dg-col relative"
+                className="dg-col"
                 style={{
-                  outline: '1px solid var(--dg-border)',
+                  position:'relative', outline: '1px solid var(--dg-border)',
                   backgroundImage: 'linear-gradient(to bottom, var(--dg-fill), transparent 55%)',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: '100% 100%',
                 }}
               >
-                <div className="absolute top-1 left-1 text-[10px] text-white/70">
+                <div className="dg-column-label" style={{position:"absolute",top:4,left:4,fontSize:10,color:"rgba(255,255,255,.7)"}}>
                   {i + 1}
                 </div>
               </div>
@@ -179,8 +185,9 @@ export function DevGrid({
 
       {/* Corner badge */}
       <div
-        className="fixed z-[2147483601] pointer-events-auto"
+        className="dg-badge"
         style={{
+          position:'fixed', zIndex:2147483601, pointerEvents:'auto',
           left: 'max(10px, env(safe-area-inset-left))',
           bottom: 'max(10px, env(safe-area-inset-bottom))',
         }}
@@ -188,8 +195,9 @@ export function DevGrid({
         <button
           type="button"
           onClick={handleToggle}
-          className="inline-flex items-center gap-2 rounded px-3 py-2 ring-1 ring-white/10"
+          className="dg-toggle"
           style={{
+            display:'inline-flex', alignItems:'center', gap:8, borderRadius:4, padding:'8px 12px', border:'1px solid rgba(255,255,255,.1)',
             font: '600 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"',
             color: 'var(--dg-badge-fg)',
             background: 'var(--dg-badge-bg)',
@@ -198,8 +206,8 @@ export function DevGrid({
           title="Alt + Shift + G to toggle"
         >
           <span
-            className="w-2 h-2 rounded-full"
-            style={{ background: colors[bp] || '#a3a3a3' }}
+            className="dg-breakpoint-dot"
+            style={{ width:8,height:8,borderRadius:'50%', background: colors[bp] || '#a3a3a3' }}
           />
           <span>{bp}</span>
           <span aria-hidden="true">•</span>
