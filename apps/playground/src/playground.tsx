@@ -54,7 +54,7 @@ export function Playground() {
             <div className="workbench-nav-title">COMPONENTS</div>
             {(['buttons','overlays','surfaces','components'] as const).map(item =>
               <button key={item} className={section === item ? 'workbench-nav-item selected' : 'workbench-nav-item'} aria-current={section === item ? 'page' : undefined} onClick={() => setSection(item)}>
-                {item === 'buttons' ? 'Buttons' : item === 'overlays' ? 'Overlays' : 'Surfaces'}
+                {item === 'buttons' ? 'Buttons' : item === 'overlays' ? 'Overlays' : item === 'surfaces' ? 'Surfaces' : 'More components'}
               </button>
             )}
             <div className="workbench-nav-title workbench-nav-tools">TOOLS</div>
