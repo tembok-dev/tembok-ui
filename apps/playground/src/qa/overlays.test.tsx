@@ -1,7 +1,7 @@
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Button, Dropdown, IconButton, MenuItem, Modal, Popover } from '@tembok/ui-react';
+import { Button, Dropdown, IconButton, MenuItem, Modal, Popover, SideBar } from '@tembok/ui-react';
 import { Playground } from '../playground';
 
 let host: HTMLDivElement;
@@ -57,6 +57,71 @@ describe('React overlay regressions', () => {
     expect(document.body.hasAttribute('data-tmbk-preview-preset')).toBe(false);
   });
 
+
+  it('keeps body locked until the last open modal unmounts', async () => {
+    document.body.style.overflow = 'auto';
+    function Fixture() {
+      const [first, setFirst] = useState(true);
+      const [second, setSecond] = useState(true);
+      return <><button onClick={() => setFirst(false)}>Close first</button>
+        <button onClick={() => setSecond(false)}>Close second</button>
+        <Modal id="first-lock" open={first} onOpenChange={setFirst}><p>First</p></Modal>
+        <Modal id="second-lock" open={second} onOpenChange={setSecond}><p>Second</p></Modal>
+      </>;
+    }
+    await render(<Fixture />);
+    expect(document.body.style.overflow).toBe('hidden');
+    await click(findButton('Close first'));
+    expect(document.body.style.overflow).toBe('hidden');
+    await click(findButton('Close second'));
+    expect(document.body.style.overflow).toBe('auto');
+    document.body.style.removeProperty('overflow');
+  });
+
+  it('inherits scoped SideBar palette and restores body lock alongside Modal', async () => {
+    function Fixture() {
+      const [showModal, setShowModal] = useState(false);
+      return <div style={{ '--tmbk-primary': '#f8c61e' } as React.CSSProperties}>
+        <button data-sidebar-open="qa-theme">Open side panel</button>
+        <button onClick={() => setShowModal(true)}>Open nested modal</button>
+        <SideBar id="qa-theme" header="Product settings"><button data-close-menu>Close panel</button></SideBar>
+        <Modal open={showModal} onOpenChange={setShowModal}><button onClick={() => setShowModal(false)}>Dismiss modal</button></Modal>
+      </div>;
+    }
+    await render(<Fixture />);
+    // jsdom does not resolve inherited CSS custom properties through
+    // getComputedStyle. Emulate the browser's computed value at the source
+    // anchor, while exercising the real portal-token transfer implementation.
+    const sourceAnchor = host.querySelector<HTMLSpanElement>('span[hidden][aria-hidden="true"]');
+    expect(sourceAnchor).not.toBeNull();
+    expect(sourceAnchor!.parentElement?.style.getPropertyValue('--tmbk-primary')).toBe('#f8c61e');
+    const nativeComputedStyle = window.getComputedStyle.bind(window);
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((element) => {
+      const computed = nativeComputedStyle(element);
+      if (element !== sourceAnchor) return computed;
+      return new Proxy(computed, {
+        get(target, property) {
+          if (property === 'getPropertyValue') {
+            return (name: string) => name === '--tmbk-primary'
+              ? '#f8c61e'
+              : target.getPropertyValue(name);
+          }
+          return Reflect.get(target, property, target);
+        },
+      });
+    });
+    await click(findButton('Open side panel'));
+    const panel = document.querySelector<HTMLElement>('.tmbk-sidebar')!;
+    expect(panel.getAttribute('data-open')).toBe('true');
+    expect(panel.style.getPropertyValue('--tmbk-primary').trim()).toBe('#f8c61e');
+    expect(document.body.style.overflow).toBe('hidden');
+    await click(findButton('Open nested modal'));
+    expect(document.body.style.overflow).toBe('hidden');
+    await click(findButton('Dismiss modal'));
+    expect(document.body.style.overflow).toBe('hidden');
+    await click(findButton('Close panel'));
+    expect(document.body.style.overflow).not.toBe('hidden');
+  });
 
   it('opens modal, contains keyboard focus and restores opener', async () => {
     function Example() {
