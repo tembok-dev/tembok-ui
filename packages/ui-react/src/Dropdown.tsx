@@ -4,8 +4,11 @@ import { Popover, PopoverChangeReason } from "./Popover";
 import { Side, Align, VirtualAnchor } from "./hooks/usePosition";
 import { cx } from "./utils/variants";
 
+/** Menu-like floating panel; supports controlled state or a trigger-owned default. */
 export type DropdownProps = {
+  /** Trigger element; optional when using a virtual anchor. */
   trigger?: ReactElement;
+  /** Controlled visibility; omit for internal state. */
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean, reason: PopoverChangeReason) => void;
@@ -13,22 +16,32 @@ export type DropdownProps = {
   anchorElement?: HTMLElement | null;
   ariaLabel?: string;
   children: ReactNode;     // direct items OR <ul><li>…</li></ul>
+  /** Preferred placement: auto/down/up. @defaultValue auto */
   side?: Side;
+  /** Alignment to the anchor. @defaultValue start */
   align?: Align;
   className?: string;      // extra panel classes
-  maxHeight?: number;      // scroll clamp
+  /** Maximum internal scroll height in CSS pixels. @defaultValue 320 */
+  maxHeight?: number;
   /** Optional per-instance variable overrides */
   bgColor?: string;        // -> --tmbk-bg
   textColor?: string;      // -> --tmbk-fg
   borderColor?: string;    // -> --tmbk-border
   /** If no theme wrapper present, keep true to scope on the panel */
   themeScoped?: boolean;   // default true
-  /** Extra class for the panel (keep it headless) */
+  /** Dismiss on selecting an item unless that item opts out. @defaultValue true */
   closeOnSelect?: boolean;
   /** Bubble z-index down to the underlying Popover */
   zIndex?: number;
 };
 
+/**
+ * Token-styled floating menu, composed from Popover.
+ * @example
+ * <Dropdown trigger={<Button>Options</Button>}>
+ *   <MenuItem onClick={edit}>Edit</MenuItem>
+ * </Dropdown>
+ */
 export function Dropdown({
   trigger,
   open,
