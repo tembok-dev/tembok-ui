@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- React `AlertDialog` composes Modal's surface with `alertdialog` semantics, a compact default, explicit action slots, safe initial Cancel focus and no backdrop dismissal.
 - SideBar supports controlled `open`/`onOpenChange`, with initial focus and opener-focus return on close; legacy attribute triggers remain supported.
 - Floating surface scrollbar tokens (`--tmbk-scrollbar-thumb`, `--tmbk-scrollbar-track`) that inherit across portals and respect dark ink menus.
 - Optional popover surface tokens (`--tmbk-popover-bg`, `--tmbk-popover-fg`, `--tmbk-popover-border`) so menus can retain intentional dark ink styling in light product themes.
