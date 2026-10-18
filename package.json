@@ -23,7 +23,8 @@
     "playground:build": "pnpm --filter @tembok/playground build",
     "playground:typecheck": "pnpm --filter @tembok/playground typecheck",
     "test": "pnpm --filter @tembok/playground test",
-    "check": "pnpm typecheck && pnpm playground:typecheck && pnpm test && pnpm build && pnpm playground:build"
+    "check": "pnpm typecheck && pnpm playground:typecheck && pnpm test && pnpm build && pnpm playground:build",
+    "consumer:check": "node scripts/consumer-smoke.mjs"
   },
   "devDependencies": {
     "@types/react": "^18",
