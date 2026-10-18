@@ -20,6 +20,7 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- SideBar backdrop now uses the same dimming and blur theme tokens as Modal, while keeping an explicit `--tmbk-backdrop` override.
 - Closed SideBar content is inert as well as hidden to assistive technology, preventing focus on offscreen controls.
 - Modal and SideBar now coordinate body scroll locks, preserving the original inline overflow after the last overlay closes.
 - SideBar panel and backdrop inherit product-scoped theme tokens across their portal.
