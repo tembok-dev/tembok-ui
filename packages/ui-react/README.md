@@ -106,6 +106,24 @@ Icon-only button with automatic icon scaling.
 <IconButton label="Edit"><Edit2 /></IconButton>
 <IconButton tone="ink" intent="primary"><Plus /></IconButton>
 
+### AlertDialog
+
+For consequential confirmation prompts, use `AlertDialog`; for custom content and multi-step workflows, use `Modal`. AlertDialog reuses Modal's responsive sizing, surface tokens and focus management. Supply your own action buttons and handlers, so icons, copy, intent and async confirmation remain under your control.
+
+```tsx
+<AlertDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="Delete project?"
+  cancelAction={<Button onClick={() => setOpen(false)}>Cancel</Button>}
+  confirmAction={<Button intent="danger" onClick={deleteProject}>Delete project</Button>}
+>
+  This action cannot be undone.
+</AlertDialog>
+```
+
+The default width is the Modal `sm` preset (400px), but `size` and `width` remain available. A Cancel button is recommended for destructive actions and receives initial focus when supplied. Backdrop clicks do not dismiss an AlertDialog; Escape still does. No action is automatically invoked or closed by the component. If confirmation is asynchronous, the consumer decides when to call `onOpenChange(false)`.
+
 ### Modal
 
 SideBar supports either controlled `open` / `onOpenChange` or uncontrolled `defaultOpen`. Existing `data-sidebar-open`, `data-sidebar-close`, and `data-sidebar-toggle` triggers remain supported. It moves focus into the panel on opening and returns it to the connected opener on closing:
