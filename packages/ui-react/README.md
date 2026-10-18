@@ -509,3 +509,33 @@ The optional semantic values below give Modal and Popover coherent surfaces with
 Modal additionally supports `--tmbk-modal-bg`, `--tmbk-modal-fg`, `--tmbk-modal-border`, `--tmbk-modal-radius` and `--tmbk-modal-shadow`. Popover supports `--tmbk-popover-radius` and `--tmbk-popover-shadow`. Existing component props and token aliases remain valid. Motion duration tokens become `0ms` under `prefers-reduced-motion: reduce`.
 
 These visual defaults are CSS-only; they do not change z-index, focus, dismissal or positioning behavior. Run `pnpm check` locally before merging. No hosted CI is configured.
+
+### Toast: compact notifications and rich content
+
+Wrap the application with `ToastProvider`, then use `useToast()` within the provider. A title alone produces a compact notification; `description` is optional and accepts text or React content. Actions are optional, and consumers control their behavior.
+
+```tsx
+import { ToastProvider, useToast } from '@tembok/ui-react';
+
+function SaveButton() {
+  const { show } = useToast();
+  return <button onClick={() => show({ title: 'Saved', intent: 'success' })}>Save</button>;
+}
+
+// Render <ToastProvider><SaveButton /></ToastProvider> at the app root.
+```
+
+For a rich notification:
+
+```tsx
+show({
+  title: 'File uploaded',
+  description: <span>report.pdf · 2.4 MB</span>,
+  intent: 'success',
+  action: { label: 'View', onClick: openFile, dismissOnClick: true },
+  duration: 0,
+});
+```
+
+`action` may also be your own React button element. Standard action clicks do not dismiss automatically unless `dismissOnClick: true` is set; custom elements own their click handling. `duration` is milliseconds (default 4000); `duration <= 0` is sticky. `canClose` controls the close button. The provider supports `position="br" | "bl" | "tr" | "tl"`.
+
