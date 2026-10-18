@@ -3,13 +3,17 @@
 
 import "./styles/components/loaders.css";
 
-type LoaderKind = "energyspin" | "spintrail";
-type LoaderSize = "sm" | "md" | "lg";
+export type LoaderKind = "energyspin" | "spintrail";
+export type LoaderSize = "sm" | "md" | "lg";
 
-interface LoadersProps {
+/** Props for a decorative or labeled loading animation. */
+export interface LoadersProps {
+    /** Animation style. @defaultValue 'energyspin' */
     type?: LoaderKind;
+    /** Size preset. @defaultValue 'md' */
     size?: LoaderSize;
-    color?: string; // HEX or any CSS color
+    /** CSS color; defaults to the inherited --tmbk-primary theme token. */
+    color?: string;
     /** Accessible loading status; omit when another nearby element already announces loading. */
     label?: string;
 }
@@ -20,6 +24,12 @@ const sizeToClass: Record<LoaderSize, string> = {
     lg: "loader-size-lg",
 };
 
+/**
+ * Reusable loading animation. Supply label to expose a screen-reader status;
+ * omit label when a surrounding element already announces the loading state.
+ * @example
+ * <Loaders type="spintrail" size="sm" label="Loading results" />
+ */
 export function Loaders({
     type = "energyspin",
     size = "md",

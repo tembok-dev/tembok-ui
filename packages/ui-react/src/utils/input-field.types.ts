@@ -10,12 +10,17 @@ export type InputFieldProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "value" | "onChange"
 > & {
+  /** Text label associated with the input. */
   label?: string;
   description?: string;
+  /** Error message; form owner decides when validation should appear. */
   error?: string;
+  /** Required controlled input value. */
   value: string;
+  /** Called with the updated string, not a DOM event. */
   onChange: (value: string) => void;
 
+  /** Async suggestion provider. Input debounces requests and ignores stale responses. */
   suggestionsLoader?: (query: string) => Promise<InputSuggestion[]>;
   onSuggestionSelect?: (
     suggestion:

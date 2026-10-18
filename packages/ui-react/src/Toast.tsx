@@ -64,6 +64,12 @@ export function toastFromAnywhere(input: Omit<Toast, "id">) {
   return "";
 }
 
+/**
+ * Mount once above components using useToast. Renders notifications at a corner.
+ * Position defaults to br (bottom-right).
+ * @example
+ * <ToastProvider position="br"><App /></ToastProvider>
+ */
 export function ToastProvider({
   children,
   position = "br", // 'br' | 'bl' | 'tr' | 'tl'
@@ -105,6 +111,12 @@ export function ToastProvider({
   );
 }
 
+/**
+ * Access show, dismiss and clear within ToastProvider.
+ * @example
+ * const { show } = useToast();
+ * show({ title: 'Saved', intent: 'success' });
+ */
 export function useToast() {
   const ctx = useContext(ToastContext);
   if (!ctx) throw new Error("useToast must be used inside <ToastProvider>");
@@ -232,6 +244,7 @@ const intentIcon: Record<ToastIntent, React.ReactNode> = {
 
 /* ========= Convenience helpers ========= */
 
+/** Convenience helpers. Pass useToast() context as the first argument. */
 export const toast = {
   success: (ctx: ToastCtx, opts: Omit<ToastInput, "intent">) =>
     ctx.show({ intent: "success", ...opts }),

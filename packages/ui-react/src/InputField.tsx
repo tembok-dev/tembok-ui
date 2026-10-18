@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { variants, cx } from "./utils/variants"; // or your internal cx helper
 import { InputFieldProps, InputSuggestion } from "./utils/input-field.types";
+export type { InputFieldProps, InputSuggestion } from "./utils/input-field.types";
 
 // InputField.tsx (or whatever file)
 // import cx + variants like in Button
@@ -42,13 +43,16 @@ const inputCls = variants(
  * Controlled input field with Tembok styling, optional async suggestions,
  * and built-in label / description / error states.
  *
- * Example:
+ * Validation is consumer-controlled: supply error after blur or submit as appropriate.
+ * Suggestions use combobox/listbox semantics and accept an async loader.
+ *
+ * @example
  * ```tsx
  * const [company, setCompany] = useState("");
  *
  * <InputField
- *   label="Empresa"
- *   placeholder="Marlyn Seguros"
+ *   label="Company"
+ *   placeholder="Acme"
  *   value={company}
  *   onChange={setCompany}
  *   suggestionsLoader={(q) => fetchCompanySuggestions(q)}

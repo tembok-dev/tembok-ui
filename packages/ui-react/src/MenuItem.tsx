@@ -2,16 +2,26 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cx } from './utils/variants';
 
 export interface MenuItemProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'prefix'> {
+  /** Leading decorative icon. */
   icon?: ReactNode;
+  /** Trailing shortcut, badge, or secondary metadata. */
   trailing?: ReactNode;
+  /** Optional secondary line beneath the item label. */
   description?: ReactNode;
+  /** Destructive appearance. @defaultValue false */
   danger?: boolean;
+  /** Visually mark the item as selected. @defaultValue false */
   selected?: boolean;
   /** Keep a menu open when activating this row. */
   keepOpen?: boolean;
 }
 
-/** A compact command row for Dropdown; unlike Popover it does not own floating behavior. */
+/**
+ * Compact command row for Dropdown and Popover menus. Does not control positioning.
+ * Items normally dismiss the parent menu; set keepOpen to retain it.
+ * @example
+ * <MenuItem icon={<EditIcon />} trailing="Ctrl+E" onClick={edit}>Edit</MenuItem>
+ */
 export const MenuItem = forwardRef<HTMLButtonElement, MenuItemProps>(function MenuItem({
   icon, trailing, description, danger = false, selected = false,
   keepOpen = false, className, children, disabled, type = 'button', ...props

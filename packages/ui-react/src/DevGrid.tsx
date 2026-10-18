@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 
 export interface DevGridProps {
+  /** Initial visibility; user can toggle with Alt+Shift+G. */
   enabled?: boolean;
+  /** Overlay column count. @defaultValue 12 */
   columns?: number;
+  /** Space between columns, in CSS pixels. */
   gutterPx?: number;
   containerPx?: number;
 }
