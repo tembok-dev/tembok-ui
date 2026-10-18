@@ -222,7 +222,7 @@ function ToastCard({
 
 /* ========= Icons by intent ========= */
 
-const intentIcon: Record<Intent, React.ReactNode> = {
+const intentIcon: Record<ToastIntent, React.ReactNode> = {
   success: <CheckCircle2 aria-hidden className="tmbk-toast-icon-svg" />,
   warning: <AlertTriangle aria-hidden className="tmbk-toast-icon-svg" />,
   danger: <XCircle aria-hidden className="tmbk-toast-icon-svg" />,
