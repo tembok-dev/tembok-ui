@@ -1,5 +1,5 @@
 // tembok/components/src/react/SideBar.tsx
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState, useEffect, useCallback, useRef } from "react";
 import { Portal } from "./utils/Portal";
 import { cx } from "./utils/variants";
 import { useEscapeKey } from "./hooks/useEscapeKey";
@@ -119,6 +119,13 @@ export function SideBar({
   const themeSourceRef = useRef<HTMLSpanElement>(null!);
   const sidebarRef = useRef<HTMLElement>(null!);
   const backdropRef = useRef<HTMLDivElement>(null!);
+  // The Portal mounts after the parent's effects. Attach inert as soon as
+  // the actual panel DOM node commits, and update it when open state changes.
+  // Native attribute avoids a dependency on newer React JSX typings.
+  const setSidebarPanelRef = useCallback((node: HTMLElement | null) => {
+    sidebarRef.current = node!;
+    if (node) node.toggleAttribute('inert', !isOpen);
+  }, [isOpen]);
   usePortalTheme(backdropRef, () => themeSourceRef.current, isOpen,
     [backdrop ? '--tmbk-backdrop' : ''].filter(Boolean));
   usePortalTheme(sidebarRef, () => themeSourceRef.current, isOpen,
@@ -187,7 +194,7 @@ export function SideBar({
 
       {/* Panel */}
       <aside
-        ref={sidebarRef}
+        ref={setSidebarPanelRef}
         className={cx("tmbk-sidebar", themeScoped && "tmbk-theme", panelClassName)}
         data-open={isOpen ? "true" : "false"}
         data-side={side}
