@@ -21,6 +21,8 @@ export interface SideBarProps {
   showClose?: boolean;
   closeAriaLabel?: string;
 
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   defaultOpen?: boolean;
   closeOnLinkClick?: boolean;
   closeOnEscape?: boolean;
@@ -76,7 +78,7 @@ export interface SideBarProps {
  *
  * // You can also control it manually:
  * <button onClick={() => setOpen(true)}>Open Menu</button>
- * <SideBar defaultOpen={open} />
+ * <SideBar open={open} onOpenChange={setOpen} />
  *
  * // Global triggers (no React state needed):
  * <a href="#" data-sidebar-open="mainMenu">Open</a>
@@ -95,6 +97,8 @@ export function SideBar({
   overlayClassName,
   showClose = true,
   closeAriaLabel = "Close menu",
+  open,
+  onOpenChange,
   defaultOpen = false,
   closeOnLinkClick = false,
   closeOnEscape = true,
@@ -108,9 +112,16 @@ export function SideBar({
   backdrop,
   themeScoped = true,
 }: SideBarProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
-  const handleClose = () => setIsOpen(false);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const isOpen = open ?? internalOpen;
+  const openerRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(isOpen);
+  const changeOpen = useCallback((next: boolean, opener?: HTMLElement | null) => {
+    if (next && !isOpen) openerRef.current = opener ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    if (open === undefined) setInternalOpen(next);
+    if (next !== isOpen) onOpenChange?.(next);
+  }, [open, isOpen, onOpenChange]);
+  const handleClose = () => changeOpen(false);
 
   // Escape
   const isTopLayer = useEscapeKey(() => { if (closeOnEscape) handleClose(); }, isOpen);
@@ -124,7 +135,17 @@ export function SideBar({
   // Native attribute avoids a dependency on newer React JSX typings.
   const setSidebarPanelRef = useCallback((node: HTMLElement | null) => {
     sidebarRef.current = node!;
-    if (node) node.toggleAttribute('inert', !isOpen);
+    if (!node) return;
+    node.toggleAttribute('inert', !isOpen);
+    if (isOpen && !wasOpenRef.current) {
+      const first = node.querySelector<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      (first ?? node).focus();
+    }
+    if (!isOpen && wasOpenRef.current) {
+      const opener = openerRef.current;
+      if (opener?.isConnected) opener.focus();
+    }
+    wasOpenRef.current = isOpen;
   }, [isOpen]);
   usePortalTheme(backdropRef, () => themeSourceRef.current, isOpen,
     [backdrop ? '--tmbk-backdrop' : ''].filter(Boolean));
@@ -144,9 +165,9 @@ export function SideBar({
       const tgt = openId || closeId || toggleId;
       if (tgt !== id) return;
 
-      if (openId) setIsOpen(true);
-      if (closeId) setIsOpen(false);
-      if (toggleId) setIsOpen((p) => !p);
+      if (openId) changeOpen(true, opener);
+      if (closeId) changeOpen(false);
+      if (toggleId) changeOpen(!isOpen, opener);
 
       const isHashLink = opener.tagName === "A" && opener.getAttribute("href") === "#";
       if (isHashLink) e.preventDefault();
@@ -154,14 +175,14 @@ export function SideBar({
 
     document.addEventListener("click", onDocClick, { capture: true });
     return () => document.removeEventListener("click", onDocClick, { capture: true });
-  }, [id]);
+  }, [id, changeOpen, isOpen]);
 
   // Close on link click
   const handlePanelClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const wantsClose = target.closest("[data-close-menu]");
-    if (wantsClose) return void setIsOpen(false);
-    if (closeOnLinkClick && target.closest("a")) setIsOpen(false);
+    if (wantsClose) return void changeOpen(false);
+    if (closeOnLinkClick && target.closest("a")) changeOpen(false);
   };
 
   // CSS variables (per-instance)
@@ -199,6 +220,7 @@ export function SideBar({
         data-open={isOpen ? "true" : "false"}
         data-side={side}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-hidden={!isOpen}
         style={vars}
