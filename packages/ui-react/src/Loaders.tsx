@@ -10,6 +10,8 @@ interface LoadersProps {
     type?: LoaderKind;
     size?: LoaderSize;
     color?: string; // HEX or any CSS color
+    /** Accessible loading status; omit when another nearby element already announces loading. */
+    label?: string;
 }
 
 const sizeToClass: Record<LoaderSize, string> = {
@@ -21,16 +23,15 @@ const sizeToClass: Record<LoaderSize, string> = {
 export function Loaders({
     type = "energyspin",
     size = "md",
-    color = "#E72AAE",
+    color = "var(--tmbk-primary, #475569)",
+    label,
 }: LoadersProps) {
     const sizeClass = sizeToClass[size] ?? sizeToClass.md;
-    const loaderColor = color || "#E72AAE";
+    const loaderColor = color || "var(--tmbk-primary, #475569)";
 
-    if (type === "spintrail") {
-        return <SpinTrail sizeClass={sizeClass} color={loaderColor} />;
-    }
-
-    return <EnergySpin sizeClass={sizeClass} color={loaderColor} />;
+    return <span role={label ? "status" : undefined} aria-label={label} aria-live={label ? "polite" : undefined} aria-hidden={label ? undefined : true} style={{display:"inline-flex"}}>
+        {type === "spintrail" ? <SpinTrail sizeClass={sizeClass} color={loaderColor} /> : <EnergySpin sizeClass={sizeClass} color={loaderColor} />}
+    </span>;
 }
 
 // Different loaders
