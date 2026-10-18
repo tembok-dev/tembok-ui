@@ -48,13 +48,17 @@ export interface TableColumn<TData> {
 }
 
 export interface DataTableProps<TData> {
+    /** Rows to render (full dataset in client mode, one page in server mode). */
     data: TData[];
+    /** Column definitions, including optional sortable/accessor/cell renderer. */
     columns: TableColumn<TData>[];
 
-    getRowId?: (row: TData, index: number) => RowId;
+    /** Stable row identifier. Recommended for selection and reordered datasets. */
+    getRowId?:  (row: TData, index: number) => RowId;
     onRowClick?: (row: TData) => void;
 
     /** --- Selection API (already done) --- */
+    /** Show row-selection checkboxes. Disabled by default. */
     enableSelection?: boolean;
     selectedRowIds?: RowId[];
     defaultSelectedRowIds?: RowId[];
@@ -64,7 +68,9 @@ export interface DataTableProps<TData> {
     }) => void;
 
     /** --- Sorting API --- */
+    /** Enable sortable headers for columns marked sortable. @defaultValue true */
     enableSorting?: boolean;
+    /** Controlled sorting; null explicitly means unsorted. */
     sortState?: TableSortState | null;
     defaultSort?: TableSortState | null;
     onSortChange?: (state: TableSortState | null) => void;
