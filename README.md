@@ -70,3 +70,7 @@ This is a monorepo managed with pnpm workspaces. Each package has its own build 
 ## License
 
 MIT
+
+### Consumer theme integration
+
+For a grounded example of migrating an existing application's component-selector overrides to supported CSS tokens, see [Taskel theme migration audit](docs/taskel-theme-migration.md). This is documentation only; Taskel has not been updated and npm publishing remains pending approval.
