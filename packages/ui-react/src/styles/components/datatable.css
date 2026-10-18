@@ -215,3 +215,12 @@
   cursor: pointer;
   background-color: var(--tmbk-bg-light);
 }
+
+/* Accessible sort controls and mobile pagination. */
+.tmbk-datatable__sort-button { appearance:none; border:0; background:none; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; padding:0; cursor:pointer; }
+.tmbk-datatable__sort-button:focus-visible { outline:2px solid var(--tmbk-ring); outline-offset:3px; border-radius:2px; }
+@media (max-width: 600px) {
+  .tmbk-datatable__footer { flex-wrap:wrap; min-width:0; }
+  .tmbk-datatable__footer-text { white-space:normal; }
+  .tmbk-datatable__footer-actions { width:100%; justify-content:flex-end; flex-wrap:wrap; }
+}
