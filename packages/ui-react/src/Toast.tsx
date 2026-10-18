@@ -211,7 +211,7 @@ function ToastCard({
           {typeof action === "object" && action !== null && !React.isValidElement(action) && "onClick" in action && "label" in action ? (
             <Button type="button" size="sm" intent="neutral" onClick={() => { (action as ToastAction).onClick(); if ((action as ToastAction).dismissOnClick) onDismiss(id); }}>
               {(action as ToastAction).label}
-            </button>
+            </Button>
           ) : action as React.ReactNode}
         </div>
       )}
