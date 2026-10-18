@@ -25,7 +25,7 @@ export function Playground() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [showcaseTheme, setShowcaseTheme] = useState<'light' | 'dark'>('light');
-  const [themePreset, setThemePreset] = useState<'neutral' | 'tembok' | 'reference'>('neutral');
+  const [themePreset, setThemePreset] = useState<'neutral' | 'tembok'>('neutral');
   const [showcaseRadius, setShowcaseRadius] = useState(12);
   const [showcaseMotion, setShowcaseMotion] = useState(true);
   const [primaryColor, setPrimaryColor] = useState('#475569');
@@ -78,7 +78,7 @@ export function Playground() {
               <select aria-label="Theme preset" value={themePreset} onChange={event => {
                 const preset = event.target.value as typeof themePreset;
                 setThemePreset(preset);
-                setPrimaryColor(preset === 'reference' ? '#f8c61e' : preset === 'tembok' ? '#5aedea' : '#475569');
+                setPrimaryColor(preset === 'tembok' ? '#5aedea' : '#475569');
               }}>
                 <option value="neutral">Neutral default</option>
                 <option value="tembok">Tembok brand</option>
