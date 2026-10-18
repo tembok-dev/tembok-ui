@@ -108,6 +108,9 @@ Icon-only button with automatic icon scaling.
 
 ### Modal
 
+Use `size="xl"` for a spacious Settings workspace and `size="sm"` for a compact decision prompt. These are **Modal** layouts; a dedicated accessible AlertDialog contract for irreversible decisions is still under review, not yet part of the published API.
+
+
 Modal and SideBar share background scroll locking: opening a second overlay will not unlock the page when the first closes. SideBar now inherits the CSS theme from its original application scope, including panel and backdrop, without requiring a provider.
 
 
