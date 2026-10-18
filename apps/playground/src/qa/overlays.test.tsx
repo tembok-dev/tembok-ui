@@ -78,6 +78,19 @@ describe('React overlay regressions', () => {
     document.body.style.removeProperty('overflow');
   });
 
+  it('keeps closed SideBar content inert and enables it when opened', async () => {
+    await render(<><button data-sidebar-open="inert-panel">Open panel</button>
+      <SideBar id="inert-panel"><button data-close-menu>Close panel</button></SideBar></>);
+    const panel = document.querySelector<HTMLElement>('.tmbk-sidebar')!;
+    expect(panel.hasAttribute('inert')).toBe(true);
+    expect(panel.getAttribute('aria-hidden')).toBe('true');
+    await click(findButton('Open panel'));
+    expect(panel.hasAttribute('inert')).toBe(false);
+    expect(panel.getAttribute('aria-hidden')).toBe('false');
+    await click(findButton('Close panel'));
+    expect(panel.hasAttribute('inert')).toBe(true);
+  });
+
   it('inherits scoped SideBar palette and restores body lock alongside Modal', async () => {
     function Fixture() {
       const [showModal, setShowModal] = useState(false);
