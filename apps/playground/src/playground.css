@@ -136,7 +136,7 @@ body { margin: 0; }
   --wb-bg:#f9fafb; --wb-panel:#fcfcfd; --wb-border:#e1e4ea;
   --wb-text:#24292e; --wb-muted:#73808c;
   --tmbk-bg:#f9fafb; --tmbk-bg-light:#fcfcfd; --tmbk-fg:#24292e;
-  --tmbk-border:#e1e4ea; --tmbk-primary-hover:#af8701; --tmbk-primary-active:#af8701;
+  --tmbk-border:#e1e4ea; 
   --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
   --tmbk-secondary-fg:#24292e;
   --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));
@@ -150,7 +150,7 @@ body { margin: 0; }
 }
 /* Reference styling is expressed through inherited public semantic tokens. */
 .playground[data-preset="reference"]:has(.workbench) {
-  --tmbk-primary-hover:#af8701; --tmbk-primary-active:#af8701;
+  
   --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
   --tmbk-secondary-fg:var(--wb-text);
   --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));

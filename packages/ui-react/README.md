@@ -124,6 +124,21 @@ For consequential confirmation prompts, use `AlertDialog`; for custom content an
 
 The default width is the Modal `sm` preset (400px), but `size` and `width` remain available. A Cancel button is recommended for destructive actions and receives initial focus when supplied. Backdrop clicks do not dismiss an AlertDialog; Escape still does. No action is automatically invoked or closed by the component. If confirmation is asynchronous, the consumer decides when to call `onOpenChange(false)`.
 
+### Accessible custom primary colors
+
+Use the optional `primaryForeground(hex)` utility when assembling a product theme or when a color picker changes its primary color. It compares WCAG contrast ratios for black and white over an opaque `#RGB` or `#RRGGBB` background, choosing the higher-contrast foreground. This is a setup-time helper, **not** a per-component automatic override.
+
+```tsx
+import { primaryForeground } from '@tembok/ui-react';
+const primary = '#f7c81e';
+const theme = {
+  '--tmbk-primary': primary,
+  '--tmbk-primary-fg': primaryForeground(primary),
+} as React.CSSProperties;
+```
+
+You can always supply `--tmbk-primary-fg` yourself; the library does not replace that choice. Primary Button hover and pressed backgrounds are derived automatically in CSS from `--tmbk-primary` and `--tmbk-primary-fg`, with optional `--tmbk-primary-hover` and `--tmbk-primary-active` overrides. No JavaScript runs per Button render. Hover uses a subtle color change; the existing pressed feedback remains. Test custom foreground colors for contrast across all states. The helper is intended for opaque hex backgrounds, not gradients, translucent or image-backed surfaces.
+
 ### Modal
 
 SideBar supports either controlled `open` / `onOpenChange` or uncontrolled `defaultOpen`. Existing `data-sidebar-open`, `data-sidebar-close`, and `data-sidebar-toggle` triggers remain supported. It moves focus into the panel on opening and returns it to the connected opener on closing:

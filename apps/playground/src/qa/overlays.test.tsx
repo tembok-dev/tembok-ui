@@ -1,7 +1,7 @@
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AlertDialog, Button, Dropdown, IconButton, MenuItem, Modal, Popover, SideBar } from '@tembok/ui-react';
+import { AlertDialog, Button, Dropdown, IconButton, MenuItem, Modal, Popover, SideBar, primaryForeground } from '@tembok/ui-react';
 import { Playground } from '../playground';
 
 let host: HTMLDivElement;
@@ -43,6 +43,15 @@ afterEach(async () => {
 });
 
 describe('React overlay regressions', () => {
+  it('derives WCAG-readable primary text without replacing explicit overrides', async () => {
+    expect(primaryForeground('#ffffff')).toBe('#000000');
+    expect(primaryForeground('#000000')).toBe('#ffffff');
+    expect(primaryForeground('#ffff00')).toBe('#000000');
+    expect(primaryForeground('#123')).toBe('#ffffff');
+    expect(() => primaryForeground('red')).toThrow();
+    // Consumers set --tmbk-primary-fg explicitly if their product needs another foreground.
+  });
+
   it('workbench switches preset without mutating body theme attributes', async () => {
     await render(<Playground />);
     const preset = document.querySelector<HTMLSelectElement>('select[aria-label="Theme preset"]');

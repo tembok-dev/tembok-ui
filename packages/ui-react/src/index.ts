@@ -33,3 +33,5 @@ export * from './hooks';
 export * from './utils';
 
 // Optional: default exports (only if you want `import Button from ...`)
+
+export { primaryForeground } from './utils/primaryContrast';
