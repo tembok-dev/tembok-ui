@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Modal, Popover, Dropdown, IconButton, SideBar, MenuItem } from '@tembok/ui-react';
+import { Button, Modal, AlertDialog, Popover, Dropdown, IconButton, SideBar, MenuItem } from '@tembok/ui-react';
 
 type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 type Side = 'auto' | 'up' | 'down';
@@ -200,11 +200,12 @@ export function Playground() {
           {Array.from({ length: 25 }, (_, i) => <p key={i}>Setting section {i + 1}</p>)}
         </div>
       </Modal>
-      <Modal open={confirmOpen} onOpenChange={setConfirmOpen} size="sm"
-        header={<h2>Delete draft?</h2>}
-        footer={<><Button intent="neutral" onClick={() => setConfirmOpen(false)}>Cancel</Button><Button intent="danger" onClick={() => setConfirmOpen(false)}>Confirm delete</Button></>}>
-        <p>This is a visual Modal fixture, not yet an AlertDialog API. Confirm focus and dismissal.</p>
-      </Modal>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}
+        title="Delete draft?"
+        cancelAction={<Button intent="neutral" onClick={() => setConfirmOpen(false)}>Cancel</Button>}
+        confirmAction={<Button intent="danger" onClick={() => setConfirmOpen(false)}>Confirm delete</Button>}>
+        <p>Delete this draft? This action cannot be undone.</p>
+      </AlertDialog>
       <Modal open={modalOpen} onOpenChange={setModalOpen}
         header={<h2>QA modal</h2>}
         footer={emptyModal ? undefined : <Button onClick={() => setModalOpen(false)}>Close modal</Button>}>
