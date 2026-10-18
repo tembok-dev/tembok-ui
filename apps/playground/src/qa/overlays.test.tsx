@@ -89,6 +89,27 @@ describe('React overlay regressions', () => {
       </div>;
     }
     await render(<Fixture />);
+    // jsdom does not resolve inherited CSS custom properties through
+    // getComputedStyle. Emulate the browser's computed value at the source
+    // anchor, while exercising the real portal-token transfer implementation.
+    const sourceAnchor = host.querySelector<HTMLSpanElement>('span[hidden][aria-hidden="true"]');
+    expect(sourceAnchor).not.toBeNull();
+    expect(sourceAnchor!.parentElement?.style.getPropertyValue('--tmbk-primary')).toBe('#f8c61e');
+    const nativeComputedStyle = window.getComputedStyle.bind(window);
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((element) => {
+      const computed = nativeComputedStyle(element);
+      if (element !== sourceAnchor) return computed;
+      return new Proxy(computed, {
+        get(target, property) {
+          if (property === 'getPropertyValue') {
+            return (name: string) => name === '--tmbk-primary'
+              ? '#f8c61e'
+              : target.getPropertyValue(name);
+          }
+          return Reflect.get(target, property, target);
+        },
+      });
+    });
     await click(findButton('Open side panel'));
     const panel = document.querySelector<HTMLElement>('.tmbk-sidebar')!;
     expect(panel.getAttribute('data-open')).toBe('true');
