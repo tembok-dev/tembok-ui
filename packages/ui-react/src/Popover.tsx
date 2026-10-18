@@ -31,7 +31,7 @@ export type PopoverChangeReason = "trigger" | "hover" | "outside" | "escape" | "
  * ```tsx
  * <Popover
  *   trigger={<button>Options</button>}
- *   side="bottom"
+ *   side="down"
  *   align="start"
  *   panelClassName="rounded-md border bg-bg p-2"
  * >
@@ -74,6 +74,12 @@ export interface PopoverProps {
   scrollMaxHeight?: number;
 }
 
+/**
+ * Floating content attached to a trigger or virtual anchor, with collision-aware placement.
+ * Use `open` plus `onOpenChange` for controlled menus; otherwise use `defaultOpen`.
+ * @example
+ * <Popover trigger={<button>Details</button>} side="down">Content</Popover>
+ */
 export function Popover({
   trigger,
   open,

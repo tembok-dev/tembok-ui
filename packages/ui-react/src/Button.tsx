@@ -7,15 +7,21 @@ type Size = 'sm' | 'md' | 'lg';
 type Tone = 'default' | 'ink' | 'red' | 'lime' | 'cyan';
 
 type PolymorphicProps<E extends ElementType> = {
+  /** Render as another element; defaults to a native button. */
   as?: E;
+  /** Semantic appearance. @defaultValue 'primary' */
   intent?: Intent;
+  /** Padding/typography preset. @defaultValue 'sm' */
   size?: Size;
+  /** Optional brand tint. @defaultValue 'default' */
   tone?: Tone;
+  /** Disables native buttons; non-button elements receive aria-disabled. @defaultValue false */
   disabled?: boolean;
   children?: ReactNode;
   className?: string;
 } & ComponentPropsWithoutRef<E>;
 
+/** Props for the polymorphic, token-styled Button. */
 export type ButtonProps<E extends ElementType = 'button'> = PolymorphicProps<E>;
 
 const base =
@@ -55,6 +61,12 @@ const cls = variants(base, {
   },
 }, { intent: "primary", size: "sm", tone: "default", disabled: "false" });
 
+/**
+ * Semantic, themeable action button. Defaults to a native button, primary intent and small size.
+ * @example
+ * <Button intent="primary" onClick={save}>Save</Button>
+ * <Button intent="neutral" size="md" disabled>Unavailable</Button>
+ */
 export function Button<E extends ElementType = 'button'>({
   as,
   intent = 'primary',

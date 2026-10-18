@@ -8,12 +8,13 @@ type Tone = "default" | "ink" | "red" | "lime" | "cyan";
 
 type PolymorphicProps<E extends ElementType> = {
   as?: E;
-  /** a11y label; required for icon-only buttons */
+  /** Accessible text for the icon-only control. Always supply a descriptive label; fallback is "Icon button". */
   label?: string;
   intent?: Intent;
   size?: Size;
   tone?: Tone;
   disabled?: boolean;
+  /** Apply optional attention pulse. @defaultValue false */
   pulse?: boolean;
   children?: ReactNode;
   className?: string;
@@ -68,6 +69,12 @@ const cls = variants(
   { intent: "primary", size: "sm", tone: "default", disabled: "false" }
 );
 
+/**
+ * Compact icon-only Button. Supply `label` for screen readers and `children` for the icon.
+ * Supports xs/sm/md/lg sizes; defaults to sm, primary intent and no pulse.
+ * @example
+ * <IconButton label="Close panel" size="xs" onClick={close}><CloseIcon /></IconButton>
+ */
 export function IconButton<E extends ElementType = "button">({
   as,
   label = "Icon button",
