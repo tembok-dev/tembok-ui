@@ -53,6 +53,12 @@ export interface ModalProps {
   className?: string;        // extra classes for panel
   overlayClassName?: string; // extra classes for overlay
   id?: string;
+  /** Semantic alert for high-impact decisions. */
+  role?: 'dialog' | 'alertdialog';
+  /** Disable backdrop dismissal for decisions requiring an explicit action. */
+  dismissOnOutsideClick?: boolean;
+  /** CSS selector for preferred initial focus (e.g. cancel action). */
+  initialFocusSelector?: string;
 }
 
 /**
@@ -81,6 +87,9 @@ function ModalContent({
   id = 'tembok-modal',
   size = 'md',
   width,
+  role = 'dialog',
+  dismissOnOutsideClick = true,
+  initialFocusSelector,
   themeSourceRef,
 }: ModalProps & { themeSourceRef: React.RefObject<HTMLSpanElement> }) {
   const panelRef = useRef<HTMLDivElement>(null!);
@@ -96,10 +105,10 @@ function ModalContent({
   // Focus trap when open
   // Escape key to close; also determines ownership of Tab navigation.
   const isTopLayer = useEscapeKey(handleClose, open);
-  useFocusTrap(panelRef, open, isTopLayer);
+  useFocusTrap(panelRef, open, isTopLayer, initialFocusSelector);
 
   // Click outside to close
-  useClickOutside(panelRef, () => { if (isTopLayer()) handleClose(); }, open);
+  useClickOutside(panelRef, () => { if (isTopLayer()) handleClose(); }, open && dismissOnOutsideClick);
 
   useBodyScrollLock(open);
 
@@ -119,7 +128,7 @@ function ModalContent({
         {/* Panel */}
         <div
           ref={panelRef}
-          role="dialog"
+          role={role}
           aria-modal="true"
           {...(header ? { 'aria-labelledby': headerId } : {})}
           {...(children ? { 'aria-describedby': bodyId } : {})}
