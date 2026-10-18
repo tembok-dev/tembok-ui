@@ -9,7 +9,7 @@
 :root {
   --tmbk-toast-z: 2147483647;
   --tmbk-toast-gap: .5rem;
-  --tmbk-toast-w: 360px;
+  --tmbk-toast-w: 380px;
   --tmbk-toast-pad: .625rem;
   --tmbk-toast-radius: .75rem;
   --tmbk-toast-shadow: 0 12px 36px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.12);
@@ -74,11 +74,11 @@
 /* content row */
 :where(.tmbk-theme .tmbk-toast-row, .tmbk-toast-row.tmbk-theme) {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: .625rem;
   padding: var(--tmbk-toast-pad);
-  padding-inline-start:calc(var(--tmbk-toast-pad) + .1875rem);
+  padding-inline-start:var(--tmbk-toast-pad);
 }
 
 /* icon */
@@ -139,11 +139,7 @@
 
 /* intent bar */
 :where(.tmbk-theme .tmbk-toast-bar, .tmbk-toast-bar.tmbk-theme) {
-  position:absolute;
-  inset-inline-start:0;
-  inset-block:0;
-  width:.1875rem;
-  height:auto;
+  display:none;
 }
 
 /* ---------------- Intents via data-intent ---------------- */
@@ -212,4 +208,23 @@
   :where(.tmbk-theme .tmbk-toast-row, .tmbk-toast.tmbk-theme .tmbk-toast-row) { grid-template-columns:auto minmax(0,1fr) auto; }
   :where(.tmbk-theme .tmbk-toast-action, .tmbk-toast.tmbk-theme .tmbk-toast-action) { grid-column:2; grid-row:2; justify-self:start; }
   :where(.tmbk-theme .tmbk-toast-close, .tmbk-toast.tmbk-theme .tmbk-toast-close) { grid-column:3; grid-row:1; }
+}
+
+/* Compact, content-first notifications. Actions have their own quiet footer. */
+:where(.tmbk-theme .tmbk-toast-actions, .tmbk-toast.tmbk-theme .tmbk-toast-actions) {
+  display:flex; align-items:center; justify-content:flex-end; gap:.5rem;
+  padding:0 var(--tmbk-toast-pad) var(--tmbk-toast-pad);
+}
+:where(.tmbk-theme .tmbk-toast-actions .tmbk-btn, .tmbk-toast.tmbk-theme .tmbk-toast-actions .tmbk-btn) {
+  font-size:.8125rem;
+}
+:where(.tmbk-theme .tmbk-toast-action-button, .tmbk-toast.tmbk-theme .tmbk-toast-action-button) {
+  background:var(--tmbk-toast-action-bg, var(--tmbk-fg, #252525));
+  color:var(--tmbk-toast-action-fg, var(--tmbk-bg-light, #fff));
+  border:1px solid transparent;
+  min-height:30px;
+}
+:where(.tmbk-theme .tmbk-toast-action-button:hover, .tmbk-toast.tmbk-theme .tmbk-toast-action-button:hover) { filter:brightness(1.12); }
+@media(max-width:420px) {
+  :where(.tmbk-theme .tmbk-toast-actions, .tmbk-toast.tmbk-theme .tmbk-toast-actions) { justify-content:flex-start; padding-inline-start:calc(var(--tmbk-toast-pad) + 2.375rem); }
 }
