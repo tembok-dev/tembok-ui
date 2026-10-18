@@ -108,10 +108,10 @@
 
 /* Product state tokens: adjust without overriding internal selectors. */
 :where(.tmbk-theme .tmbk-btn[data-intent="primary"]:hover, .tmbk-btn.tmbk-theme[data-intent="primary"]:hover) {
-  background-color: var(--tmbk-primary-hover, var(--tmbk-primary));
+  background-color: var(--tmbk-primary-hover, color-mix(in srgb, var(--tmbk-primary) 92%, var(--tmbk-primary-fg) 8%));
 }
 :where(.tmbk-theme .tmbk-btn[data-intent="primary"]:active, .tmbk-btn.tmbk-theme[data-intent="primary"]:active) {
-  background-color: var(--tmbk-primary-active, var(--tmbk-primary-hover, var(--tmbk-primary)));
+  background-color: var(--tmbk-primary-active, color-mix(in srgb, var(--tmbk-primary) 86%, var(--tmbk-primary-fg) 14%));
 }
 :where(.tmbk-theme .tmbk-btn[data-intent="secondary"]:hover, .tmbk-btn.tmbk-theme[data-intent="secondary"]:hover) {
   background-color: var(--tmbk-secondary-hover, color-mix(in srgb, var(--tmbk-primary) 13%, var(--tmbk-bg-light)));
