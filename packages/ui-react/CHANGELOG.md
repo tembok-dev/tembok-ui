@@ -48,8 +48,3 @@ Changes to the React package are recorded here for application developers.
 - Workbench dark preview now propagates foreground/surface tokens to self-scoped buttons, restoring neutral and ghost readability.
 - Private component workbench for appearance, accent and interaction previews.
 
-> This is an accumulated source-level summary of changes after prior npm releases. It does **not** mean the features have been published. The package source remains 0.0.22; choose the release version and publish in a separate, reviewed release step. For exact history, consult Git commits and PRs.
-
-## Released versions
-
-Historical npm release notes have not yet been reconstructed. Do not assume a source commit or package.json version is a published npm release.
