@@ -11,6 +11,7 @@ type SidePosition = "left" | "right";
 
 export interface SideBarProps {
   id?: string;
+  /** Panel edge. @defaultValue 'right' */
   side?: SidePosition;
   /** Width controls via CSS vars (fallbacks in CSS) */
   width?: string;      // -> --tmbk-sidebar-w   e.g. "86vw"
@@ -18,14 +19,20 @@ export interface SideBarProps {
 
   panelClassName?: string;
   overlayClassName?: string;
+  /** Display built-in Close button. */
   showClose?: boolean;
   closeAriaLabel?: string;
 
+  /** Controlled visibility. Omit to use defaultOpen and data-sidebar-* triggers. */
   open?: boolean;
+  /** Requests controlled state changes (e.g. close button/backdrop). */
   onOpenChange?: (open: boolean) => void;
+  /** Initial visibility in uncontrolled mode. */
   defaultOpen?: boolean;
   closeOnLinkClick?: boolean;
+  /** Whether Escape requests dismissal. */
   closeOnEscape?: boolean;
+  /** Whether clicking the backdrop requests dismissal. */
   closeOnOverlayClick?: boolean;
 
   children?: ReactNode;
