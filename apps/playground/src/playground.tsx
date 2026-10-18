@@ -82,7 +82,6 @@ export function Playground() {
               }}>
                 <option value="neutral">Neutral default</option>
                 <option value="tembok">Tembok brand</option>
-                <option value="reference">Product reference (Taskel)</option>
               </select>
             </label>
             <div className="workbench-field"><span>Appearance</span><div className="workbench-mode-tabs" role="group" aria-label="Appearance">
