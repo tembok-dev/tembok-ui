@@ -93,7 +93,7 @@ describe('React overlay regressions', () => {
     const panel = document.querySelector<HTMLElement>('.tmbk-sidebar')!;
     expect(panel.dataset.open).toBe('true');
     expect(panel.hasAttribute('inert')).toBe(false);
-    expect(document.activeElement).toBe(findButton('Dismiss controlled panel'));
+    expect(document.activeElement).toBe(panel.querySelector('.tmbk-sidebar-close'));
     await click(findButton('Dismiss controlled panel'));
     expect(panel.dataset.open).toBe('false');
     expect(panel.hasAttribute('inert')).toBe(true);
