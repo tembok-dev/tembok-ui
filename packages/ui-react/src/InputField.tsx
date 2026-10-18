@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { variants, cx } from "./utils/variants"; // or your internal cx helper
 import { InputFieldProps, InputSuggestion } from "./utils/input-field.types";
+export type { InputFieldProps, InputSuggestion } from "./utils/input-field.types";
 
 // InputField.tsx (or whatever file)
 // import cx + variants like in Button
