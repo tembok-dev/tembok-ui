@@ -8,7 +8,6 @@
 :root {
   --tmbk-sidebar-w: 86vw;
   --tmbk-sidebar-maxw: 360px;
-  --tmbk-backdrop: color-mix(in oklab, var(--tmbk-bg) 60%, transparent);
   --sidebar-z: 2147483646;
 }
 
@@ -17,9 +16,10 @@
   position: fixed;
   inset: 0;
   z-index: var(--sidebar-z, 2147483646);
-  background: var(--tmbk-backdrop);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  /* Same dimming/blur tokens as Modal's shared overlay surface. */
+  background: var(--tmbk-backdrop, rgba(var(--tmbk-overlay-color, 0, 0, 0), var(--tmbk-overlay-opacity, .6)));
+  backdrop-filter: blur(var(--tmbk-overlay-blur, 6px));
+  -webkit-backdrop-filter: blur(var(--tmbk-overlay-blur, 6px));
   transition: opacity .3s ease;
   opacity: 0;
   pointer-events: none;

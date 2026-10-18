@@ -78,6 +78,28 @@ describe('React overlay regressions', () => {
     document.body.style.removeProperty('overflow');
   });
 
+  it('controls SideBar open state and returns focus to its opener', async () => {
+    function Fixture() {
+      const [open, setOpen] = useState(false);
+      return <><button onClick={() => setOpen(true)}>Show controlled panel</button>
+        <SideBar id="controlled-panel" open={open} onOpenChange={setOpen}>
+          <button data-close-menu>Dismiss controlled panel</button>
+        </SideBar></>;
+    }
+    await render(<Fixture />);
+    const opener = findButton('Show controlled panel');
+    opener.focus();
+    await click(opener);
+    const panel = document.querySelector<HTMLElement>('.tmbk-sidebar')!;
+    expect(panel.dataset.open).toBe('true');
+    expect(panel.hasAttribute('inert')).toBe(false);
+    expect(document.activeElement).toBe(panel.querySelector('.tmbk-sidebar-close'));
+    await click(findButton('Dismiss controlled panel'));
+    expect(panel.dataset.open).toBe('false');
+    expect(panel.hasAttribute('inert')).toBe(true);
+    expect(document.activeElement).toBe(opener);
+  });
+
   it('keeps closed SideBar content inert and enables it when opened', async () => {
     await render(<><button data-sidebar-open="inert-panel">Open panel</button>
       <SideBar id="inert-panel"><button data-close-menu>Close panel</button></SideBar></>);

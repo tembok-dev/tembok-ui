@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- SideBar supports controlled `open`/`onOpenChange`, with initial focus and opener-focus return on close; legacy attribute triggers remain supported.
 - Floating surface scrollbar tokens (`--tmbk-scrollbar-thumb`, `--tmbk-scrollbar-track`) that inherit across portals and respect dark ink menus.
 - Optional popover surface tokens (`--tmbk-popover-bg`, `--tmbk-popover-fg`, `--tmbk-popover-border`) so menus can retain intentional dark ink styling in light product themes.
 - Provider-free scoped theme inheritance for Modal, Popover and Dropdown portals, including product-specific CSS token scopes and live ancestor class/style changes.
@@ -19,6 +20,7 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- SideBar backdrop now uses the same dimming and blur theme tokens as Modal, while keeping an explicit `--tmbk-backdrop` override.
 - Closed SideBar content is inert as well as hidden to assistive technology, preventing focus on offscreen controls.
 - Modal and SideBar now coordinate body scroll locks, preserving the original inline overflow after the last overlay closes.
 - SideBar panel and backdrop inherit product-scoped theme tokens across their portal.

@@ -7,6 +7,7 @@ const THEME_KEYS = [
   'secondary','secondary-fg','secondary-bg','secondary-border','secondary-hover',
   'surface','surface-raised','surface-text','surface-border',
   'radius-surface','shadow-surface','shadow-floating',
+  'overlay-color','overlay-opacity','overlay-blur',
   'motion-fast','motion-normal','motion-ease',
   'success','success-fg','warning','warning-fg','info','info-fg','danger','danger-fg',
   'brand-red','brand-red-fg','brand-cyan','brand-cyan-fg',
