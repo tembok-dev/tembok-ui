@@ -46,6 +46,7 @@
 
 /* ---------------- Toast card ---------------- */
 :where(.tmbk-theme .tmbk-toast, .tmbk-toast.tmbk-theme) {
+  position: relative;
   pointer-events: auto;
   border-radius: var(--tmbk-toast-radius);
   border: 1px solid color-mix(in oklab, var(--tmbk-border, rgba(0,0,0,.12)) 90%, transparent);
@@ -77,6 +78,7 @@
   align-items: center;
   gap: .625rem;
   padding: var(--tmbk-toast-pad);
+  padding-inline-start:calc(var(--tmbk-toast-pad) + .1875rem);
 }
 
 /* icon */
@@ -137,8 +139,11 @@
 
 /* intent bar */
 :where(.tmbk-theme .tmbk-toast-bar, .tmbk-toast-bar.tmbk-theme) {
-  height: .1875rem;
-  width: 100%;
+  position:absolute;
+  inset-inline-start:0;
+  inset-block:0;
+  width:.1875rem;
+  height:auto;
 }
 
 /* ---------------- Intents via data-intent ---------------- */
