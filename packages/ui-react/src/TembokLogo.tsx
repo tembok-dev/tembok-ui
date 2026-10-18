@@ -25,6 +25,7 @@ import React, { forwardRef, memo } from "react";
 type Size = "sm" | "md" | "lg" | number;
 type Tone = "auto" | "light" | "dark";
 
+/** SVG wordmark/symbol appearance. Uses inherited color for auto tone. */
 export type TembokLogoProps = {
     /** Accessible label */
     alt?: string;
