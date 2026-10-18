@@ -157,7 +157,7 @@ export function SideBar({
     const onDocClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       const opener = t.closest("[data-sidebar-open],[data-sidebar-close],[data-sidebar-toggle]");
-      if (!opener) return;
+      if (!(opener instanceof HTMLElement)) return;
 
       const openId = opener.getAttribute("data-sidebar-open");
       const closeId = opener.getAttribute("data-sidebar-close");
