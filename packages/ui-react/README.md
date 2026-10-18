@@ -137,7 +137,7 @@ const theme = {
 } as React.CSSProperties;
 ```
 
-You can always supply `--tmbk-primary-fg` yourself; the library does not replace that choice. The helper is intended for opaque hex backgrounds, not gradients, translucent or image-backed surfaces.
+You can always supply `--tmbk-primary-fg` yourself; the library does not replace that choice. Primary Button hover and pressed backgrounds are derived automatically in CSS from `--tmbk-primary` and `--tmbk-primary-fg`, with optional `--tmbk-primary-hover` and `--tmbk-primary-active` overrides. No JavaScript runs per Button render. Hover uses a subtle color change; the existing pressed feedback remains. Test custom foreground colors for contrast across all states. The helper is intended for opaque hex backgrounds, not gradients, translucent or image-backed surfaces.
 
 ### Modal
 
