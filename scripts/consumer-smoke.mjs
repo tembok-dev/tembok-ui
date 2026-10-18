@@ -79,7 +79,7 @@ createRoot(document.getElementById('root')!).render(<ToastProvider><Consumer /><
 void [AlertDialog, Popover, Dropdown, MenuItem, SideBar, DevGrid];
 `);
   console.log('\nInstalling packed package in isolated consumer...');
-  run('pnpm install --ignore-scripts --offline', temp);
+  run('pnpm install --ignore-scripts', temp);
   run('pnpm typecheck', temp);
   run('pnpm build', temp);
   const out = join(temp, 'dist', 'assets');
