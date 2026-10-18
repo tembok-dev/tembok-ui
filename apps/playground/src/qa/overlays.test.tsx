@@ -123,6 +123,23 @@ describe('React overlay regressions', () => {
     expect(document.body.style.overflow).not.toBe('hidden');
   });
 
+  it('exposes wide settings and compact confirmation fixtures in Gallery', async () => {
+    await render(<Playground />);
+    const overlays = [...document.querySelectorAll<HTMLButtonElement>('.workbench-nav-item')]
+      .find(button => button.textContent === 'Overlays');
+    expect(overlays).toBeDefined();
+    await click(overlays!);
+    await click(findButton('Settings modal'));
+    const settings = document.querySelector<HTMLElement>('.tmbk-modal-panel');
+    expect(settings?.dataset.size).toBe('xl');
+    expect(settings?.querySelector('.tmbk-modal-body')).not.toBeNull();
+    await click(findButton('Done'));
+    await click(findButton('Confirm action'));
+    expect(document.querySelector('.tmbk-modal-panel')?.getAttribute('data-size')).toBe('sm');
+    await click(findButton('Cancel'));
+    expect(document.querySelector('.tmbk-modal')).toBeNull();
+  });
+
   it('opens modal, contains keyboard focus and restores opener', async () => {
     function Example() {
       const [open, setOpen] = useState(false);
