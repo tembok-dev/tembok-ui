@@ -95,6 +95,11 @@ export interface DataTableProps<TData> {
 
     onPaginationChange?: (state: PaginationState) => void;
 
+    /** Text for the empty data state. Defaults to English. */
+    emptyText?: string;
+    /** Localizable pagination labels. */
+    labels?: { previous?: string; next?: string; page?: string; of?: string; records?: string };
+
     /** Styles */
     className?: string;
     tableClassName?: string;
