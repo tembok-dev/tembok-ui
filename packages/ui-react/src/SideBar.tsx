@@ -136,14 +136,16 @@ export function SideBar({
   const setSidebarPanelRef = useCallback((node: HTMLElement | null) => {
     sidebarRef.current = node!;
     if (!node) return;
+    // Return focus *before* making the closed panel inert: focus cannot
+    // reliably move out of an already-inert subtree in every browser.
+    if (!isOpen && wasOpenRef.current) {
+      const opener = openerRef.current;
+      if (opener?.isConnected) opener.focus();
+    }
     node.toggleAttribute('inert', !isOpen);
     if (isOpen && !wasOpenRef.current) {
       const first = node.querySelector<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
       (first ?? node).focus();
-    }
-    if (!isOpen && wasOpenRef.current) {
-      const opener = openerRef.current;
-      if (opener?.isConnected) opener.focus();
     }
     wasOpenRef.current = isOpen;
   }, [isOpen]);
