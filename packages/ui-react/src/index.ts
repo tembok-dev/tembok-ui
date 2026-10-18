@@ -16,6 +16,7 @@ import './styles/components/loaders.css'
 export * from './Button';
 export * from './IconButton';
 export * from './Modal';
+export * from './AlertDialog';
 export * from './Popover';
 export * from './SideBar';
 export * from './Toast';
