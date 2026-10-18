@@ -76,6 +76,8 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
   const {
     data,
     columns,
+    emptyText = 'No data to display.',
+    labels,
     getRowId,
     onRowClick,
 
@@ -140,10 +142,10 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
   const [internalSort, setInternalSort] = useState<TableSortState | null>(
     () => defaultSort,
   );
-  const currentSort = sortState ?? internalSort;
+  const currentSort = sortState !== undefined ? sortState : internalSort;
 
   function setSort(next: TableSortState | null) {
-    if (!sortState) setInternalSort(next);
+    if (sortState === undefined) setInternalSort(next);
     onSortChange?.(next);
   }
 
@@ -360,7 +362,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                   className="tmbk-datatable__empty"
                   colSpan={visibleColumns.length + (enableSelection ? 1 : 0)}
                 >
-                  No hay datos para mostrar.
+                  {emptyText}
                 </td>
               </tr>
             ) : (
@@ -447,11 +449,11 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
       {enablePagination && (
         <div className="tmbk-datatable__footer">
           <span className="tmbk-datatable__footer-text">
-            Página {clampedPageIndex + 1} de {pageCount}
+            {labels?.page ?? 'Page'} {clampedPageIndex + 1} {labels?.of ?? 'of'} {pageCount}
             {effectiveTotalItems > 0 && (
               <span className="tmbk-datatable__footer-meta">
                 {" "}
-                · {effectiveTotalItems} registros
+                · {effectiveTotalItems} {labels?.records ?? 'records'}
               </span>
             )}
           </span>
@@ -462,7 +464,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
               disabled={clampedPageIndex === 0}
               onClick={prevPage}
             >
-              Anterior
+              {labels?.previous ?? 'Previous'}
             </Button>
             <Button
               intent="neutral"
@@ -470,7 +472,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
               disabled={clampedPageIndex >= pageCount - 1}
               onClick={nextPage}
             >
-              Siguiente
+              {labels?.next ?? 'Next'}
             </Button>
           </div>
         </div>
