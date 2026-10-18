@@ -59,10 +59,10 @@ describe('React overlay regressions', () => {
     expect(document.body.hasAttribute('data-tmbk-preview-preset')).toBe(false);
     expect(document.body.hasAttribute('data-tmbk-preview-theme')).toBe(false);
     await act(async () => {
-      preset!.value = 'reference';
+      preset!.value = 'tembok';
       preset!.dispatchEvent(new Event('change', { bubbles: true }));
     });
-    expect(document.querySelector('.playground')?.getAttribute('data-preset')).toBe('reference');
+    expect(document.querySelector('.playground')?.getAttribute('data-preset')).toBe('tembok');
     expect(document.body.hasAttribute('data-tmbk-preview-preset')).toBe(false);
   });
 
