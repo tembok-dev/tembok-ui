@@ -84,8 +84,18 @@ void [AlertDialog, Popover, Dropdown, MenuItem, SideBar, DevGrid];
   run('pnpm build', temp);
   const out = join(temp, 'dist', 'assets');
   const assets = existsSync(out) ? readdirSync(out) : [];
-  if (!assets.some(f => f.endsWith('.css'))) throw new Error('Consumer Vite output contains no CSS asset');
-  console.log('\nPASS: local packed-package install, exported types, Vite build and bundled CSS.');
+  // tsup is configured with injectStyle: true, so Vite may bundle Tembok's
+  // stylesheet into JavaScript instead of emitting a separate .css asset.
+  const hasCssAsset = assets.some(f => f.endsWith('.css'));
+  const jsContent = assets.filter(f => f.endsWith('.js'))
+    .map(f => readFileSync(join(out, f), 'utf8')).join('\n');
+  const hasInjectedStyles = jsContent.includes('--tmbk-primary') &&
+    jsContent.includes('.tmbk-toast') && jsContent.includes('createElement("style")');
+  if (!hasCssAsset && !hasInjectedStyles) {
+    throw new Error('Styles not found in CSS assets or JS style-injection payload');
+  }
+  console.log('\nPASS: packed-package install, exported types, Vite build and packaged styles (' +
+    (hasCssAsset ? 'CSS asset' : 'injected JS') + ').');
 } finally {
   rmSync(temp, { recursive: true, force: true });
 }
