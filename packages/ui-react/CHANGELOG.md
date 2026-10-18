@@ -22,7 +22,7 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
-- Primary Button hover/pressed colors now derive from primary and foreground tokens; removed hardcoded gold interaction overrides from the Taskel-inspired playground preset.
+- Primary Button hover/pressed colors now derive from primary and foreground tokens; removed fixed preview-specific interaction shades.
 - SideBar backdrop now uses the same dimming and blur theme tokens as Modal, while keeping an explicit `--tmbk-backdrop` override.
 - Closed SideBar content is inert as well as hidden to assistive technology, preventing focus on offscreen controls.
 - Modal and SideBar now coordinate body scroll locks, preserving the original inline overflow after the last overlay closes.
