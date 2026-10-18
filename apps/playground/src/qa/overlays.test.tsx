@@ -1,7 +1,7 @@
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Button, Dropdown, IconButton, MenuItem, Modal, Popover, SideBar } from '@tembok/ui-react';
+import { AlertDialog, Button, Dropdown, IconButton, MenuItem, Modal, Popover, SideBar } from '@tembok/ui-react';
 import { Playground } from '../playground';
 
 let host: HTMLDivElement;
@@ -156,6 +156,27 @@ describe('React overlay regressions', () => {
     expect(document.body.style.overflow).toBe('hidden');
     await click(findButton('Close panel'));
     expect(document.body.style.overflow).not.toBe('hidden');
+  });
+
+  it('AlertDialog has alert semantics, focuses cancel and ignores outside click', async () => {
+    function Example() {
+      const [open, setOpen] = useState(true);
+      return <AlertDialog open={open} onOpenChange={setOpen} title="Delete?"
+        cancelAction={<Button onClick={() => setOpen(false)}>Keep</Button>}
+        confirmAction={<Button onClick={() => setOpen(false)}>Delete</Button>}>
+        <p>Cannot undo.</p>
+      </AlertDialog>;
+    }
+    await render(<Example />);
+    const panel = document.querySelector<HTMLElement>('[role="alertdialog"]')!;
+    expect(panel).not.toBeNull();
+    expect(panel.getAttribute('aria-modal')).toBe('true');
+    expect(panel.hasAttribute('aria-labelledby')).toBe(true);
+    expect(document.activeElement).toBe(findButton('Keep'));
+    await click(document.querySelector<HTMLElement>('.tmbk-overlay')!);
+    expect(document.querySelector('[role="alertdialog"]')).not.toBeNull();
+    await click(findButton('Keep'));
+    expect(document.querySelector('[role="alertdialog"]')).toBeNull();
   });
 
   it('exposes wide settings and compact confirmation fixtures in Gallery', async () => {
