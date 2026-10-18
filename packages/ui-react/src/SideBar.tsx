@@ -144,6 +144,12 @@ export function SideBar({
     }
     node.toggleAttribute('inert', !isOpen);
     if (isOpen && !wasOpenRef.current) {
+      // Controlled consumers can change 'open' directly, bypassing changeOpen.
+      // Capture the currently focused external element before moving focus in.
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && !node.contains(active)) {
+        openerRef.current = active;
+      }
       const first = node.querySelector<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
       (first ?? node).focus();
     }
