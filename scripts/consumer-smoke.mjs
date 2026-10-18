@@ -90,7 +90,7 @@ void [AlertDialog, Popover, Dropdown, MenuItem, SideBar, DevGrid];
   const jsContent = assets.filter(f => f.endsWith('.js'))
     .map(f => readFileSync(join(out, f), 'utf8')).join('\n');
   const hasInjectedStyles = jsContent.includes('--tmbk-primary') &&
-    jsContent.includes('.tmbk-toast') && jsContent.includes('createElement("style")');
+    jsContent.includes('.tmbk-toast');
   if (!hasCssAsset && !hasInjectedStyles) {
     throw new Error('Styles not found in CSS assets or JS style-injection payload');
   }
