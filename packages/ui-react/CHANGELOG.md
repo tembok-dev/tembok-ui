@@ -32,6 +32,7 @@ Changes to the React package are recorded here for application developers.
 - Popover arrow styling for dark surfaces.
 
 ### Developer tools
+- Gallery now includes a wide Settings Modal and compact confirmation Modal with real scrolling and size fixtures for QA.
 - SideBar can now be opened directly from Gallery → Overlays for visual QA.
 - Removed playground-only body theme mutations and component selector overrides; theme examples now exercise inherited public CSS tokens.
 - Workbench dark preview now propagates foreground/surface tokens to self-scoped buttons, restoring neutral and ghost readability.

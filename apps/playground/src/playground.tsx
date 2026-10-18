@@ -28,6 +28,8 @@ function PlaygroundMenuIcon({ name }: { name: 'edit' | 'copy' | 'delete' }) {
 export function Playground() {
   const [page, setPage] = useState<'gallery' | 'qa'>('gallery');
   const [modalOpen, setModalOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [showcaseTheme, setShowcaseTheme] = useState<'light' | 'dark'>('light');
   const [themePreset, setThemePreset] = useState<'neutral' | 'tembok' | 'reference'>('neutral');
   const [showcaseRadius, setShowcaseRadius] = useState(12);
@@ -69,7 +71,7 @@ export function Playground() {
               <div className="workbench-preview-top"><span>PREVIEW</span><span>Actual @tembok/ui-react components</span></div>
               <div className="workbench-stage">
                 {section === 'buttons' && <div className="workbench-examples"><div className="workbench-example-label">Intents</div><div className="playground-actions"><Button intent="primary">Primary</Button><Button intent="secondary">Secondary</Button><Button intent="neutral">Neutral</Button><Button intent="ghost">Ghost</Button><Button intent="danger">Danger</Button><Button disabled>Disabled</Button><IconButton label="Favorite"><span aria-hidden="true">✦</span></IconButton></div><div className="workbench-example-label">Sizes</div><div className="playground-actions"><Button size="sm">Small</Button><Button size="md">Medium</Button><Button size="lg">Large</Button></div><div className="workbench-example-label">Icon buttons · 28px Edit / 32px Duplicate / disabled Delete</div><div className="playground-actions"><IconButton size="xs" intent="neutral" label="Compact edit"><PlaygroundMenuIcon name="edit" /></IconButton><IconButton size="xs" intent="ghost" label="Compact duplicate" style={{ ["--tmbk-icon-button-xs-size" as string]: "32px" }}><PlaygroundMenuIcon name="copy" /></IconButton><IconButton size="xs" intent="neutral" disabled label="Disabled compact delete"><PlaygroundMenuIcon name="delete" /></IconButton></div></div>}
-                {section === 'overlays' && <div className="workbench-examples"><div className="workbench-example-label">Floating components</div><div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Button intent="neutral" data-sidebar-open="qa-sidebar">Open sidebar</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content"><span>Popover content</span><button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><MenuItem icon={<PlaygroundMenuIcon name="edit" />} trailing="⌘ E">Edit</MenuItem><MenuItem icon={<PlaygroundMenuIcon name="copy" />}>Duplicate</MenuItem><MenuItem danger icon={<PlaygroundMenuIcon name="delete" />}>Delete</MenuItem></Dropdown></div><p className="workbench-hint">Try Escape, keyboard focus and clicking outside.</p></div>}
+                {section === 'overlays' && <div className="workbench-examples"><div className="workbench-example-label">Floating components</div><div className="playground-actions"><Button onClick={() => setModalOpen(true)}>Open modal</Button><Button intent="neutral" data-sidebar-open="qa-sidebar">Open sidebar</Button><Button intent="neutral" onClick={() => setSettingsOpen(true)}>Settings modal</Button><Button intent="danger" onClick={() => setConfirmOpen(true)}>Confirm action</Button><Popover trigger={<Button intent="neutral">Popover</Button>}><div className="fixture-content"><span>Popover content</span><button type="button">Focusable action</button></div></Popover><Dropdown trigger={<Button intent="neutral">Dropdown</Button>}><MenuItem icon={<PlaygroundMenuIcon name="edit" />} trailing="⌘ E">Edit</MenuItem><MenuItem icon={<PlaygroundMenuIcon name="copy" />}>Duplicate</MenuItem><MenuItem danger icon={<PlaygroundMenuIcon name="delete" />}>Delete</MenuItem></Dropdown></div><p className="workbench-hint">Try Escape, keyboard focus and clicking outside.</p></div>}
                 {section === 'surfaces' && <div className="workbench-surface-example"><div className="workbench-surface-card"><small>STATUS</small><strong>Ready for review</strong><span>Semantic surface and elevation tokens.</span><Button size="sm">Review</Button></div></div>}
               </div>
               <div className="workbench-preview-bottom"><span>{section === 'buttons' ? 'Hover · Focus · Disabled' : section === 'overlays' ? 'Portals · Focus · Dismissal' : 'Colors · Radius · Elevation'}</span><span>PREVIEW / 01</span></div>
@@ -189,6 +191,20 @@ export function Playground() {
           </Popover>
         </div>
       </SideBar>
+      <Modal open={settingsOpen} onOpenChange={setSettingsOpen} size="xl"
+        header={<h2>Settings</h2>}
+        footer={<Button onClick={() => setSettingsOpen(false)}>Done</Button>}>
+        <div className="fixture-tall" style={{ minWidth: 0 }}>
+          <p>A wider workspace modal with independently scrolling body and persistent footer.</p>
+          <label>Workspace name <input aria-label="Workspace name" defaultValue="Sample workspace" /></label>
+          {Array.from({ length: 25 }, (_, i) => <p key={i}>Setting section {i + 1}</p>)}
+        </div>
+      </Modal>
+      <Modal open={confirmOpen} onOpenChange={setConfirmOpen} size="sm"
+        header={<h2>Delete draft?</h2>}
+        footer={<><Button intent="neutral" onClick={() => setConfirmOpen(false)}>Cancel</Button><Button intent="danger" onClick={() => setConfirmOpen(false)}>Confirm delete</Button></>}>
+        <p>This is a visual Modal fixture, not yet an AlertDialog API. Confirm focus and dismissal.</p>
+      </Modal>
       <Modal open={modalOpen} onOpenChange={setModalOpen}
         header={<h2>QA modal</h2>}
         footer={emptyModal ? undefined : <Button onClick={() => setModalOpen(false)}>Close modal</Button>}>
