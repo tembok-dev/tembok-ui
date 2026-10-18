@@ -84,6 +84,9 @@ export function InputField({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const latestQueryRef = useRef<string>("");
+  const committedValueRef = useRef<string | null>(null);
+  const listboxId = React.useId();
+  const optionId = (index: number) => `${listboxId}-option-${index}`;
 
   const hasSuggestionsFeature = typeof suggestionsLoader === "function";
   const showDropdown = hasSuggestionsFeature && isOpen && (isLoading || suggestions.length > 0 || !!value.trim());
@@ -106,6 +109,8 @@ export function InputField({
 
     const query = value.trim();
     latestQueryRef.current = query;
+    if (committedValueRef.current === query) { setIsLoading(false); setIsOpen(false); return; }
+    committedValueRef.current = null;
 
     if (!query) {
       setSuggestions([]);
@@ -207,6 +212,7 @@ export function InputField({
   const handleChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
       const next = evt.target.value;
+      committedValueRef.current = null;
       onChange(next);
       if (hasSuggestionsFeature) {
         setIsOpen(true);
@@ -262,6 +268,7 @@ export function InputField({
 
       if (row.type === "suggestion") {
         const s = row.suggestion;
+        committedValueRef.current = s.label.trim();
         onChange(s.label);
         onSuggestionSelect?.(s);
         setIsOpen(false);
@@ -269,6 +276,7 @@ export function InputField({
         const clean = trimmed;
         if (!clean) return;
         const payload = { slug: clean, label: clean, isNew: true as const };
+        committedValueRef.current = clean;
         onChange(clean);
         onSuggestionSelect?.(payload);
         setIsOpen(false);
@@ -285,6 +293,7 @@ export function InputField({
     suggestion: InputSuggestion,
     index: number
   ) => {
+    committedValueRef.current = suggestion.label.trim();
     onChange(suggestion.label);
     onSuggestionSelect?.(suggestion);
     setHighlightIndex(index);
@@ -296,6 +305,7 @@ export function InputField({
     const clean = trimmed;
     if (!clean) return;
     const payload = { slug: clean, label: clean, isNew: true as const };
+    committedValueRef.current = clean;
     onChange(clean);
     onSuggestionSelect?.(payload);
     setIsOpen(false);
@@ -345,6 +355,11 @@ export function InputField({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           disabled={disabled}
+          role={hasSuggestionsFeature ? "combobox" : undefined}
+          aria-autocomplete={hasSuggestionsFeature ? "list" : undefined}
+          aria-expanded={hasSuggestionsFeature ? showDropdown : undefined}
+          aria-controls={hasSuggestionsFeature ? listboxId : undefined}
+          aria-activedescendant={showDropdown && highlightIndex >= 0 ? optionId(highlightIndex) : undefined}
           aria-invalid={!!error || undefined}
           aria-describedby={
             [descriptionId, errorId].filter(Boolean).join(" ") || undefined
@@ -361,9 +376,9 @@ export function InputField({
         />
 
         {showDropdown && (
-          <div className={dropdownClasses}>
+          <div id={listboxId} role="listbox" className={dropdownClasses}>
             {isLoading && (
-              <div className="tmbk-suggest-loading">
+              <div role="presentation" className="tmbk-suggest-loading">
                 Cargando sugerencias…
               </div>
             )}
@@ -374,6 +389,9 @@ export function InputField({
               return (
                 <button
                   key={s.slug}
+                  id={optionId(rowIndex)}
+                  role="option"
+                  aria-selected={isActive}
                   type="button"
                   className="tmbk-suggest-row"
                   data-active={isActive ? "true" : "false"}
@@ -393,6 +411,9 @@ export function InputField({
             {showCreateOption && (
               <button
                 type="button"
+                id={optionId(totalRows - 1)}
+                role="option"
+                aria-selected={highlightIndex === totalRows - 1}
                 className="tmbk-suggest-row tmbk-suggest-row--create"
                 data-active={
                   highlightIndex === totalRows - 1 ? "true" : "false"

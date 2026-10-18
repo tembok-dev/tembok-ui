@@ -5,6 +5,7 @@ Changes to the React package are recorded here for application developers.
 ## Unreleased (source only, not yet on npm)
 
 ### Added
+- Toast accepts optional rich React descriptions and configurable/custom action content without breaking string descriptions; playground includes message and upload examples.
 - Exported `primaryForeground(hex)` helper for WCAG-based black/white primary text selection at theme setup or color-picker changes; playground uses it instead of a heuristic.
 - React `AlertDialog` composes Modal's surface with `alertdialog` semantics, a compact default, explicit action slots, safe initial Cancel focus and no backdrop dismissal.
 - SideBar supports controlled `open`/`onOpenChange`, with initial focus and opener-focus return on close; legacy attribute triggers remain supported.
@@ -22,6 +23,7 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- DataTable defaults to English pagination/empty-state text and exposes `labels` / `emptyText` overrides; controlled `sortState={null}` is respected.
 - Primary Button hover/pressed colors now derive from primary and foreground tokens; removed fixed preview-specific interaction shades.
 - SideBar backdrop now uses the same dimming and blur theme tokens as Modal, while keeping an explicit `--tmbk-backdrop` override.
 - Closed SideBar content is inert as well as hidden to assistive technology, preventing focus on offscreen controls.

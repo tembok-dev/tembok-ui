@@ -76,6 +76,8 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
   const {
     data,
     columns,
+    emptyText = 'No data to display.',
+    labels,
     getRowId,
     onRowClick,
 
@@ -140,10 +142,10 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
   const [internalSort, setInternalSort] = useState<TableSortState | null>(
     () => defaultSort,
   );
-  const currentSort = sortState ?? internalSort;
+  const currentSort = sortState !== undefined ? sortState : internalSort;
 
   function setSort(next: TableSortState | null) {
-    if (!sortState) setInternalSort(next);
+    if (sortState === undefined) setInternalSort(next);
     onSortChange?.(next);
   }
 
@@ -303,6 +305,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     aria-checked={
                       someVisibleSelected ? "mixed" : allVisibleSelected
                     }
+                    aria-label="Select all rows on this page"
                     onChange={toggleAllVisible}
                   />
                 </th>
@@ -336,12 +339,10 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     key={column.id}
                     className={headerClasses}
                     style={style}
-                    onClick={
-                      sortable ? () => handleHeaderClick(column) : undefined
-                    }
+                    aria-sort={sortable ? (sortDir === "asc" ? "ascending" : sortDir === "desc" ? "descending" : "none") : undefined}
                   >
                     <span className="tmbk-datatable__header-label">
-                      {column.label}
+                      {sortable ? <button type="button" className="tmbk-datatable__sort-button" onClick={() => handleHeaderClick(column)}>{column.label}</button> : column.label}
                       {sortable && (
                         <span className="tmbk-datatable__sort-indicator">
                           {isSorted ? (sortDir === "asc" ? "↑" : "↓") : ""}
@@ -361,7 +362,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                   className="tmbk-datatable__empty"
                   colSpan={visibleColumns.length + (enableSelection ? 1 : 0)}
                 >
-                  No hay datos para mostrar.
+                  {emptyText}
                 </td>
               </tr>
             ) : (
@@ -394,6 +395,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                         <input
                           type="checkbox"
                           checked={isSelected}
+                          aria-label={`Select row ${rowId}`}
                           onChange={() => toggleRowSelection(rowId)}
                         />
                       </td>
@@ -447,11 +449,11 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
       {enablePagination && (
         <div className="tmbk-datatable__footer">
           <span className="tmbk-datatable__footer-text">
-            Página {clampedPageIndex + 1} de {pageCount}
+            {labels?.page ?? 'Page'} {clampedPageIndex + 1} {labels?.of ?? 'of'} {pageCount}
             {effectiveTotalItems > 0 && (
               <span className="tmbk-datatable__footer-meta">
                 {" "}
-                · {effectiveTotalItems} registros
+                · {effectiveTotalItems} {labels?.records ?? 'records'}
               </span>
             )}
           </span>
@@ -462,7 +464,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
               disabled={clampedPageIndex === 0}
               onClick={prevPage}
             >
-              Anterior
+              {labels?.previous ?? 'Previous'}
             </Button>
             <Button
               intent="neutral"
@@ -470,7 +472,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
               disabled={clampedPageIndex >= pageCount - 1}
               onClick={nextPage}
             >
-              Siguiente
+              {labels?.next ?? 'Next'}
             </Button>
           </div>
         </div>

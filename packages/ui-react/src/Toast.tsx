@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Button } from "./Button";
 import { CheckCircle2 } from "./icons/CheckCircle2";
 import { AlertTriangle } from "./icons/AlertTrianglle";
 import { Info } from "./icons/Info";
@@ -27,19 +28,25 @@ import { XCircle } from "./icons/XCircle";
  * toastFromAnywhere({ title: "Synced", intent: "success", duration: 2000 });
  */
 
-type Intent = "success" | "warning" | "danger" | "neutral";
+export type ToastIntent = "success" | "warning" | "danger" | "neutral";
 
-type Toast = {
-  id: string;
-  title?: string;
-  description?: string;
-  intent?: Intent;
-  duration?: number; // ms; <=0 means sticky
+/** Optional standard action. Calling it does not automatically dismiss the toast. */
+export type ToastAction = { label: string; onClick: () => void; dismissOnClick?: boolean };
+
+/** Content may be plain text or custom React content, such as metadata or an avatar. */
+export type ToastInput = {
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  intent?: ToastIntent;
+  /** Milliseconds; defaults to 4000. Values <= 0 remain visible until dismissed. */
+  duration?: number;
   canClose?: boolean;
-  className?: string; // optional extra class on the card
+  className?: string;
+  /** Simple button configuration or a custom React action element. */
+  action?: ToastAction | React.ReactNode;
 };
 
-type ToastInput = Omit<Toast, "id"> & { className?: string };
+type Toast = ToastInput & { id: string };
 
 type ToastCtx = {
   show: (t: ToastInput) => string;
@@ -144,6 +151,7 @@ function ToastCard({
     duration = 4000,
     canClose = true,
     className,
+    action,
   } = toast;
   const timerRef = useRef<number | null>(null);
   const [hover, setHover] = useState(false);
@@ -177,8 +185,8 @@ function ToastCard({
         </span>
 
         <div className="tmbk-toast-content">
-          {title && <p className="tmbk-toast-title">{title}</p>}
-          {description && <p className="tmbk-toast-desc">{description}</p>}
+          {title != null && <div className="tmbk-toast-title">{title}</div>}
+          {description != null && <div className="tmbk-toast-desc">{description}</div>}
         </div>
 
         {canClose && (
@@ -198,6 +206,15 @@ function ToastCard({
           </button>
         )}
       </div>
+      {action != null && (
+        <div className="tmbk-toast-actions">
+          {typeof action === "object" && action !== null && !React.isValidElement(action) && "onClick" in action && "label" in action ? (
+            <Button type="button" size="sm" intent="neutral" onClick={() => { (action as ToastAction).onClick(); if ((action as ToastAction).dismissOnClick) onDismiss(id); }}>
+              {(action as ToastAction).label}
+            </Button>
+          ) : action as React.ReactNode}
+        </div>
+      )}
 
       <div className="tmbk-toast-bar" />
     </div>
@@ -206,7 +223,7 @@ function ToastCard({
 
 /* ========= Icons by intent ========= */
 
-const intentIcon: Record<Intent, React.ReactNode> = {
+const intentIcon: Record<ToastIntent, React.ReactNode> = {
   success: <CheckCircle2 aria-hidden className="tmbk-toast-icon-svg" />,
   warning: <AlertTriangle aria-hidden className="tmbk-toast-icon-svg" />,
   danger: <XCircle aria-hidden className="tmbk-toast-icon-svg" />,
