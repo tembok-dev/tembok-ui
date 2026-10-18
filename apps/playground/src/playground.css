@@ -145,3 +145,15 @@ body { margin: 0; }
 .playground[data-showcase-theme="light"]:has(.workbench) {
   color-scheme: light;
 }
+
+/* QA fixture layout only; component visuals remain owned by @tembok/ui-react. */
+.playground-fixtures { display:grid; gap:20px; min-width:0; width:100%; }
+.playground-fixture-block { min-width:0; display:grid; gap:12px; padding:16px; border:1px solid var(--wb-border,#ddd); border-radius:var(--tmbk-radius-surface,12px); background:var(--wb-panel,#fff); color:var(--wb-text,#24292e); }
+.playground-fixture-block h3 { font-size:15px; margin:0; }
+.playground-fixture-block p { font-size:13px; margin:0; color:var(--wb-muted,#666); }
+.playground-fixture-table { max-width:100%; min-width:0; overflow-x:auto; }
+.playground-fixture-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr)); gap:16px; align-items:start; }
+.playground-fixture-loaders { display:flex; flex-wrap:wrap; gap:24px; }
+.playground-fixture-loaders > div { display:grid; gap:12px; }
+.playground-fixture-loader { display:grid; place-items:center; gap:8px; min-width:72px; min-height:88px; }
+@media (max-width:600px) { .playground-fixture-block { padding:12px; } .playground-fixtures { gap:12px; } }
