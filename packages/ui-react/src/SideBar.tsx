@@ -115,7 +115,7 @@ export function SideBar({
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isOpen = open ?? internalOpen;
   const openerRef = useRef<HTMLElement | null>(null);
-  const wasOpenRef = useRef(isOpen);
+  const wasOpenRef = useRef(false);
   const changeOpen = useCallback((next: boolean, opener?: HTMLElement | null) => {
     if (next && !isOpen) openerRef.current = opener ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     if (open === undefined) setInternalOpen(next);
