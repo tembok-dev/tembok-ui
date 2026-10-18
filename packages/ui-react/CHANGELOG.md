@@ -23,6 +23,8 @@ Changes to the React package are recorded here for application developers.
 - Semantic surface and motion theme values.
 
 ### Fixed
+- DevGrid now uses its own fixed overlay/grid layout rather than relying on consumer Tailwind utility classes.
+- Loaders can expose an optional accessible status label and default to the primary theme token.
 - DataTable defaults to English pagination/empty-state text and exposes `labels` / `emptyText` overrides; controlled `sortState={null}` is respected.
 - Primary Button hover/pressed colors now derive from primary and foreground tokens; removed fixed preview-specific interaction shades.
 - SideBar backdrop now uses the same dimming and blur theme tokens as Modal, while keeping an explicit `--tmbk-backdrop` override.

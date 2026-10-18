@@ -80,7 +80,7 @@ export function RemainingComponentFixtures() {
           <strong>{type}</strong>
           <div className="playground-actions">
             {(['sm', 'md', 'lg'] as const).map(size => <div key={size} className="playground-fixture-loader">
-              <Loaders type={type} size={size} color="var(--tmbk-primary)" />
+              <Loaders type={type} size={size} color="var(--tmbk-primary)" label={size === "md" ? `${type} loading` : undefined} />
               <small>{size}</small>
             </div>)}
           </div>
