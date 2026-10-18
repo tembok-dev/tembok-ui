@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Button } from "./Button";
 import { CheckCircle2 } from "./icons/CheckCircle2";
 import { AlertTriangle } from "./icons/AlertTrianglle";
 import { Info } from "./icons/Info";
@@ -208,7 +209,7 @@ function ToastCard({
       {action != null && (
         <div className="tmbk-toast-actions">
           {typeof action === "object" && action !== null && !React.isValidElement(action) && "onClick" in action && "label" in action ? (
-            <button type="button" className="tmbk-toast-action-button" onClick={() => { (action as ToastAction).onClick(); if ((action as ToastAction).dismissOnClick) onDismiss(id); }}>
+            <Button type="button" size="sm" intent="neutral" onClick={() => { (action as ToastAction).onClick(); if ((action as ToastAction).dismissOnClick) onDismiss(id); }}>
               {(action as ToastAction).label}
             </button>
           ) : action as React.ReactNode}
