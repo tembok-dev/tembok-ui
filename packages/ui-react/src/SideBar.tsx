@@ -194,6 +194,7 @@ export function SideBar({
         role="dialog"
         aria-modal="true"
         aria-hidden={!isOpen}
+        inert={!isOpen}
         style={vars}
       >
         <div className="tmbk-sidebar-shell">
