@@ -108,6 +108,9 @@ Icon-only button with automatic icon scaling.
 
 ### Modal
 
+SideBar is mounted for its slide transition even while closed. Its closed panel is now `inert`, so offscreen links and buttons are excluded from keyboard interaction. This is a lifecycle safeguard, not yet a complete SideBar focus-management or controlled-state API.
+
+
 Use `size="xl"` for a spacious Settings workspace and `size="sm"` for a compact decision prompt. These are **Modal** layouts; a dedicated accessible AlertDialog contract for irreversible decisions is still under review, not yet part of the published API.
 
 
