@@ -130,42 +130,6 @@ body { margin: 0; }
 .workbench-mode-tabs button { min-width:44px; min-height:40px; padding:8px; }
 .workbench-mode-tabs button svg { display:block; width:20px; height:20px; flex:none; }
 
-/* Reference fixture derived from Taskel develop/core palette.
-   Playground-only: the package must consume the inherited token contract. */
-.playground[data-preset="reference"]:has(.workbench) {
-  --wb-bg:#f9fafb; --wb-panel:#fcfcfd; --wb-border:#e1e4ea;
-  --wb-text:#24292e; --wb-muted:#73808c;
-  --tmbk-bg:#f9fafb; --tmbk-bg-light:#fcfcfd; --tmbk-fg:#24292e;
-  --tmbk-border:#e1e4ea; 
-  --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
-  --tmbk-secondary-fg:#24292e;
-  --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));
-  --tmbk-secondary-hover:color-mix(in srgb,var(--tmbk-primary) 12%,var(--tmbk-bg-light));
-}
-.playground[data-preset="reference"][data-showcase-theme="dark"]:has(.workbench) {
-  --wb-bg:#1d242a; --wb-panel:#353e46; --wb-border:#48545e;
-  --wb-text:#eff0f0; --wb-muted:#b1b3b4;
-  --tmbk-bg:#1d242a; --tmbk-bg-light:#353e46; --tmbk-fg:#eff0f0;
-  --tmbk-border:#48545e; --tmbk-secondary-fg:#eff0f0;
-}
-/* Reference styling is expressed through inherited public semantic tokens. */
-.playground[data-preset="reference"]:has(.workbench) {
-  
-  --tmbk-secondary-bg:color-mix(in srgb,var(--tmbk-primary) 8%,var(--tmbk-bg-light));
-  --tmbk-secondary-fg:var(--wb-text);
-  --tmbk-secondary-border:color-mix(in srgb,var(--tmbk-primary) 35%,var(--tmbk-border));
-  --tmbk-secondary-hover:color-mix(in srgb,var(--tmbk-primary) 12%,var(--tmbk-bg-light));
-}
-/* Taskel-inspired floating ink surfaces are deliberately dark in BOTH preview
-   modes. Set scoped component tokens at the source, not on document.body:
-   usePortalTheme carries these through to the portaled panel. */
-.playground[data-preset="reference"]:has(.workbench) {
-  --tmbk-popover-bg:#252c37;
-  --tmbk-popover-fg:#f6f7f9;
-  --tmbk-popover-border:#5b6a80;
-  --tmbk-menu-hover:#394656;
-}
-
 /* Preview colors live on the existing playground root, not on body or individual
    kit components. Portals copy the public computed tokens from their opener. */
 .playground[data-showcase-theme="dark"]:has(.workbench) {
