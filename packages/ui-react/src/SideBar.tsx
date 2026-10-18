@@ -1,5 +1,5 @@
 // tembok/components/src/react/SideBar.tsx
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Portal } from "./utils/Portal";
 import { cx } from "./utils/variants";
 import { useEscapeKey } from "./hooks/useEscapeKey";
@@ -119,6 +119,10 @@ export function SideBar({
   const themeSourceRef = useRef<HTMLSpanElement>(null!);
   const sidebarRef = useRef<HTMLElement>(null!);
   const backdropRef = useRef<HTMLDivElement>(null!);
+  // Use the native inert attribute without requiring newer React JSX typings.
+  useLayoutEffect(() => {
+    sidebarRef.current?.toggleAttribute('inert', !isOpen);
+  }, [isOpen]);
   usePortalTheme(backdropRef, () => themeSourceRef.current, isOpen,
     [backdrop ? '--tmbk-backdrop' : ''].filter(Boolean));
   usePortalTheme(sidebarRef, () => themeSourceRef.current, isOpen,
@@ -194,7 +198,6 @@ export function SideBar({
         role="dialog"
         aria-modal="true"
         aria-hidden={!isOpen}
-        inert={!isOpen}
         style={vars}
       >
         <div className="tmbk-sidebar-shell">
