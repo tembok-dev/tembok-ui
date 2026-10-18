@@ -56,7 +56,7 @@ const DEFAULT_PAGINATION: PaginationState = {
  *
  * Basic usage:
  * const columns = [
- *   { id: "name", label: "Nombre", isPrimary: true },
+ *   { id: "name", label: "Name", isPrimary: true },
  *   { id: "email", label: "Email" },
  * ];
  *
@@ -72,6 +72,14 @@ const DEFAULT_PAGINATION: PaginationState = {
  */
 
 
+/**
+ * Accessible data table with optional sorting, row selection and pagination.
+ * Client-side pagination defaults to 20 rows per page; pass getRowId for stable selection.
+ * Enable selection with enableSelection. Localize footer text via labels/emptyText.
+ * @example
+ * <DataTable data={rows} columns={[{id: 'name', label: 'Name', sortable: true}]}
+ *   getRowId={row => row.id} enableSelection enablePagination />
+ */
 export function DataTable<TData>(props: DataTableProps<TData>) {
   const {
     data,
