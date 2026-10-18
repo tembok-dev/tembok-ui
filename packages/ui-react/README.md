@@ -192,14 +192,18 @@ export function SettingsDialog() {
 
 ### Toast
 
-Global toast notifications.
+Toast notifications use `ToastProvider` and `useToast`. The public `toast` helpers take the context and an options object; they are not global string-based methods.
 
-import { toast } from "@tembok/ui-react";
+```tsx
+import { useToast, toast } from '@tembok/ui-react';
 
-toast.success("Operation completed!");
-toast.error("Something went wrong");
-toast.info("Information message");
-toast.warning("Warning message");
+function SaveAction() {
+  const ctx = useToast(); // inside ToastProvider
+  return <button onClick={() => toast.success(ctx, { title: 'Operation completed!' })}>Save</button>;
+}
+```
+
+See the rich-content Toast examples later in this guide.
 
 ### Loaders
 
