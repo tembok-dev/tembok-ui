@@ -303,6 +303,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     aria-checked={
                       someVisibleSelected ? "mixed" : allVisibleSelected
                     }
+                    aria-label="Select all rows on this page"
                     onChange={toggleAllVisible}
                   />
                 </th>
@@ -336,12 +337,10 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     key={column.id}
                     className={headerClasses}
                     style={style}
-                    onClick={
-                      sortable ? () => handleHeaderClick(column) : undefined
-                    }
+                    aria-sort={sortable ? (sortDir === "asc" ? "ascending" : sortDir === "desc" ? "descending" : "none") : undefined}
                   >
                     <span className="tmbk-datatable__header-label">
-                      {column.label}
+                      {sortable ? <button type="button" className="tmbk-datatable__sort-button" onClick={() => handleHeaderClick(column)}>{column.label}</button> : column.label}
                       {sortable && (
                         <span className="tmbk-datatable__sort-indicator">
                           {isSorted ? (sortDir === "asc" ? "↑" : "↓") : ""}
@@ -394,6 +393,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                         <input
                           type="checkbox"
                           checked={isSelected}
+                          aria-label={`Select row ${rowId}`}
                           onChange={() => toggleRowSelection(rowId)}
                         />
                       </td>
