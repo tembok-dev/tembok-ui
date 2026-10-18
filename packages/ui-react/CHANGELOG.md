@@ -38,6 +38,7 @@ Changes to the React package are recorded here for application developers.
 - Popover arrow styling for dark surfaces.
 
 ### Developer tools
+- Documented the source-grounded Taskel theme integration migration and removal strategy for consumer-side selector overrides (no Taskel changes).
 - Gallery now includes a wide Settings Modal and compact confirmation Modal with real scrolling and size fixtures for QA.
 - SideBar can now be opened directly from Gallery → Overlays for visual QA.
 - Removed playground-only body theme mutations and component selector overrides; theme examples now exercise inherited public CSS tokens.
