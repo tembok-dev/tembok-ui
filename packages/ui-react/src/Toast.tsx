@@ -188,15 +188,6 @@ function ToastCard({
           {description != null && <div className="tmbk-toast-desc">{description}</div>}
         </div>
 
-        {action != null && (
-          <div className="tmbk-toast-action">
-            {!(typeof action === "object" && action !== null && !React.isValidElement(action) && "onClick" in action && "label" in action) ? action as React.ReactNode : (
-              <button type="button" className="tmbk-toast-action-button" onClick={() => { (action as ToastAction).onClick(); if ((action as ToastAction).dismissOnClick) onDismiss(id); }}>
-                {(action as ToastAction).label}
-              </button>
-            )}
-          </div>
-        )}
         {canClose && (
           <button
             onClick={() => onDismiss(id)}
@@ -214,6 +205,15 @@ function ToastCard({
           </button>
         )}
       </div>
+      {action != null && (
+        <div className="tmbk-toast-actions">
+          {typeof action === "object" && action !== null && !React.isValidElement(action) && "onClick" in action && "label" in action ? (
+            <button type="button" className="tmbk-toast-action-button" onClick={() => { (action as ToastAction).onClick(); if ((action as ToastAction).dismissOnClick) onDismiss(id); }}>
+              {(action as ToastAction).label}
+            </button>
+          ) : action as React.ReactNode}
+        </div>
+      )}
 
       <div className="tmbk-toast-bar" />
     </div>
