@@ -2,7 +2,7 @@
 
 Changes to the React package are recorded here for application developers.
 
-## Unreleased (source only, not yet on npm)
+## 0.0.23 — 2026-10-18
 
 ### Added
 - Toast accepts optional rich React descriptions and configurable/custom action content without breaking string descriptions; playground includes message and upload examples.
